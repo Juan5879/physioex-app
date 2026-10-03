@@ -12,7 +12,7 @@ pnpm test        # pruebas del modelo fisiológico
 pnpm typecheck   # verificación de tipos
 pnpm build       # compila a out/
 pnpm dist        # instalador de Windows en %LOCALAPPDATA%/physioex-build (fuera de OneDrive)
-pnpm release     # instalador + publicación del release en GitHub (requiere GH_TOKEN)
+pnpm release     # instalador + publicación del release en GitHub (usa gh)
 ```
 
 ## Actualizaciones automáticas
@@ -30,12 +30,12 @@ En desarrollo (`pnpm dev`) no se buscan actualizaciones.
 ### Publicar una versión nueva
 
 1. Subir `version` en `package.json` (por ejemplo `0.1.0` → `0.2.0`) y hacer commit.
-2. Publicar el release con el instalador, su `.blockmap` y `latest.yml`:
+2. Publicar el release con el instalador, su `.blockmap` y `latest.yml` (requiere sesión en `gh`):
    ```bash
-   GH_TOKEN=$(gh auth token) pnpm release
+   pnpm release
    ```
-   electron-builder crea el release `v<versión>` ya publicado (`releaseType: release`), y las apps
-   instaladas lo detectan la próxima vez que se abran.
+   `scripts/release.mjs` crea el release `v<versión>` (o reemplaza sus archivos si ya existe), y las
+   apps instaladas lo detectan la próxima vez que se abran.
 
 `latest.yml` es obligatorio: es el archivo que la app consulta para saber si hay una versión nueva.
 

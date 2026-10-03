@@ -14,7 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dist": "pnpm build && electron-builder --win --publish never --config.directories.output=%LOCALAPPDATA%/physioex-build",
-    "release": "pnpm build && electron-builder --win --publish always --config.directories.output=%LOCALAPPDATA%/physioex-build"
+    "release": "pnpm dist && node scripts/release.mjs"
   },
   "build": {
     "appId": "com.physioex.app",

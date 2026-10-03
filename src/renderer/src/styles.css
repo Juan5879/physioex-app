@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-bench-50: #eef3f9;
+  --color-bench-100: #d6e2f0;
+  --color-bench-300: #8fa9c9;
+  --color-bench-500: #3f618c;
+  --color-bench-600: #2f4d74;
+  --color-bench-700: #233b5b;
+  --color-bench-800: #182a42;
+  --color-bench-900: #0f1c2e;
+  --color-lcd: #39ff6a;
+  --color-trace-a: #ffe14d;
+  --color-trace-b: #4dd2ff;
+  --font-mono: 'Cascadia Mono', 'Consolas', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bench-900);
+  color: var(--color-bench-50);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+}
+
+/* Al imprimir sólo se muestra el contenedor del reporte */
+.print-only {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Fisiología del músculo esquelético",
+  "experiments": {
+    "single": "Estímulo único",
+    "multiple": "Estímulos múltiples",
+    "isometric": "Contracción isométrica",
+    "isotonic": "Contracción isotónica"
+  },
+  "fields": {
+    "voltage": "Voltaje (V)",
+    "length": "Longitud (mm)",
+    "muscleLength": "Longitud del músculo (mm)",
+    "active": "Fuerza activa (g)",
+    "passive": "Fuerza pasiva (g)",
+    "total": "Fuerza total (g)",
+    "stimRate": "Estímulos/s",
+    "weight": "Peso (g)",
+    "velocity": "Velocidad (mm/ms)",
+    "platformHeight": "Altura de la plataforma (mm)",
+    "time": "Tiempo (ms)",
+    "force": "Fuerza (g)"
+  },
+  "short": {
+    "voltage": "Voltaje",
+    "length": "Longitud",
+    "active": "F. activa",
+    "passive": "F. pasiva",
+    "total": "F. total",
+    "stimRate": "Estím./s",
+    "weight": "Peso",
+    "velocity": "Velocidad"
+  },
+  "actions": {
+    "singleStimulus": "Estímulo único",
+    "multipleStimulus": "Estímulos múltiples",
+    "stopStimulus": "Detener estímulo"
+  },
+  "legend": {
+    "active": "Fuerza activa",
+    "passive": "Fuerza pasiva",
+    "total": "Fuerza total"
+  },
+  "hints": {
+    "passiveArrow": "La flecha indica la fuerza pasiva",
+    "putWeight": "Cuelga una pesa del músculo antes de estimular.",
+    "dragWeight": "Arrastra una pesa al tendón inferior para colgarla; arrástrala de vuelta para quitarla.",
+    "measure": "Activa la línea de medición y muévela con las flechas para leer la fuerza en un instante.",
+    "holdToRepeat": "Mantén presionado para cambiar rápido"
+  },
+  "lengthTension": "Longitud (mm)",
+  "atp": "ATP"
+}

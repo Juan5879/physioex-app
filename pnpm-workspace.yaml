@@ -1,0 +1,6 @@
+nodeLinker: hoisted
+packageImportMethod: copy
+allowBuilds:
+  electron: true
+  esbuild: true
+  electron-winstaller: true

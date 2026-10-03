@@ -1,0 +1,52 @@
+{
+  "title": "Skeletal Muscle Physiology",
+  "experiments": {
+    "single": "Single Stimulus",
+    "multiple": "Multiple Stimulus",
+    "isometric": "Isometric Contraction",
+    "isotonic": "Isotonic Contraction"
+  },
+  "fields": {
+    "voltage": "Voltage (V)",
+    "length": "Length (mm)",
+    "muscleLength": "Muscle Length (mm)",
+    "active": "Active Force (gms)",
+    "passive": "Passive Force (gms)",
+    "total": "Total Force (gms)",
+    "stimRate": "Stimuli/sec",
+    "weight": "Weight (gms)",
+    "velocity": "Velocity (mm/msec)",
+    "platformHeight": "Platform Height (mm)",
+    "time": "Time (msec)",
+    "force": "Force (gms)"
+  },
+  "short": {
+    "voltage": "Voltage",
+    "length": "Length",
+    "active": "Act. Force",
+    "passive": "Pass. Force",
+    "total": "Total Force",
+    "stimRate": "Stimuli/sec",
+    "weight": "Weight",
+    "velocity": "Velocity"
+  },
+  "actions": {
+    "singleStimulus": "Single Stimulus",
+    "multipleStimulus": "Multiple Stimulus",
+    "stopStimulus": "Stop Stimulus"
+  },
+  "legend": {
+    "active": "Active Force",
+    "passive": "Passive Force",
+    "total": "Total Force"
+  },
+  "hints": {
+    "passiveArrow": "Arrow indicates the passive force",
+    "putWeight": "Hang a weight on the muscle before stimulating.",
+    "dragWeight": "To attach a weight, drag it to the bottom tendon; drag it back to remove it.",
+    "measure": "Turn on the measurement line and move it with the arrows to read the force at a given time.",
+    "holdToRepeat": "Hold to change quickly"
+  },
+  "lengthTension": "Length (mm)",
+  "atp": "ATP"
+}

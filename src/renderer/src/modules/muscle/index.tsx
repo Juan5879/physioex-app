@@ -14,6 +14,10 @@ const EXPERIMENTS = [
   { path: 'isotonic', key: 'experiments.isotonic', element: <Isotonic /> }
 ] as const
 
+// Rutas absolutas: en React Router v7 los enlaces relativos dentro de una ruta con comodín
+// (/lab/:labId/*) se resuelven contra la URL completa y provocaban un bucle de redirecciones.
+const BASE = '/lab/muscle'
+
 /** Ejercicio 2 de PhysioEx: Fisiología del músculo esquelético */
 export default function MuscleLab(): ReactNode {
   const { t } = useTranslation('muscle')
@@ -27,7 +31,7 @@ export default function MuscleLab(): ReactNode {
               {EXPERIMENTS.map((e, i) => (
                 <NavLink
                   key={e.path}
-                  to={e.path}
+                  to={`${BASE}/${e.path}`}
                   className={({ isActive }) =>
                     `rounded-t-lg px-3 py-1.5 text-sm font-semibold ${isActive ? 'bg-bench-700 text-white' : 'text-bench-300 hover:bg-bench-800 hover:text-white'}`
                   }
@@ -44,7 +48,7 @@ export default function MuscleLab(): ReactNode {
           {EXPERIMENTS.map((e) => (
             <Route key={e.path} path={e.path} element={e.element} />
           ))}
-          <Route path="*" element={<Navigate to="single" replace />} />
+          <Route path="*" element={<Navigate to={`${BASE}/single`} replace />} />
         </Routes>
       </ToolbarHost>
     </div>

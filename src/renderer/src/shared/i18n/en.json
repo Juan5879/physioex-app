@@ -5,7 +5,9 @@
     "home": "Main menu",
     "language": "Language",
     "comingSoon": "Coming soon",
-    "selectLab": "Choose a lab"
+    "selectLab": "Choose a lab",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred on this screen. You can go back to the main menu and keep working."
   },
   "labs": {
     "cellTransport": "Cell Transport Mechanisms and Permeability",

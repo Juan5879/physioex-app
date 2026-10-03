@@ -5,7 +5,9 @@
     "home": "Menú principal",
     "language": "Idioma",
     "comingSoon": "Próximamente",
-    "selectLab": "Elige un laboratorio"
+    "selectLab": "Elige un laboratorio",
+    "errorTitle": "Algo salió mal",
+    "errorBody": "Ocurrió un error inesperado en esta pantalla. Puedes volver al menú principal y seguir trabajando."
   },
   "labs": {
     "cellTransport": "Mecanismos de transporte celular y permeabilidad",

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { labs } from '@/modules/registry'
 import { LANGUAGES } from '@/shared/i18n'
 import { UpdateNotice } from './UpdateNotice'
+import { ErrorBoundary } from './ErrorBoundary'
 
 export function App(): ReactNode {
   return (
@@ -11,13 +12,15 @@ export function App(): ReactNode {
       <div className="no-print flex h-full flex-col">
         <TopBar />
         <main className="min-h-0 flex-1 overflow-auto">
-          <Suspense fallback={null}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/lab/:labId/*" element={<LabRoute />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/lab/:labId/*" element={<LabRoute />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </main>
       </div>
     </HashRouter>

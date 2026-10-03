@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { initAutoUpdates } from './updater'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -22,6 +23,7 @@ function createWindow(): void {
   })
 
   win.once('ready-to-show', () => win.show())
+  initAutoUpdates(win)
 
   // Los enlaces externos se abren en el navegador del sistema
   win.webContents.setWindowOpenHandler(({ url }) => {

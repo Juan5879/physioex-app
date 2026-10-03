@@ -16,5 +16,5 @@
       "@/*": ["src/renderer/src/*"]
     }
   },
-  "include": ["src/renderer/src/**/*", "src/preload/*.d.ts"]
+  "include": ["src/renderer/src/**/*", "src/preload/*.d.ts", "src/main/updateStatus.ts"]
 }

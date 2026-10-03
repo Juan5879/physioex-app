@@ -62,5 +62,11 @@
       "mm": "mm",
       "V": "V"
     }
+  },
+  "updates": {
+    "downloading": "Descargando actualización v{{version}}… {{percent}}%",
+    "downloadingHint": "La descarga continúa en segundo plano; puedes seguir trabajando.",
+    "ready": "Actualización v{{version}} lista",
+    "readyHint": "Se instalará automáticamente al cerrar el programa."
   }
 }

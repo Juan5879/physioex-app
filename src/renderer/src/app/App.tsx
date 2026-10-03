@@ -3,6 +3,7 @@ import { HashRouter, Link, Navigate, Route, Routes, useParams } from 'react-rout
 import { useTranslation } from 'react-i18next'
 import { labs } from '@/modules/registry'
 import { LANGUAGES } from '@/shared/i18n'
+import { UpdateNotice } from './UpdateNotice'
 
 export function App(): ReactNode {
   return (
@@ -34,6 +35,7 @@ function TopBar(): ReactNode {
         {t('app.home')}
       </Link>
       <div className="ml-auto flex items-center gap-2 text-sm">
+        <UpdateNotice />
         <span className="text-bench-300">{t('app.language')}</span>
         {LANGUAGES.map((lng) => (
           <button

@@ -11,7 +11,7 @@ pnpm dev         # app en modo desarrollo (recarga en caliente)
 pnpm test        # pruebas del modelo fisiológico
 pnpm typecheck   # verificación de tipos
 pnpm build       # compila a out/
-pnpm dist        # instalador de Windows en dist/
+pnpm dist        # instalador de Windows en %LOCALAPPDATA%/physioex-build (fuera de OneDrive)
 ```
 
 ## Estructura

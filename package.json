@@ -32,7 +32,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "GITHUB_OWNER",
+        "owner": "Juan5879",
         "repo": "physioex-app",
         "releaseType": "release"
       }

@@ -47,12 +47,16 @@ src/preload/       puente seguro window.api
 src/renderer/src/
   app/             shell: menú principal, barra superior, rutas
   shared/
-    components/    Oscilloscope, DataTable, Stepper, PlotData, PrintReport, ExperimentTools, ui
-    lib/           formato, bucle a 20 fps, animación de barrido, fábrica de stores
+    components/    LabShell, Oscilloscope, DataTable, DataSetTable, RunTable, Stepper, PlotData, PrintReport,
+                   ExperimentTools, LabGlass (tubos y goteros), Lungs, ui
+    lib/           formato, bucle a 20 fps, animación de barrido, fábricas de stores (experimento y conjuntos de datos)
     i18n/          textos comunes es/en
   modules/
-    registry.ts    lista de los 13 laboratorios
-    muscle/        Ejercicio 2 (migrado)
+    registry.ts    lista de los 13 ejercicios (todos migrados)
+    cellTransport/ muscle/ nerve/ endocrine/ cardioDynamics/ frogCardio/      Ejercicios 1–6
+    respiratory/ digestion/ renal/ acidBase/ blood/ serology/                 Ejercicios 7–11 y 13
+    histology/     Ejercicio 12: atlas de consulta (datos de scripts/build-histology.mjs)
+    <lab>/
       model/       lógica fisiológica pura (sin React) + pruebas
       experiments/ una vista por experimento
       components/  aparato, columnas de tablas, layout

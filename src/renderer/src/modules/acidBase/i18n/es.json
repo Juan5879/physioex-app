@@ -1,0 +1,60 @@
+{
+  "title": "Equilibrio ácido-base",
+  "experiments": {
+    "raa": "Acidosis y alcalosis respiratorias",
+    "maa": "Acidosis y alcalosis metabólicas",
+    "rsc": "Compensación renal"
+  },
+  "fields": {
+    "time": "Tiempo (s)",
+    "liters": "Litros (l)",
+    "ph": "pH",
+    "bloodPh": "pH sanguíneo",
+    "pco2": "PCO₂",
+    "maxPco2": "PCO₂ máxima",
+    "minPco2": "PCO₂ mínima",
+    "bpm": "Respiraciones/min",
+    "hco3": "HCO₃⁻",
+    "h": "H⁺",
+    "metabolicRate": "Tasa metabólica",
+    "urine": "Orina",
+    "condition": "Condición"
+  },
+  "columns": {
+    "condition": "Condición",
+    "minPco2": "PCO₂ mín.",
+    "maxPco2": "PCO₂ máx.",
+    "minPh": "pH mín.",
+    "maxPh": "pH máx.",
+    "metabolicRate": "Tasa metabólica",
+    "bpm": "Resp./min",
+    "bloodPh": "pH sanguíneo",
+    "pco2": "PCO₂",
+    "h": "H⁺",
+    "hco3": "HCO₃⁻",
+    "hUrine": "H⁺ en orina",
+    "hco3Urine": "HCO₃⁻ en orina"
+  },
+  "actions": {
+    "start": "Iniciar",
+    "stop": "Detener",
+    "refill": "Rellenar",
+    "hyperventilation": "Hiperventilación",
+    "rebreathing": "Reinhalación",
+    "normal": "Respiración normal"
+  },
+  "conditions": {
+    "normal": "Normal",
+    "hyperventilation": "Hiperventilación",
+    "rebreathing": "Reinhalación",
+    "returning": "Volviendo a la normalidad"
+  },
+  "levels": {
+    "decreased": "disminuido",
+    "normal": "normal",
+    "elevated": "elevado"
+  },
+  "sets": {
+    "PCO2": "PCO₂"
+  }
+}

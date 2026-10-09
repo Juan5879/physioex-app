@@ -1,0 +1,17 @@
+{
+  "title": "Histology Tutorial",
+  "subtitle": "Atlas of microscope images with descriptions",
+  "groups": {
+    "A-Z": "A-Z",
+    "System": "By system",
+    "Tissue Type": "By tissue type",
+    "Histology Review": "Histology Review"
+  },
+  "search": "Search tissue…",
+  "labels": "Show labels",
+  "previous": "Previous",
+  "next": "Next",
+  "noResults": "No results",
+  "originalNote": "Titles and descriptions from the original atlas.",
+  "pick": "Choose an image from the index."
+}

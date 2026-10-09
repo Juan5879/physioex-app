@@ -1,0 +1,73 @@
+{
+  "title": "Análisis de sangre",
+  "experiments": {
+    "hct": "Hematocrito",
+    "esr": "Velocidad de sedimentación",
+    "hb": "Hemoglobina",
+    "type": "Tipificación sanguínea",
+    "chol": "Colesterol total"
+  },
+  "fields": {
+    "sample": "Muestra",
+    "samples": "Muestras de sangre",
+    "patient": "Paciente",
+    "timer": "Temporizador (min)",
+    "elapsed": "Tiempo transcurrido",
+    "hbReading": "Lectura (g Hb/100 ml)",
+    "sampleColor": "Muestra",
+    "standard": "Patrón",
+    "strip": "Tira",
+    "chart": "Escala de colores"
+  },
+  "columns": {
+    "sample": "Muestra",
+    "bloodHeight": "Altura de la columna",
+    "rbcHeight": "Capa de glóbulos rojos",
+    "buffyHeight": "Capa leucocitaria",
+    "hct": "Hematocrito",
+    "wbc": "% leucocitos",
+    "distance": "Distancia de los GR",
+    "time": "Tiempo",
+    "rate": "Velocidad de sedimentación",
+    "hb": "g Hb/100 ml",
+    "antiA": "Anti-A",
+    "antiB": "Anti-B",
+    "antiRh": "Anti-Rh",
+    "type": "Grupo sanguíneo",
+    "chol": "Colesterol total aprox. (mg/dL)",
+    "level": "Nivel"
+  },
+  "actions": {
+    "load": "Cargar tubo capilar",
+    "start": "Iniciar",
+    "measure": "Medir",
+    "prepare": "Preparar tubo (citrato + sangre, mezclar)",
+    "addSera": "Agregar sueros y mezclar",
+    "observe": "Observar",
+    "wipe": "Limpiar con alcohol",
+    "lancet": "Pinchar con lanceta",
+    "strip": "Aplicar tira",
+    "nextPatient": "Siguiente paciente",
+    "reset": "Reiniciar",
+    "insertChamber": "Colocar muestra en el hemoglobinómetro"
+  },
+  "values": {
+    "positive": "positivo",
+    "negative": "negativo",
+    "mm": "{{v}} mm",
+    "min": "{{v}} min",
+    "mmhr": "{{v}} mm/h"
+  },
+  "levels": {
+    "desirable": "deseable",
+    "borderline": "límite alto",
+    "elevated": "elevado",
+    "na": "N/D"
+  },
+  "hints": {
+    "hct": "Carga los tubos capilares, centrifuga y luego mide cada tubo.",
+    "hb": "Mueve el deslizador hasta que el color del patrón coincida con el de la muestra.",
+    "chol": "Elige en la escala el color que coincide con la tira.",
+    "recorded": "Esa muestra ya está registrada."
+  }
+}

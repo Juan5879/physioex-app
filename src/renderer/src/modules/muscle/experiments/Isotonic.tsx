@@ -121,6 +121,16 @@ export function Isotonic(): ReactNode {
             <Stepper
               label={t('fields.platformHeight')}
               display={String(platform)}
+              edit={{
+                value: platform,
+                min: IT.P_MIN,
+                max: IT.P_MAX,
+                step: 1,
+                onChange: (v) => {
+                  setLast(null)
+                  s.setParams({ platform: v })
+                }
+              }}
               disabled={running}
               canDecrement={platform > IT.P_MIN}
               canIncrement={platform < IT.P_MAX}
@@ -152,6 +162,16 @@ export function Isotonic(): ReactNode {
               <Stepper
                 label={t('fields.voltage')}
                 display={fixed(voltage, 1)}
+                edit={{
+                  value: voltage,
+                  min: 0,
+                  max: V_DISPLAY_MAX,
+                  step: 0.1,
+                  onChange: (v) => {
+                    setLast(null)
+                    s.setParams({ voltage: v })
+                  }
+                }}
                 disabled={running}
                 canDecrement={voltage > 0}
                 canIncrement={voltage < V_DISPLAY_MAX}

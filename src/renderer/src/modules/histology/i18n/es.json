@@ -1,0 +1,31 @@
+{
+  "title": "Tutorial de histología",
+  "subtitle": "Atlas de imágenes microscópicas con descripciones",
+  "groups": {
+    "A-Z": "A-Z",
+    "System": "Por sistema",
+    "Tissue Type": "Por tipo de tejido",
+    "Histology Review": "Repaso de histología",
+    "Cardiovascular": "Cardiovascular",
+    "Digestive": "Digestivo",
+    "Endocrine": "Endocrino",
+    "Integumentary": "Tegumentario",
+    "Lymphatic": "Linfático",
+    "Muscular": "Muscular",
+    "Nervous": "Nervioso",
+    "Reproductive": "Reproductor",
+    "Respiratory": "Respiratorio",
+    "Skeletal": "Esquelético",
+    "Urinary": "Urinario",
+    "Connective": "Conectivo",
+    "Epithelium": "Epitelio",
+    "Muscle": "Músculo"
+  },
+  "search": "Buscar tejido…",
+  "labels": "Mostrar rótulos",
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "noResults": "Sin resultados",
+  "originalNote": "Títulos y descripciones del atlas original (en inglés).",
+  "pick": "Elige una imagen en el índice."
+}

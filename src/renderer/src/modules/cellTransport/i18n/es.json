@@ -1,0 +1,124 @@
+{
+  "title": "Mecanismos de transporte celular y permeabilidad",
+  "experiments": {
+    "sd": "Difusión simple",
+    "fd": "Difusión facilitada",
+    "os": "Ósmosis",
+    "fl": "Filtración",
+    "at": "Transporte activo"
+  },
+  "solutes": {
+    "NaCl": "Na⁺/Cl⁻",
+    "Urea": "Urea",
+    "Albu": "Albúmina",
+    "Gluc": "Glucosa",
+    "Napl": "Na⁺",
+    "Kplu": "K⁺",
+    "PoCh": "Carbón en polvo"
+  },
+  "controlSolutes": {
+    "Napl": "Na⁺/Cl⁻",
+    "Kplu": "K⁺/Cl⁻"
+  },
+  "units": {
+    "mM": "mM",
+    "mgml": "mg/ml"
+  },
+  "beaker": {
+    "left": "Vaso izquierdo",
+    "right": "Vaso derecho",
+    "top": "Vaso superior",
+    "bottom": "Filtrado"
+  },
+  "actions": {
+    "dispense": "Dispensar",
+    "flush": "Vaciar",
+    "deionized": "Agua desionizada",
+    "start": "Iniciar",
+    "pause": "Pausa",
+    "resume": "Reanudar",
+    "stop": "Detener",
+    "record": "Registrar datos",
+    "deleteRun": "Borrar corrida",
+    "build": "Construir membrana",
+    "remove": "Quitar membrana",
+    "dispenseAtp": "Dispensar ATP",
+    "startAnalysis": "Iniciar análisis"
+  },
+  "fields": {
+    "solute": "Soluto",
+    "concentration": "Concentración",
+    "timer": "Temporizador (min)",
+    "elapsed": "Tiempo transcurrido (min)",
+    "avgRate": "Vel. media de difusión (mM/min)",
+    "rate": "Velocidad (mM/min)",
+    "pressure": "Presión (mm Hg)",
+    "atp": "ATP (mM)",
+    "availableAtp": "ATP disponible (mM)",
+    "carriers": "Transportadores de glucosa",
+    "pumps": "Bombas Na⁺/K⁺",
+    "filtrationRate": "Velocidad de filtración (ml/min)",
+    "filtrateConc": "Solutos en el filtrado (mg/ml)",
+    "residue": "Residuo",
+    "runNumber": "Corrida"
+  },
+  "panels": {
+    "dialysis": "Membranas de diálisis",
+    "builder": "Constructor de membrana",
+    "analysis": "Análisis de residuos de la membrana",
+    "holder": "Soporte de membrana"
+  },
+  "columns": {
+    "solute": "Soluto",
+    "mwco": "MWCO",
+    "startL": "Conc. inicial izq.",
+    "startR": "Conc. inicial der.",
+    "avgRate": "Vel. media dif.",
+    "carriers": "Transportadores",
+    "rate": "Velocidad",
+    "presL": "Pres. izq.",
+    "presR": "Pres. der.",
+    "pres": "Pres.",
+    "filtRate": "Vel. filtr.",
+    "residue": "Residuo",
+    "startConc": "Conc. inicial",
+    "filtConc": "Conc. filtrado",
+    "atp": "ATP",
+    "pumps": "Bombas"
+  },
+  "residue": {
+    "present": "presente",
+    "absent": "ausente"
+  },
+  "messages": {
+    "title": "Aviso",
+    "results": "Resultados",
+    "topEmpty": "El vaso superior está vacío. Dispensa una solución.",
+    "leftEmpty": "El vaso izquierdo está vacío. Dispensa una solución.",
+    "rightEmpty": "El vaso derecho está vacío. Dispensa una solución.",
+    "bothEmpty": "Ambos vasos están vacíos. Dispensa solución en los dos.",
+    "analyze": "Analiza y limpia la membrana con el análisis de residuos de la membrana.",
+    "bothStale": "Ambos vasos contienen la solución de la corrida anterior. Vacía al menos uno y dispensa una solución nueva.",
+    "noMembrane": "No hay ninguna membrana en el soporte.",
+    "flush": "Vacía el vaso y dispensa una solución nueva.",
+    "noDiffusion": "{{solute}}: no hubo difusión",
+    "noTransport": "{{solute}}: no hubo transporte",
+    "notReached": "{{solute}}: no se alcanzó el equilibrio",
+    "interrupted": "{{solute}}: transporte interrumpido, sin terminar",
+    "equilibrium": "{{solute}}: equilibrio a los {{time}} min",
+    "finished": "{{solute}}: transporte terminado a los {{time}} min",
+    "osmoticReached": "Se alcanzó el equilibrio osmótico",
+    "osmoticNotReached": "No se alcanzó el equilibrio osmótico",
+    "noSolute": "No hay ningún soluto",
+    "filtrationDone": "Filtración completa en {{time}} min.",
+    "filtrationStopped": "Filtración detenida. Se habría completado a los {{time}} min.",
+    "moveToAnalysis": "Analiza la membrana con el análisis de residuos de la membrana.",
+    "deleteRun": "Se borrarán los datos de la corrida {{run}}. ¿Seguro que quieres continuar?",
+    "hashLegend": "# = la corrida terminó antes de alcanzar el equilibrio",
+    "noRuns": "Aún no hay corridas registradas.",
+    "builtMembrane": "Membrana con {{carriers}} transportadores",
+    "builtMembranePumps": "Membrana con {{carriers}} transportadores y {{pumps}} bombas",
+    "pickMembrane": "Haz clic en una membrana (o arrástrala) para colocarla en el soporte; vuelve a hacer clic para quitarla."
+  },
+  "run": "Corrida {{n}}"
+}

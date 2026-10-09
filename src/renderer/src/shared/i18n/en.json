@@ -7,7 +7,10 @@
     "comingSoon": "Coming soon",
     "selectLab": "Choose a lab",
     "errorTitle": "Something went wrong",
-    "errorBody": "An unexpected error occurred on this screen. You can go back to the main menu and keep working."
+    "errorBody": "An unexpected error occurred on this screen. You can go back to the main menu and keep working.",
+    "reference": "Reference material",
+    "referenceHint": "Images with descriptions to study and review.",
+    "histologyHint": "More than 260 tissue images with labels and descriptions, by system, by tissue type or A to Z."
   },
   "labs": {
     "cellTransport": "Cell Transport Mechanisms and Permeability",
@@ -63,7 +66,16 @@
       "g": "gms",
       "mm": "mm",
       "V": "V"
-    }
+    },
+    "dataSets": "Data Sets",
+    "addDataSet": "Add Data Set",
+    "deleteDataSet": "Delete Data Set",
+    "dataSetName": "Data set name (letters, numbers, spaces)",
+    "confirmDeleteDataSet": "The data set \"{{name}}\" and all its data will be erased. Are you sure you want to proceed?",
+    "measuring": "measuring",
+    "run": "Run",
+    "deleteRun": "Delete Run",
+    "confirmDeleteRun": "The data for run {{run}} will be erased. Are you sure you want to proceed?"
   },
   "updates": {
     "downloading": "Downloading update v{{version}}… {{percent}}%",

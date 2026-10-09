@@ -1,0 +1,100 @@
+{
+  "title": "Chemical and Physical Processes of Digestion",
+  "experiments": {
+    "am": "Starch Digestion by Amylase",
+    "pe": "Protein Digestion by Pepsin",
+    "li": "Fat Digestion by Lipase"
+  },
+  "reagents": {
+    "amylase": "Amylase",
+    "starch": "Starch",
+    "maltose": "Maltose",
+    "ph2": "pH 2.0 Buffer",
+    "ph7": "pH 7.0 Buffer",
+    "ph9": "pH 9.0 Buffer",
+    "water": "Deionized Water",
+    "glucose": "Glucose",
+    "cellulose": "Cellulose",
+    "peptidase": "Peptidase",
+    "bacteria": "Bacteria",
+    "pepsin": "Pepsin",
+    "bapna": "BAPNA",
+    "lipase": "Lipase",
+    "oil": "Vegetable Oil",
+    "bile": "Bile Salts",
+    "iki": "IKI",
+    "benedict": "Benedict's Solution"
+  },
+  "short": {
+    "amylase": "Amylase",
+    "starch": "Starch",
+    "maltose": "Maltose",
+    "ph2": "pH 2.0",
+    "ph7": "pH 7.0",
+    "ph9": "pH 9.0",
+    "water": "Water",
+    "glucose": "Glucose",
+    "cellulose": "Cellulose",
+    "peptidase": "Peptidase",
+    "bacteria": "Bacteria",
+    "pepsin": "Pepsin",
+    "bapna": "BAPNA",
+    "lipase": "Lipase",
+    "oil": "Veg. Oil",
+    "bile": "Bile Salts"
+  },
+  "fields": {
+    "temperature": "Temperature (°C)",
+    "timer": "Timer (min)",
+    "elapsed": "Elapsed Time",
+    "od": "Optical Density",
+    "ph": "pH"
+  },
+  "actions": {
+    "incubate": "Incubate",
+    "stop": "Stop",
+    "boil": "Boil",
+    "freeze": "Freeze",
+    "lower": "Lower",
+    "pour": "Pour sample",
+    "analyze": "Analyze",
+    "measurePh": "Measure pH",
+    "dispose": "Dispose tubes",
+    "addTube": "Place tube"
+  },
+  "columns": {
+    "tube": "Tube No.",
+    "reagent": "Reagent {{n}}",
+    "boiled": "Boiled",
+    "time": "Time",
+    "temp": "Temp.",
+    "iki": "IKI",
+    "benedict": "Benedict's",
+    "od": "Optical Dens.",
+    "ph": "pH"
+  },
+  "alerts": {
+    "title": "Notice",
+    "full": "This tube contains the maximum number of reagents.",
+    "duplicate": "This tube already contains {{name}}.",
+    "bufferPresent": "A buffer has already been dispensed to this tube.",
+    "typePresent": "There is already a reagent of that type in this tube.",
+    "bacteriaAlt": "Enzyme is an alternative to Bacteria and the tube already contains Bacteria.",
+    "enzymeAlt": "Bacteria is an alternative to Enzyme and the tube already contains Enzyme.",
+    "notReady": "The following test tubes do not contain the proper number of reagents: {{tubes}}",
+    "noTubes": "Place at least one test tube.",
+    "lowerFirst": "A test tube must be filled with the correct number of reagents and lowered into the incubation unit first.",
+    "benedictFirst": "Before boiling, dispense Benedict's solution to the following tubes: {{tubes}}",
+    "pourFirst": "Pour some of the fluid into a tube in the test unit first.",
+    "disposeSure": "All data for this experimental run will be erased. Are you sure you want to proceed?"
+  },
+  "hints": {
+    "dropper": "Choose a bottle and click the test tubes to dispense the reagent.",
+    "tests": "After incubating, run the tests on each tube and record the data."
+  },
+  "phase": {
+    "setup": "Setup",
+    "incubating": "Incubating",
+    "testing": "Testing"
+  }
+}

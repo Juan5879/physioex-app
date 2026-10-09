@@ -1,0 +1,52 @@
+{
+  "title": "Fisiología cardiovascular de la rana",
+  "experiments": {
+    "es": "Estimulación eléctrica",
+    "mr": "Modificadores de la frecuencia cardíaca"
+  },
+  "fields": {
+    "heartRate": "Frecuencia cardíaca (lpm)",
+    "time": "Tiempo (s)",
+    "contraction": "Contracción",
+    "voltage": "Voltaje (V)",
+    "stimRate": "Estímulos/s"
+  },
+  "status": {
+    "normal": "Frecuencia normal",
+    "stable": "Frecuencia estable",
+    "changing": "Frecuencia cambiando",
+    "none": "----"
+  },
+  "probes": {
+    "probe1": "Estimulación directa del corazón",
+    "probe2": "Estimulación del nervio vago",
+    "hint": "Haz clic en un electrodo para colocarlo; vuelve a hacer clic para quitarlo."
+  },
+  "actions": {
+    "single": "Estímulo único",
+    "multiple": "Estímulos múltiples",
+    "stop": "Detener estímulo",
+    "improve": "Mejorar trazo (10 s)",
+    "speed": "Aumentar velocidad (15 s)"
+  },
+  "ringers": {
+    "label": "Ringer a {{temp}}°",
+    "solution": "Ringer a {{temp}}°"
+  },
+  "drugs": {
+    "Pilo": "Pilocarpina",
+    "Atro": "Atropina",
+    "Epin": "Epinefrina",
+    "Digi": "Digital",
+    "Calc": "Iones de calcio",
+    "Sodi": "Iones de sodio",
+    "Pota": "Iones de potasio"
+  },
+  "columns": {
+    "solution": "Solución",
+    "heartRate": "Frecuencia cardíaca"
+  },
+  "hints": {
+    "droppers": "Los goteros se habilitan cuando la frecuencia es normal; para volver a ella, lava con Ringer a 23°."
+  }
+}

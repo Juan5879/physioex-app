@@ -7,7 +7,10 @@
     "comingSoon": "Próximamente",
     "selectLab": "Elige un laboratorio",
     "errorTitle": "Algo salió mal",
-    "errorBody": "Ocurrió un error inesperado en esta pantalla. Puedes volver al menú principal y seguir trabajando."
+    "errorBody": "Ocurrió un error inesperado en esta pantalla. Puedes volver al menú principal y seguir trabajando.",
+    "reference": "Material de consulta",
+    "referenceHint": "Imágenes con descripciones para estudiar y repasar.",
+    "histologyHint": "Más de 260 imágenes de tejidos con rótulos y descripciones, por sistema, por tipo de tejido o de la A a la Z."
   },
   "labs": {
     "cellTransport": "Mecanismos de transporte celular y permeabilidad",
@@ -63,7 +66,16 @@
       "g": "g",
       "mm": "mm",
       "V": "V"
-    }
+    },
+    "dataSets": "Conjuntos de datos",
+    "addDataSet": "Agregar conjunto",
+    "deleteDataSet": "Borrar conjunto",
+    "dataSetName": "Nombre del conjunto (letras, números y espacios)",
+    "confirmDeleteDataSet": "Se borrará el conjunto «{{name}}» con todos sus datos. ¿Seguro que quieres continuar?",
+    "measuring": "midiendo",
+    "run": "Corrida",
+    "deleteRun": "Borrar corrida",
+    "confirmDeleteRun": "Se borrarán los datos de la corrida {{run}}. ¿Seguro que quieres continuar?"
   },
   "updates": {
     "downloading": "Descargando actualización v{{version}}… {{percent}}%",

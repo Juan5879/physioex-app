@@ -1,0 +1,52 @@
+{
+  "title": "Frog Cardiovascular Physiology",
+  "experiments": {
+    "es": "Electrical Stimulation",
+    "mr": "Modifiers of Heart Rate"
+  },
+  "fields": {
+    "heartRate": "Heart Rate (bpm)",
+    "time": "Time (sec)",
+    "contraction": "Contraction",
+    "voltage": "Voltage (V)",
+    "stimRate": "Stimuli / sec"
+  },
+  "status": {
+    "normal": "Heart Rate Normal",
+    "stable": "Heart Rate Stable",
+    "changing": "Heart Rate Changing",
+    "none": "----"
+  },
+  "probes": {
+    "probe1": "Direct Heart Stimulation",
+    "probe2": "Vagus Nerve Stimulation",
+    "hint": "Click an electrode to place it; click it again to remove it."
+  },
+  "actions": {
+    "single": "Single Stimulus",
+    "multiple": "Multiple Stimulus",
+    "stop": "Stop Stimulus",
+    "improve": "Improve Tracing (10 s)",
+    "speed": "Increase Speed (15 s)"
+  },
+  "ringers": {
+    "label": "{{temp}}° Ringers",
+    "solution": "{{temp}} deg. Ringer's"
+  },
+  "drugs": {
+    "Pilo": "Pilocarpine",
+    "Atro": "Atropine",
+    "Epin": "Epinephrine",
+    "Digi": "Digitalis",
+    "Calc": "Calcium Ions",
+    "Sodi": "Sodium Ions",
+    "Pota": "Potassium Ions"
+  },
+  "columns": {
+    "solution": "Solution",
+    "heartRate": "Heart Rate"
+  },
+  "hints": {
+    "droppers": "The droppers are enabled when the heart rate is normal; wash with 23° Ringer's to return to it."
+  }
+}

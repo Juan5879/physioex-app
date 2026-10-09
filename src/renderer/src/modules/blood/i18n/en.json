@@ -1,0 +1,73 @@
+{
+  "title": "Blood Analysis",
+  "experiments": {
+    "hct": "Hematocrit Determination",
+    "esr": "Erythrocyte Sedimentation Rate",
+    "hb": "Hemoglobin Determination",
+    "type": "Blood Typing",
+    "chol": "Total Cholesterol Determination"
+  },
+  "fields": {
+    "sample": "Sample",
+    "samples": "Blood samples",
+    "patient": "Patient",
+    "timer": "Timer (min)",
+    "elapsed": "Elapsed Time",
+    "hbReading": "Reading (gm Hb/100 ml)",
+    "sampleColor": "Sample",
+    "standard": "Standard",
+    "strip": "Strip",
+    "chart": "Color chart"
+  },
+  "columns": {
+    "sample": "Blood sample",
+    "bloodHeight": "Height of column of blood",
+    "rbcHeight": "Height of red blood cell layer",
+    "buffyHeight": "Height of buffy coat",
+    "hct": "Hematocrit",
+    "wbc": "% WBC",
+    "distance": "Distance RBCs",
+    "time": "Time",
+    "rate": "Sedimentation Rate",
+    "hb": "gm Hb per 100 ml blood",
+    "antiA": "Anti-A",
+    "antiB": "Anti-B",
+    "antiRh": "Anti-Rh",
+    "type": "Blood Type",
+    "chol": "Approx. Total Cholesterol mg/dL",
+    "level": "Cholesterol Level"
+  },
+  "actions": {
+    "load": "Load capillary tube",
+    "start": "Start",
+    "measure": "Measure",
+    "prepare": "Prepare tube (citrate + blood, mix)",
+    "addSera": "Add sera and mix",
+    "observe": "Observe",
+    "wipe": "Alcohol wipe",
+    "lancet": "Lance finger",
+    "strip": "Apply strip",
+    "nextPatient": "Next Patient",
+    "reset": "Reset",
+    "insertChamber": "Insert sample into hemoglobinometer"
+  },
+  "values": {
+    "positive": "positive",
+    "negative": "negative",
+    "mm": "{{v}} mm",
+    "min": "{{v}} min",
+    "mmhr": "{{v}} mm/hr"
+  },
+  "levels": {
+    "desirable": "desirable",
+    "borderline": "borderline elevated",
+    "elevated": "elevated",
+    "na": "N/A"
+  },
+  "hints": {
+    "hct": "Load the capillary tubes, centrifuge them, then measure each tube.",
+    "hb": "Move the slider until the standard color matches the sample.",
+    "chol": "Choose the chart color that matches the strip.",
+    "recorded": "That sample has already been recorded."
+  }
+}

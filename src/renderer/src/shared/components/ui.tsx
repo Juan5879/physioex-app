@@ -99,3 +99,29 @@ export function Modal({
     </div>
   )
 }
+
+/** Aviso con botón Aceptar (los cuadros de alerta del original) */
+export function Notice({
+  title,
+  lines,
+  onClose
+}: {
+  title: ReactNode
+  lines: ReactNode[]
+  onClose: () => void
+}): ReactNode {
+  return (
+    <Modal title={title} onClose={onClose}>
+      <div className="mb-5 space-y-1 text-bench-100">
+        {lines.map((l, i) => (
+          <p key={i}>{l}</p>
+        ))}
+      </div>
+      <div className="flex justify-end">
+        <Button variant="primary" autoFocus onClick={onClose}>
+          OK
+        </Button>
+      </div>
+    </Modal>
+  )
+}

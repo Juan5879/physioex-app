@@ -100,6 +100,7 @@ export function SingleStimulus(): ReactNode {
           <Stepper
             label={t('fields.muscleLength')}
             display={String(length)}
+            edit={{ value: length, min: L_MIN, max: L_MAX, step: 1, onChange: (v) => s.setParams({ length: v }) }}
             disabled={running}
             canDecrement={length > L_MIN}
             canIncrement={length < L_MAX}
@@ -133,6 +134,7 @@ export function SingleStimulus(): ReactNode {
               <Stepper
                 label={t('fields.voltage')}
                 display={fixed(voltage, 1)}
+                edit={{ value: voltage, min: 0, max: V_DISPLAY_MAX, step: 0.1, onChange: (v) => s.setParams({ voltage: v }) }}
                 disabled={running}
                 canDecrement={voltage > 0}
                 canIncrement={voltage < V_DISPLAY_MAX}
@@ -158,6 +160,13 @@ export function SingleStimulus(): ReactNode {
                 label={t('fields.time')}
                 arrows
                 display={measureTime !== null ? fixed(measureTime) : '----'}
+                edit={{
+                  value: measureTime ?? 0,
+                  min: 0,
+                  max: tMax,
+                  step: tMax / SAMPLES,
+                  onChange: (v) => setMeasure((m) => (m ? { ...m, index: Math.round((v / tMax) * SAMPLES) } : m))
+                }}
                 disabled={!measure}
                 canDecrement={(measure?.index ?? 0) > 0}
                 canIncrement={(measure?.index ?? SAMPLES) < SAMPLES}

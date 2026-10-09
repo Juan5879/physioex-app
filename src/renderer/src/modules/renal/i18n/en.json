@@ -1,0 +1,75 @@
+{
+  "title": "Renal System Physiology",
+  "experiments": {
+    "gf": "Simulating Glomerular Filtration",
+    "uf": "Simulating Urine Formation"
+  },
+  "fields": {
+    "afferent": "Afferent Radius",
+    "efferent": "Efferent Radius",
+    "pressure": "Pressure (mmHg)",
+    "glomPressure": "Glomerular Pressure",
+    "gfr": "Glomerular Filt. Rate",
+    "urineVolume": "Urine Volume",
+    "concGradient": "Conc. Grad. (mosm)",
+    "carriers": "Glucose Carriers",
+    "concentration": "Concentration",
+    "probe": "Probe"
+  },
+  "columns": {
+    "afferent": "Afferent Radius",
+    "efferent": "Efferent Radius",
+    "beakerPressure": "Beaker Press.",
+    "glomPressure": "Glomerular Press.",
+    "gfr": "Glom. Filt. Rate",
+    "urineVolume": "Urine Volume",
+    "glucose": "Glucose Conc.",
+    "potassium": "Potassium Conc.",
+    "urineConc": "Urine Conc.",
+    "gradient": "Conc. Grad.",
+    "aldosterone": "Aldosterone",
+    "adh": "ADH"
+  },
+  "actions": {
+    "start": "Start",
+    "stop": "Stop",
+    "refill": "Refill",
+    "valveOpen": "Valve open",
+    "valveClosed": "Valve closed",
+    "addCarriers": "Add Carriers",
+    "dispense": "Dispense"
+  },
+  "reagents": {
+    "aldosterone": "Aldosterone",
+    "adh": "ADH"
+  },
+  "values": {
+    "present": "present",
+    "absent": "absent"
+  },
+  "sets": {
+    "Afferent": "Afferent",
+    "Pressure": "Pressure",
+    "Combined": "Combined",
+    "Gradient": "Gradient",
+    "Glucose": "Glucose",
+    "Hormone": "Hormone"
+  },
+  "segments": {
+    "descending": "Descending limb",
+    "ascending": "Ascending limb",
+    "distal": "Distal tubule",
+    "collecting": "Collecting duct",
+    "loop": "Bottom of the loop",
+    "urine": "Urine"
+  },
+  "alerts": {
+    "title": "Notice",
+    "aldPresent": "You have already added aldosterone.",
+    "adhPresent": "You have already added ADH."
+  },
+  "hints": {
+    "probe": "Click on the tubule (at any depth) to measure the concentration with the probe.",
+    "applyFirst": "Carrier and gradient changes are applied with their buttons."
+  }
+}

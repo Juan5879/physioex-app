@@ -1,0 +1,124 @@
+{
+  "title": "Cell Transport Mechanisms and Permeability",
+  "experiments": {
+    "sd": "Simple Diffusion",
+    "fd": "Facilitated Diffusion",
+    "os": "Osmosis",
+    "fl": "Filtration",
+    "at": "Active Transport"
+  },
+  "solutes": {
+    "NaCl": "Na⁺/Cl⁻",
+    "Urea": "Urea",
+    "Albu": "Albumin",
+    "Gluc": "Glucose",
+    "Napl": "Na⁺",
+    "Kplu": "K⁺",
+    "PoCh": "Powdered Charcoal"
+  },
+  "controlSolutes": {
+    "Napl": "Na⁺/Cl⁻",
+    "Kplu": "K⁺/Cl⁻"
+  },
+  "units": {
+    "mM": "mM",
+    "mgml": "mg/ml"
+  },
+  "beaker": {
+    "left": "Left beaker",
+    "right": "Right beaker",
+    "top": "Top beaker",
+    "bottom": "Filtrate"
+  },
+  "actions": {
+    "dispense": "Dispense",
+    "flush": "Flush",
+    "deionized": "Deionized Water",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "record": "Record Data",
+    "deleteRun": "Delete Run",
+    "build": "Build Membrane",
+    "remove": "Remove Membrane",
+    "dispenseAtp": "Dispense ATP",
+    "startAnalysis": "Start Analysis"
+  },
+  "fields": {
+    "solute": "Solute",
+    "concentration": "Concentration",
+    "timer": "Timer (min)",
+    "elapsed": "Elapsed Time (min)",
+    "avgRate": "Avg. Diff. Rate (mM/min)",
+    "rate": "Rate (mM/min)",
+    "pressure": "Pressure (mmHg)",
+    "atp": "ATP (mM)",
+    "availableAtp": "Available ATP (mM)",
+    "carriers": "Glucose Carriers",
+    "pumps": "Na⁺/K⁺ Pumps",
+    "filtrationRate": "Filtration Rate (ml/min)",
+    "filtrateConc": "Solutes in Filtrate (mg/ml)",
+    "residue": "Residue",
+    "runNumber": "Run Number"
+  },
+  "panels": {
+    "dialysis": "Dialysis Membranes",
+    "builder": "Membrane Builder",
+    "analysis": "Membrane Residue Analysis",
+    "holder": "Membrane holder"
+  },
+  "columns": {
+    "solute": "Solute",
+    "mwco": "MWCO",
+    "startL": "Start Conc. L",
+    "startR": "Start Conc. R",
+    "avgRate": "Avg. Diff. Rate",
+    "carriers": "Carriers",
+    "rate": "Rate",
+    "presL": "Pres. L",
+    "presR": "Pres. R",
+    "pres": "Pres.",
+    "filtRate": "Filtr. Rate",
+    "residue": "Residue",
+    "startConc": "Start Conc.",
+    "filtConc": "Filtr. Conc.",
+    "atp": "ATP",
+    "pumps": "Pumps"
+  },
+  "residue": {
+    "present": "present",
+    "absent": "not present"
+  },
+  "messages": {
+    "title": "Notice",
+    "results": "Results",
+    "topEmpty": "The top beaker is empty. Please dispense solution.",
+    "leftEmpty": "The left beaker is empty. Please dispense solution.",
+    "rightEmpty": "The right beaker is empty. Please dispense solution.",
+    "bothEmpty": "Both beakers are empty. Please dispense solution to both beakers.",
+    "analyze": "Analyze and clean the membrane by running a Membrane Residue Analysis.",
+    "bothStale": "Both beakers contain solution from the last experimental run. Flush at least one beaker and dispense new solution.",
+    "noMembrane": "Membrane is absent from holder.",
+    "flush": "Flush and dispense new solution.",
+    "noDiffusion": "{{solute}}: no diffusion",
+    "noTransport": "{{solute}}: no transport",
+    "notReached": "{{solute}}: equilibrium not reached",
+    "interrupted": "{{solute}}: transport interrupted, not finished",
+    "equilibrium": "{{solute}}: equilibrium at {{time}} min",
+    "finished": "{{solute}}: transport finished at {{time}} min",
+    "osmoticReached": "Osmotic equilibrium reached",
+    "osmoticNotReached": "Osmotic equilibrium not reached",
+    "noSolute": "No solute present",
+    "filtrationDone": "Filtration completed in {{time}} min.",
+    "filtrationStopped": "Filtration stopped. Projected completion at {{time}} min.",
+    "moveToAnalysis": "Analyze the membrane by running a Membrane Residue Analysis.",
+    "deleteRun": "The data for run {{run}} will be erased. Are you sure you want to proceed?",
+    "hashLegend": "# = the run ended before equilibrium was reached",
+    "noRuns": "No runs recorded yet.",
+    "builtMembrane": "Membrane with {{carriers}} carriers",
+    "builtMembranePumps": "Membrane with {{carriers}} carriers and {{pumps}} pumps",
+    "pickMembrane": "Click a membrane (or drag it) to place it in the holder; click it again to remove it."
+  },
+  "run": "Run {{n}}"
+}

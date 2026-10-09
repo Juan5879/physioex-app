@@ -1,0 +1,99 @@
+{
+  "title": "Neurophysiology of Nerve Impulses",
+  "experiments": {
+    "eni": "Eliciting a Nerve Impulse",
+    "ini": "Inhibiting a Nerve Impulse",
+    "ncv": "Nerve Conduction Velocity"
+  },
+  "fields": {
+    "voltage": "Voltage (V)",
+    "stimRate": "Stimuli / sec",
+    "interval": "Interval between Stimuli (min)",
+    "elapsed": "Elapsed Time (min)",
+    "measureTime": "Time (msec)",
+    "timeMs": "Time (msec)",
+    "timeSec": "Time (sec)",
+    "timeMin": "Time (min)",
+    "amplitude": "Potential"
+  },
+  "actions": {
+    "singleStimulus": "Single Stimulus",
+    "multipleStimulus": "Multiple Stimulus",
+    "stimulate": "Stimulate",
+    "stop": "Stop",
+    "clean": "Clean",
+    "heat": "Heat",
+    "clear": "Clear",
+    "pulse": "Pulse",
+    "measure": "Measure",
+    "on": "On",
+    "off": "Off"
+  },
+  "reagents": {
+    "NaCl": "Sodium Chloride",
+    "HCl": "Hydrochloric Acid",
+    "glassBar": "Glass Bar",
+    "hotBar": "Hot Glass Bar",
+    "lido": "Lidocaine",
+    "cura": "Curare",
+    "ethr": "Ether",
+    "ethanol": "Ethanol"
+  },
+  "nerves": {
+    "worm": "Earthworm",
+    "frog": "Frog Nerve",
+    "rat1": "Rat Nerve 1",
+    "rat2": "Rat Nerve 2",
+    "none": "No nerve"
+  },
+  "panels": {
+    "heater": "Heater",
+    "chamber": "Nerve Chamber",
+    "stimulator": "Stimulator",
+    "bioAmp": "Bio-Amplifier",
+    "nerves": "Nerves"
+  },
+  "columns": {
+    "voltage": "Voltage",
+    "glassBar": "Glass Bar",
+    "NaCl": "NaCl",
+    "HCl": "HCl",
+    "heat": "Heat",
+    "actionPotential": "Action Potential",
+    "ether": "Ether",
+    "curare": "Curare",
+    "lidocaine": "Lidocaine",
+    "nerve": "Nerve Type",
+    "time": "Time (msec)",
+    "distance": "Distance (mm)",
+    "velocity": "Conduction Velocity"
+  },
+  "values": {
+    "yes": "yes",
+    "no": "no",
+    "present": "present",
+    "absent": "absent",
+    "infinite": "infinite",
+    "velocity": "{{v}} m/sec"
+  },
+  "alerts": {
+    "title": "Notice",
+    "toMsec": "Change the oscilloscope time scale to msec before using Single Stimulus.",
+    "toSec": "Change the oscilloscope time scale to seconds before using Multiple Stimulus.",
+    "minToMsec": "Change the oscilloscope time scale to msec for a single stimulus, or increase the Interval between Stimuli for repeated stimuli.",
+    "msecToMin": "Change the oscilloscope time scale to minutes for repeated stimuli, or set the Interval between Stimuli to zero for a single stimulus.",
+    "clean": "Please clean the nerve before you continue.",
+    "squirm": "Apply ethanol to the worm before placing it in the chamber.",
+    "ethanol": "You have already applied ethanol to the worm.",
+    "noNerve": "Drag a nerve to the chamber before stimulating.",
+    "bioAmp": "Turn on the Bio-Amplifier before stimulating.",
+    "dataFull": "Unless you clear a line of data from the table you won't have room to record any measurements.",
+    "heatFirst": "Place the glass bar on the Heater and click Heat."
+  },
+  "hints": {
+    "drag": "Drag to the nerve (or click) to apply",
+    "dragNerve": "Drag to the chamber (or click) to place the nerve; click again to remove it",
+    "dragBar": "Drag the bar to the nerve to stimulate it, or to the heater to heat it",
+    "measure": "Move the measuring line with the arrows to the start of the action potential."
+  }
+}

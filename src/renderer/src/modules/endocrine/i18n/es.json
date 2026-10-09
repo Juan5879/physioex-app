@@ -1,0 +1,140 @@
+{
+  "title": "Fisiología del sistema endocrino",
+  "experiments": {
+    "m": "Metabolismo",
+    "hrt": "Terapia de reemplazo hormonal",
+    "id1": "Insulina y diabetes (parte 1)",
+    "id2": "Insulina y diabetes (parte 2)"
+  },
+  "rats": {
+    "normal": "Normal",
+    "tx": "Tx (tiroidectomizada)",
+    "hypox": "Hypox (hipofisectomizada)",
+    "control": "Control",
+    "experimental": "Experimental"
+  },
+  "sets": {
+    "normal": "Normal",
+    "tx": "Tx",
+    "hypox": "Hypox",
+    "control": "Control",
+    "experimental": "Experimental"
+  },
+  "hormones": {
+    "none": "--",
+    "thyroxine": "Tiroxina",
+    "tsh": "TSH",
+    "ptu": "Propiltiouracilo"
+  },
+  "fields": {
+    "timer": "Temporizador (min)",
+    "elapsed": "Tiempo transcurrido",
+    "o2": "ml de O₂",
+    "weight": "Peso (g)",
+    "elapsedDays": "Días transcurridos",
+    "injections": "Inyecciones",
+    "saline": "salina",
+    "estrogen": "estrógeno",
+    "opticalDensity": "Densidad óptica",
+    "glucose": "Glucosa (mg/dl)",
+    "glucoseReading": "Lectura de glucosa (mg/dl)",
+    "run": "Corrida"
+  },
+  "actions": {
+    "start": "Iniciar",
+    "inject": "Inyectar",
+    "reset": "Reiniciar",
+    "resetApparatus": "Reiniciar aparato",
+    "weigh": "Pesar",
+    "clear": "Borrar",
+    "clean": "Limpiar",
+    "tare": "Tarar",
+    "clampOpen": "Pinza abierta",
+    "clampClosed": "Pinza cerrada",
+    "tChamber": "Cámara y manómetro conectados",
+    "tSyringe": "Manómetro y jeringa conectados",
+    "toChamber": "Poner en la cámara",
+    "toCage": "Devolver a la jaula",
+    "removeUterus": "Extraer útero",
+    "uterusToScale": "Útero a la balanza",
+    "paper": "Papel de pesar",
+    "advanceDay": "Avanzar un día",
+    "cleanSyringe": "Limpiar jeringa",
+    "resetExperiment": "Reiniciar experimento",
+    "mix": "Mezclar",
+    "centrifuge": "Centrifugar",
+    "removePellet": "Quitar sedimento",
+    "incubate": "Incubar",
+    "setUp": "Preparar",
+    "analyze": "Analizar",
+    "graph": "Graficar",
+    "graphStandard": "Graficar curva patrón",
+    "washTube": "Lavar tubo",
+    "cleanTubes": "Limpiar tubos",
+    "obtainReagents": "Obtener reactivos",
+    "drawBlood": "Extraer sangre",
+    "record": "Registrar datos"
+  },
+  "reagents": {
+    "glucose": "Glucosa estándar",
+    "water": "Agua desionizada",
+    "color": "Reactivo de color enzimático",
+    "barium": "Hidróxido de bario",
+    "heparin": "Heparina",
+    "saline": "Salina",
+    "estrogen": "Estrógeno",
+    "insulin": "Insulina",
+    "alloxan": "Aloxano"
+  },
+  "columns": {
+    "weight": "Peso",
+    "elapsed": "Tiempo transcurrido",
+    "o2": "ml de oxígeno",
+    "injected": "Inyectada",
+    "days": "Días transcurridos",
+    "saline": "Inyecciones de salina",
+    "estrogen": "Inyecciones de estrógeno",
+    "uterusWeight": "Peso",
+    "tube": "Tubo",
+    "opticalDensity": "Densidad óptica",
+    "glucose": "Glucosa (mg/dl)",
+    "insulin": "Insulina",
+    "saline2": "Salina",
+    "alloxan": "Aloxano"
+  },
+  "panels": {
+    "chamber": "Cámara",
+    "manometer": "Manómetro",
+    "syringe": "Jeringa",
+    "scale": "Balanza",
+    "spectro": "Espectrofotómetro",
+    "washer": "Lavador de tubos",
+    "rack": "Gradilla",
+    "steps": "Pasos"
+  },
+  "yesNo": {
+    "yes": "Sí",
+    "no": "No"
+  },
+  "alerts": {
+    "title": "Aviso",
+    "switchT": "¡Tiempo cumplido! Cambia el conector en T para conectar el manómetro con la jeringa.",
+    "cleanRat": "Limpia la rata antes de inyectar otra hormona.",
+    "oneInjection": "Solo una inyección por día por rata. Haz clic en el reloj para avanzar un día.",
+    "cleanSyringe": "Limpia la jeringa antes de volver a llenarla.",
+    "fillFirst": "Llena la jeringa con salina o estrógeno antes de inyectar.",
+    "paperFirst": "Coloca el papel de pesar y tara la balanza antes de poner el útero.",
+    "levels": "Los niveles del manómetro están igualados: el O₂ inyectado es igual al consumido.",
+    "pickRat": "Elige una rata para inyectar.",
+    "pickTube": "Elige un tubo."
+  },
+  "hints": {
+    "metabolism": "1) Pesa la rata en la cámara. 2) Cierra la pinza y arranca el temporizador. 3) Al terminar, cambia el conector en T e inyecta O₂ hasta igualar el manómetro. 4) Registra.",
+    "hrt": "Inyecta una vez por día cada rata, avanza los días, extrae los úteros y pésalos (papel → tarar → útero → pesar).",
+    "dropper": "Elige un gotero y haz clic en los tubos para agregar las gotas.",
+    "spectro": "Pasa los tubos en orden al espectrofotómetro, analiza, registra y lávalos.",
+    "reading": "Mueve la línea (o escribe el valor) hasta donde la densidad óptica corta la curva patrón."
+  },
+  "levelEqual": "igualados",
+  "levelOff": "desiguales"
+}

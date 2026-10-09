@@ -1,0 +1,99 @@
+{
+  "title": "Neurofisiología de los impulsos nerviosos",
+  "experiments": {
+    "eni": "Provocar un impulso nervioso",
+    "ini": "Inhibir un impulso nervioso",
+    "ncv": "Velocidad de conducción nerviosa"
+  },
+  "fields": {
+    "voltage": "Voltaje (V)",
+    "stimRate": "Estímulos/s",
+    "interval": "Intervalo entre estímulos (min)",
+    "elapsed": "Tiempo transcurrido (min)",
+    "measureTime": "Tiempo (ms)",
+    "timeMs": "Tiempo (ms)",
+    "timeSec": "Tiempo (s)",
+    "timeMin": "Tiempo (min)",
+    "amplitude": "Potencial"
+  },
+  "actions": {
+    "singleStimulus": "Estímulo único",
+    "multipleStimulus": "Estímulos múltiples",
+    "stimulate": "Estimular",
+    "stop": "Detener",
+    "clean": "Limpiar",
+    "heat": "Calentar",
+    "clear": "Limpiar pantalla",
+    "pulse": "Pulso",
+    "measure": "Medir",
+    "on": "Encendido",
+    "off": "Apagado"
+  },
+  "reagents": {
+    "NaCl": "Cloruro de sodio",
+    "HCl": "Ácido clorhídrico",
+    "glassBar": "Varilla de vidrio",
+    "hotBar": "Varilla caliente",
+    "lido": "Lidocaína",
+    "cura": "Curare",
+    "ethr": "Éter",
+    "ethanol": "Etanol"
+  },
+  "nerves": {
+    "worm": "Lombriz",
+    "frog": "Nervio de rana",
+    "rat1": "Nervio de rata 1",
+    "rat2": "Nervio de rata 2",
+    "none": "Sin nervio"
+  },
+  "panels": {
+    "heater": "Calentador",
+    "chamber": "Cámara del nervio",
+    "stimulator": "Estimulador",
+    "bioAmp": "Bioamplificador",
+    "nerves": "Nervios"
+  },
+  "columns": {
+    "voltage": "Voltaje",
+    "glassBar": "Varilla de vidrio",
+    "NaCl": "NaCl",
+    "HCl": "HCl",
+    "heat": "Calor",
+    "actionPotential": "Potencial de acción",
+    "ether": "Éter",
+    "curare": "Curare",
+    "lidocaine": "Lidocaína",
+    "nerve": "Tipo de nervio",
+    "time": "Tiempo (ms)",
+    "distance": "Distancia (mm)",
+    "velocity": "Velocidad de conducción"
+  },
+  "values": {
+    "yes": "sí",
+    "no": "no",
+    "present": "presente",
+    "absent": "ausente",
+    "infinite": "infinita",
+    "velocity": "{{v}} m/s"
+  },
+  "alerts": {
+    "title": "Aviso",
+    "toMsec": "Cambia la escala de tiempo del osciloscopio a ms antes de usar un estímulo único.",
+    "toSec": "Cambia la escala de tiempo del osciloscopio a segundos antes de usar estímulos múltiples.",
+    "minToMsec": "Cambia la escala de tiempo a ms para un estímulo único, o aumenta el intervalo entre estímulos para estímulos repetidos.",
+    "msecToMin": "Cambia la escala de tiempo a minutos para estímulos repetidos, o pon el intervalo entre estímulos en cero para un estímulo único.",
+    "clean": "Limpia el nervio antes de continuar.",
+    "squirm": "Aplica etanol a la lombriz antes de colocarla en la cámara.",
+    "ethanol": "Ya aplicaste etanol a la lombriz.",
+    "noNerve": "Arrastra un nervio a la cámara antes de estimular.",
+    "bioAmp": "Enciende el bioamplificador antes de estimular.",
+    "dataFull": "Si no borras una línea de la tabla no habrá lugar para registrar más mediciones.",
+    "heatFirst": "Coloca la varilla de vidrio en el calentador y haz clic en Calentar."
+  },
+  "hints": {
+    "drag": "Arrastra al nervio (o haz clic) para aplicar",
+    "dragNerve": "Arrastra a la cámara (o haz clic) para colocar el nervio; vuelve a hacer clic para quitarlo",
+    "dragBar": "Arrastra la varilla al nervio para estimularlo, o al calentador para calentarla",
+    "measure": "Mueve la línea de medición con las flechas hasta el inicio del potencial de acción."
+  }
+}

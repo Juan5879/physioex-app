@@ -1,0 +1,63 @@
+{
+  "title": "Cardiovascular Dynamics",
+  "experiments": {
+    "vr": "Vessel Resistance",
+    "pm": "Pump Mechanics"
+  },
+  "fields": {
+    "pressure": "Pressure (mmHg)",
+    "pumpPressure": "Pump Pressure (mmHg)",
+    "flow": "Flow (ml/min)",
+    "radius": "Radius (mm)",
+    "viscosity": "Viscosity",
+    "length": "Length (mm)",
+    "volume": "Volume (ml)",
+    "maxStrokes": "Max. strokes",
+    "pumpVolume": "Pump volume (ml)",
+    "start": "Start",
+    "end": "End",
+    "stroke": "Stroke",
+    "radiusL": "Left radius (mm)",
+    "radiusR": "Right radius (mm)",
+    "flowTubeRadius": "Flow tube radius (mm)",
+    "rate": "Rate (strokes/min)",
+    "tubeDiameter": "Tube Diameter"
+  },
+  "columns": {
+    "flow": "Flow",
+    "radius": "Radius",
+    "viscosity": "Viscosity",
+    "length": "Length",
+    "pressure": "Pressure",
+    "radiusL": "Rad.L",
+    "radiusR": "Rad.R",
+    "strokeVolume": "Str.V",
+    "rate": "Rate",
+    "pressureL": "Press.L",
+    "pressureDif": "Press.Dif.R"
+  },
+  "actions": {
+    "start": "Start",
+    "refill": "Refill",
+    "autoPump": "Auto Pump",
+    "single": "Single"
+  },
+  "sets": {
+    "Radius": "Radius",
+    "Viscosity": "Viscosity",
+    "Length": "Length",
+    "Pressure": "Pressure",
+    "Rad.R.": "Rad.R.",
+    "Str.V.": "Str.V."
+  },
+  "alerts": {
+    "title": "Notice",
+    "insufficientDrive": "Insufficient pressure to drive flow. Increase the pressure.",
+    "lowFlow": "Flow is too low to measure. Change the parameters.",
+    "insufficientFluid": "There is not enough fluid in the left beaker for all the strokes. Refill or reduce the strokes.",
+    "noSourcePressure": "Without pressure in the left beaker the pump cannot fill.",
+    "lowInflow": "Flow into the pump is too low.",
+    "lowOutflow": "Pump pressure must exceed the right beaker pressure for flow to occur.",
+    "rateTooHigh": "The rate would exceed 999 strokes/min. Change the parameters."
+  }
+}

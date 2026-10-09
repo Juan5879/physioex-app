@@ -1,0 +1,75 @@
+{
+  "title": "Fisiología del sistema renal",
+  "experiments": {
+    "gf": "Filtración glomerular",
+    "uf": "Formación de orina"
+  },
+  "fields": {
+    "afferent": "Radio aferente",
+    "efferent": "Radio eferente",
+    "pressure": "Presión (mm Hg)",
+    "glomPressure": "Presión glomerular",
+    "gfr": "Tasa de filtración glomerular",
+    "urineVolume": "Volumen de orina",
+    "concGradient": "Gradiente de concentración (mosm)",
+    "carriers": "Transportadores de glucosa",
+    "concentration": "Concentración",
+    "probe": "Sonda"
+  },
+  "columns": {
+    "afferent": "Radio aferente",
+    "efferent": "Radio eferente",
+    "beakerPressure": "Presión del vaso",
+    "glomPressure": "Presión glomerular",
+    "gfr": "TFG",
+    "urineVolume": "Vol. de orina",
+    "glucose": "Conc. glucosa",
+    "potassium": "Conc. potasio",
+    "urineConc": "Conc. orina",
+    "gradient": "Gradiente",
+    "aldosterone": "Aldosterona",
+    "adh": "ADH"
+  },
+  "actions": {
+    "start": "Iniciar",
+    "stop": "Detener",
+    "refill": "Rellenar",
+    "valveOpen": "Válvula abierta",
+    "valveClosed": "Válvula cerrada",
+    "addCarriers": "Agregar transportadores",
+    "dispense": "Dispensar"
+  },
+  "reagents": {
+    "aldosterone": "Aldosterona",
+    "adh": "ADH"
+  },
+  "values": {
+    "present": "presente",
+    "absent": "ausente"
+  },
+  "sets": {
+    "Afferent": "Aferente",
+    "Pressure": "Presión",
+    "Combined": "Combinado",
+    "Gradient": "Gradiente",
+    "Glucose": "Glucosa",
+    "Hormone": "Hormona"
+  },
+  "segments": {
+    "descending": "Asa descendente",
+    "ascending": "Asa ascendente",
+    "distal": "Túbulo distal",
+    "collecting": "Conducto colector",
+    "loop": "Fondo del asa",
+    "urine": "Orina"
+  },
+  "alerts": {
+    "title": "Aviso",
+    "aldPresent": "Ya agregaste aldosterona.",
+    "adhPresent": "Ya agregaste ADH."
+  },
+  "hints": {
+    "probe": "Haz clic sobre el túbulo (a la altura que quieras) para medir la concentración con la sonda.",
+    "applyFirst": "Los cambios de transportadores y gradiente se aplican con sus botones."
+  }
+}

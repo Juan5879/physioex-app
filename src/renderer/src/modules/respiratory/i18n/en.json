@@ -1,0 +1,80 @@
+{
+  "title": "Respiratory System Mechanics",
+  "experiments": {
+    "rv": "Respiratory Volumes",
+    "far": "Factors Affecting Respiration",
+    "vb": "Variations in Breathing"
+  },
+  "fields": {
+    "flow": "Flow (liters)",
+    "radius": "Radius (mm)",
+    "time": "Time (sec)",
+    "liters": "Liters (l)",
+    "tidal": "Tidal Vol.",
+    "expReserve": "Exp. Res. Vol.",
+    "inspReserve": "Insp. Res. Vol",
+    "residual": "Res. Vol.",
+    "vitalCapacity": "Vital Cap.",
+    "fev1": "F.E.V.₁",
+    "totalLungCapacity": "Total Lung Cap.",
+    "pumpRate": "Pump Rate",
+    "pumpRateLong": "Pump Rate (strokes/min)",
+    "flowLeft": "Flow Left",
+    "flowRight": "Flow Right",
+    "totalFlow": "Total Flow",
+    "pressureLeft": "Pressure Left",
+    "pressureRight": "Pressure Right",
+    "pco2": "PCO₂",
+    "maxPco2": "Maximum PCO₂",
+    "minPco2": "Minimum PCO₂",
+    "surfactant": "Surfactant"
+  },
+  "columns": {
+    "radius": "Radius",
+    "flow": "Flow",
+    "tv": "T.V.",
+    "erv": "E.R.V.",
+    "irv": "I.R.V.",
+    "rv": "R.V.",
+    "vc": "V.C.",
+    "fev1": "F.E.V.₁",
+    "tlc": "T.L.C.",
+    "pumpRate": "Pump Rate",
+    "surfactant": "Surfactant",
+    "pressureL": "Pressure Left",
+    "pressureR": "Pressure Right",
+    "flowL": "Flow Left",
+    "flowR": "Flow Right",
+    "totalFlow": "Total Flow",
+    "condition": "Condition",
+    "pco2": "PCO₂",
+    "maxPco2": "Max. PCO₂",
+    "minPco2": "Min. PCO₂"
+  },
+  "actions": {
+    "start": "Start",
+    "stop": "Stop",
+    "erv": "ERV",
+    "fvc": "FVC",
+    "surfactant": "Surfactant",
+    "flush": "Flush",
+    "reset": "Reset",
+    "valveOpen": "Valve open",
+    "valveClosed": "Valve closed",
+    "rapid": "Rapid Breathing",
+    "rebreathing": "Rebreathing",
+    "holding": "Breath Holding",
+    "normal": "Normal Breathing"
+  },
+  "conditions": {
+    "normal": "Normal",
+    "rapid": "Rapid Breathing",
+    "rebreathing": "Rebreathing",
+    "holding": "Breath Holding",
+    "resume": "Return to normal"
+  },
+  "hints": {
+    "valve": "Opening the valve lets air into the pleural cavity and the lung collapses (pneumothorax).",
+    "forced": "ERV and FVC start at the beginning of the next breath."
+  }
+}

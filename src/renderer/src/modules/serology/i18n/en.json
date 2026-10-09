@@ -1,0 +1,90 @@
+{
+  "title": "Serological Testing",
+  "experiments": {
+    "dfa": "Direct Fluorescent Antibody Test",
+    "odd": "Ouchterlony Double Diffusion Test",
+    "elisa": "Indirect ELISA Procedure",
+    "wb": "Western Blot"
+  },
+  "samples": {
+    "A": "Sample A",
+    "B": "Sample B",
+    "C": "Sample C",
+    "+": "Positive Control",
+    "−": "Negative Control",
+    "patientA": "Patient A",
+    "patientB": "Patient B",
+    "patientC": "Patient C",
+    "positive": "Positive Control",
+    "negative": "Negative Control"
+  },
+  "reagents": {
+    "goatAH": "Goat anti-horse",
+    "goatAB": "Goat anti-bovine",
+    "bsa": "BSA",
+    "hsa": "HSA",
+    "unknown": "Unknown"
+  },
+  "steps": {
+    "dfa1": "Place the slides and the samples",
+    "dfa2": "Fix with 95% ethyl alcohol",
+    "dfa3": "Add Chlamydia fluorescent antibody",
+    "dfa4": "Incubate 30 min",
+    "dfa5": "Rinse with F.A. buffer and PBS",
+    "dfa6": "Add mounting medium",
+    "odd1": "Open the agar plate and cut the wells",
+    "odd2": "Fill the wells (1: goat anti-horse, 2: goat anti-bovine, 3: BSA, 4: HSA, 5: unknown)",
+    "odd3": "Incubate 16 h",
+    "elisa1": "Place the plate and add the antigens",
+    "elisa2": "Add the samples and controls",
+    "elisa3": "Incubate 1 h",
+    "elisa4": "Wash",
+    "elisa5": "Add the secondary antibody (developing buffer)",
+    "elisa6": "Incubate 1 h",
+    "elisa7": "Wash and add the substrate",
+    "elisa8": "Incubate 1 h",
+    "wb1": "Place the nitrocellulose strips in the tray",
+    "wb2": "Add the samples",
+    "wb3": "Incubate 30 min and wash",
+    "wb4": "Add the developing buffer",
+    "wb5": "Incubate 30 min and wash",
+    "wb6": "Add the substrates"
+  },
+  "fields": {
+    "elementary": "Elementary bodies",
+    "chlamydia": "Chlamydia",
+    "od": "Optical Density",
+    "wells": "Wells",
+    "identity": "Relationship",
+    "microscope": "Microscope",
+    "elapsed": "Incubation time"
+  },
+  "columns": {
+    "sample": "Sample",
+    "elementary": "Elementary bodies",
+    "chlamydia": "Chlamydia",
+    "od": "Optical Density",
+    "wells": "Wells",
+    "identity": "Relationship"
+  },
+  "values": {
+    "present": "present",
+    "absent": "absent",
+    "yes": "yes",
+    "no": "no",
+    "complete": "Complete identity",
+    "partial": "Partial identity",
+    "none": "Non-identity"
+  },
+  "actions": {
+    "view": "View under microscope",
+    "measure": "Measure"
+  },
+  "hints": {
+    "procedure": "Follow the steps in order.",
+    "dfa": "Count the fluorescent elementary bodies (green dots) and decide whether Chlamydia is present.",
+    "odd": "Look at the precipitin lines between the wells and choose the relationship of each pair.",
+    "elisa": "Click a well to measure its optical density.",
+    "wb": "Click a strip to see its bands."
+  }
+}

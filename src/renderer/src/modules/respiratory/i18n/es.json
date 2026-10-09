@@ -1,0 +1,80 @@
+{
+  "title": "Mecánica del sistema respiratorio",
+  "experiments": {
+    "rv": "Volúmenes respiratorios",
+    "far": "Factores que afectan la respiración",
+    "vb": "Variaciones en la respiración"
+  },
+  "fields": {
+    "flow": "Flujo (litros)",
+    "radius": "Radio (mm)",
+    "time": "Tiempo (s)",
+    "liters": "Litros (l)",
+    "tidal": "Vol. corriente",
+    "expReserve": "Vol. reserva esp.",
+    "inspReserve": "Vol. reserva insp.",
+    "residual": "Vol. residual",
+    "vitalCapacity": "Capacidad vital",
+    "fev1": "VEF₁",
+    "totalLungCapacity": "Capacidad pulmonar total",
+    "pumpRate": "Frecuencia",
+    "pumpRateLong": "Frecuencia (golpes/min)",
+    "flowLeft": "Flujo izq.",
+    "flowRight": "Flujo der.",
+    "totalFlow": "Flujo total",
+    "pressureLeft": "Presión izq.",
+    "pressureRight": "Presión der.",
+    "pco2": "PCO₂",
+    "maxPco2": "PCO₂ máxima",
+    "minPco2": "PCO₂ mínima",
+    "surfactant": "Surfactante"
+  },
+  "columns": {
+    "radius": "Radio",
+    "flow": "Flujo",
+    "tv": "V.C.",
+    "erv": "V.R.E.",
+    "irv": "V.R.I.",
+    "rv": "V.R.",
+    "vc": "C.V.",
+    "fev1": "VEF₁",
+    "tlc": "C.P.T.",
+    "pumpRate": "Frecuencia",
+    "surfactant": "Surfactante",
+    "pressureL": "Presión izq.",
+    "pressureR": "Presión der.",
+    "flowL": "Flujo izq.",
+    "flowR": "Flujo der.",
+    "totalFlow": "Flujo total",
+    "condition": "Condición",
+    "pco2": "PCO₂",
+    "maxPco2": "PCO₂ máx.",
+    "minPco2": "PCO₂ mín."
+  },
+  "actions": {
+    "start": "Iniciar",
+    "stop": "Detener",
+    "erv": "VRE",
+    "fvc": "CVF",
+    "surfactant": "Surfactante",
+    "flush": "Vaciar",
+    "reset": "Reiniciar",
+    "valveOpen": "Válvula abierta",
+    "valveClosed": "Válvula cerrada",
+    "rapid": "Respiración rápida",
+    "rebreathing": "Reinhalación",
+    "holding": "Contener la respiración",
+    "normal": "Respiración normal"
+  },
+  "conditions": {
+    "normal": "Normal",
+    "rapid": "Respiración rápida",
+    "rebreathing": "Reinhalación",
+    "holding": "Contener la respiración",
+    "resume": "Vuelta a la normalidad"
+  },
+  "hints": {
+    "valve": "Abrir la válvula deja entrar aire en la cavidad pleural y el pulmón colapsa (neumotórax).",
+    "forced": "VRE y CVF empiezan al comienzo de la siguiente respiración."
+  }
+}

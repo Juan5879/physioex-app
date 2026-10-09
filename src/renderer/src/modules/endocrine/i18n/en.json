@@ -1,0 +1,140 @@
+{
+  "title": "Endocrine System Physiology",
+  "experiments": {
+    "m": "Metabolism",
+    "hrt": "Hormone Replacement Therapy",
+    "id1": "Insulin and Diabetes - Part 1",
+    "id2": "Insulin and Diabetes - Part 2"
+  },
+  "rats": {
+    "normal": "Normal",
+    "tx": "Tx (thyroidectomized)",
+    "hypox": "Hypox (hypophysectomized)",
+    "control": "Control",
+    "experimental": "Experimental"
+  },
+  "sets": {
+    "normal": "Normal",
+    "tx": "Tx",
+    "hypox": "Hypox",
+    "control": "Control",
+    "experimental": "Experiment"
+  },
+  "hormones": {
+    "none": "--",
+    "thyroxine": "Thyroxine",
+    "tsh": "TSH",
+    "ptu": "Propylthiouracil"
+  },
+  "fields": {
+    "timer": "Timer (min)",
+    "elapsed": "Elapsed Time",
+    "o2": "ml O₂",
+    "weight": "Weight (gms)",
+    "elapsedDays": "Elapsed Days",
+    "injections": "# of injections",
+    "saline": "saline",
+    "estrogen": "estrogen",
+    "opticalDensity": "Optical Density",
+    "glucose": "Glucose (mg/deciliter)",
+    "glucoseReading": "Glucose reading (mg/deciliter)",
+    "run": "Run"
+  },
+  "actions": {
+    "start": "Start",
+    "inject": "Inject",
+    "reset": "Reset",
+    "resetApparatus": "Reset Apparatus",
+    "weigh": "Weigh",
+    "clear": "Clear",
+    "clean": "Clean",
+    "tare": "Tare",
+    "clampOpen": "Clamp open",
+    "clampClosed": "Clamp closed",
+    "tChamber": "Chamber & manometer connected",
+    "tSyringe": "Manometer & syringe connected",
+    "toChamber": "Place in chamber",
+    "toCage": "Back to cage",
+    "removeUterus": "Remove Uterus",
+    "uterusToScale": "Uterus to scale",
+    "paper": "Weighing paper",
+    "advanceDay": "Advance one day",
+    "cleanSyringe": "Clean syringe",
+    "resetExperiment": "Reset experiment",
+    "mix": "Mix",
+    "centrifuge": "Centrifuge",
+    "removePellet": "Remove Pellet",
+    "incubate": "Incubate",
+    "setUp": "Set Up",
+    "analyze": "Analyze",
+    "graph": "Graph",
+    "graphStandard": "Graph Glucose Standard",
+    "washTube": "Wash tube",
+    "cleanTubes": "Clean tubes",
+    "obtainReagents": "Obtain reagents",
+    "drawBlood": "Draw blood",
+    "record": "Record Data"
+  },
+  "reagents": {
+    "glucose": "Glucose Standard",
+    "water": "Deionized Water",
+    "color": "Enzyme Color Reagent",
+    "barium": "Barium Hydroxide",
+    "heparin": "Heparin",
+    "saline": "Saline",
+    "estrogen": "Estrogen",
+    "insulin": "Insulin",
+    "alloxan": "Alloxan"
+  },
+  "columns": {
+    "weight": "Weight",
+    "elapsed": "Elapsed Time",
+    "o2": "ml Oxygen",
+    "injected": "Injected",
+    "days": "Elapsed Days",
+    "saline": "# of saline injections",
+    "estrogen": "# of estrogen injections",
+    "uterusWeight": "Weight",
+    "tube": "Tube",
+    "opticalDensity": "Optical Density",
+    "glucose": "Glucose (mg/deciliter)",
+    "insulin": "Insulin",
+    "saline2": "Saline",
+    "alloxan": "Alloxan"
+  },
+  "panels": {
+    "chamber": "Chamber",
+    "manometer": "Manometer",
+    "syringe": "Syringe",
+    "scale": "Scale",
+    "spectro": "Spectrophotometer",
+    "washer": "Test Tube Washer",
+    "rack": "Rack",
+    "steps": "Steps"
+  },
+  "yesNo": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "alerts": {
+    "title": "Notice",
+    "switchT": "Time elapsed! Click on the T-connector to connect the manometer and syringe.",
+    "cleanRat": "Clean the rat before injecting another hormone.",
+    "oneInjection": "Administer only one injection per day per rat. Click on the clock to advance one day.",
+    "cleanSyringe": "Clean the syringe before filling it again.",
+    "fillFirst": "Fill the syringe with saline or estrogen before injecting.",
+    "paperFirst": "Place the weighing paper and tare the scale before adding the uterus.",
+    "levels": "The manometer levels are equal: the O₂ injected equals the O₂ consumed.",
+    "pickRat": "Choose a rat to inject.",
+    "pickTube": "Choose a test tube."
+  },
+  "hints": {
+    "metabolism": "1) Weigh the rat in the chamber. 2) Close the clamp and start the timer. 3) When time is up, switch the T-connector and inject O₂ until the manometer levels are equal. 4) Record.",
+    "hrt": "Inject each rat once per day, advance the days, remove the uteri and weigh them (paper → tare → uterus → weigh).",
+    "dropper": "Choose a dropper and click the test tubes to add the drops.",
+    "spectro": "Move the tubes in order into the spectrophotometer, analyze, record and wash them.",
+    "reading": "Move the line (or type the value) to where the optical density meets the standard curve."
+  },
+  "levelEqual": "equal",
+  "levelOff": "unequal"
+}

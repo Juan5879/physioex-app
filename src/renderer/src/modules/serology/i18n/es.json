@@ -1,0 +1,90 @@
+{
+  "title": "Pruebas serológicas",
+  "experiments": {
+    "dfa": "Anticuerpos fluorescentes directos",
+    "odd": "Doble difusión de Ouchterlony",
+    "elisa": "ELISA indirecto",
+    "wb": "Western blot"
+  },
+  "samples": {
+    "A": "Muestra A",
+    "B": "Muestra B",
+    "C": "Muestra C",
+    "+": "Control positivo",
+    "−": "Control negativo",
+    "patientA": "Paciente A",
+    "patientB": "Paciente B",
+    "patientC": "Paciente C",
+    "positive": "Control positivo",
+    "negative": "Control negativo"
+  },
+  "reagents": {
+    "goatAH": "Cabra anti-caballo",
+    "goatAB": "Cabra anti-bovino",
+    "bsa": "BSA",
+    "hsa": "HSA",
+    "unknown": "Desconocido"
+  },
+  "steps": {
+    "dfa1": "Colocar los portaobjetos y las muestras",
+    "dfa2": "Fijar con alcohol etílico 95 %",
+    "dfa3": "Agregar anticuerpo fluorescente anti-clamidia",
+    "dfa4": "Incubar 30 min",
+    "dfa5": "Lavar con tampón y PBS",
+    "dfa6": "Agregar medio de montaje",
+    "odd1": "Abrir la placa de agar y cortar los pocillos",
+    "odd2": "Llenar los pocillos (1: cabra anti-caballo, 2: cabra anti-bovino, 3: BSA, 4: HSA, 5: desconocido)",
+    "odd3": "Incubar 16 h",
+    "elisa1": "Colocar la placa y agregar los antígenos",
+    "elisa2": "Agregar las muestras y los controles",
+    "elisa3": "Incubar 1 h",
+    "elisa4": "Lavar",
+    "elisa5": "Agregar el anticuerpo secundario (tampón de revelado)",
+    "elisa6": "Incubar 1 h",
+    "elisa7": "Lavar y agregar el sustrato",
+    "elisa8": "Incubar 1 h",
+    "wb1": "Colocar las tiras de nitrocelulosa en la bandeja",
+    "wb2": "Agregar las muestras",
+    "wb3": "Incubar 30 min y lavar",
+    "wb4": "Agregar el tampón de revelado",
+    "wb5": "Incubar 30 min y lavar",
+    "wb6": "Agregar los sustratos"
+  },
+  "fields": {
+    "elementary": "Cuerpos elementales",
+    "chlamydia": "Clamidia",
+    "od": "Densidad óptica",
+    "wells": "Pocillos",
+    "identity": "Relación",
+    "microscope": "Microscopio",
+    "elapsed": "Tiempo de incubación"
+  },
+  "columns": {
+    "sample": "Muestra",
+    "elementary": "Cuerpos elementales",
+    "chlamydia": "Clamidia",
+    "od": "Densidad óptica",
+    "wells": "Pocillos",
+    "identity": "Relación"
+  },
+  "values": {
+    "present": "presente",
+    "absent": "ausente",
+    "yes": "sí",
+    "no": "no",
+    "complete": "Identidad completa",
+    "partial": "Identidad parcial",
+    "none": "Sin identidad"
+  },
+  "actions": {
+    "view": "Ver al microscopio",
+    "measure": "Medir"
+  },
+  "hints": {
+    "procedure": "Sigue los pasos en orden.",
+    "dfa": "Cuenta los cuerpos elementales fluorescentes (puntos verdes) y decide si hay clamidia.",
+    "odd": "Observa las líneas de precipitación entre los pocillos y elige la relación de cada par.",
+    "elisa": "Haz clic en un pocillo para medir su densidad óptica.",
+    "wb": "Haz clic en una tira para ver sus bandas."
+  }
+}

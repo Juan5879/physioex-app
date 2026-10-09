@@ -1,0 +1,63 @@
+{
+  "title": "Dinámica cardiovascular",
+  "experiments": {
+    "vr": "Resistencia vascular",
+    "pm": "Mecánica de la bomba"
+  },
+  "fields": {
+    "pressure": "Presión (mm Hg)",
+    "pumpPressure": "Presión de la bomba (mm Hg)",
+    "flow": "Flujo (ml/min)",
+    "radius": "Radio (mm)",
+    "viscosity": "Viscosidad",
+    "length": "Longitud (mm)",
+    "volume": "Volumen (ml)",
+    "maxStrokes": "Golpes máx.",
+    "pumpVolume": "Volumen de la bomba (ml)",
+    "start": "Inicio",
+    "end": "Fin",
+    "stroke": "Golpe",
+    "radiusL": "Radio izq. (mm)",
+    "radiusR": "Radio der. (mm)",
+    "flowTubeRadius": "Radio del tubo de flujo (mm)",
+    "rate": "Frecuencia (golpes/min)",
+    "tubeDiameter": "Diámetro del tubo"
+  },
+  "columns": {
+    "flow": "Flujo",
+    "radius": "Radio",
+    "viscosity": "Viscosidad",
+    "length": "Longitud",
+    "pressure": "Presión",
+    "radiusL": "Rad. izq.",
+    "radiusR": "Rad. der.",
+    "strokeVolume": "Vol. golpe",
+    "rate": "Frecuencia",
+    "pressureL": "Pres. izq.",
+    "pressureDif": "Dif. pres. der."
+  },
+  "actions": {
+    "start": "Iniciar",
+    "refill": "Rellenar",
+    "autoPump": "Bombeo automático",
+    "single": "Un golpe"
+  },
+  "sets": {
+    "Radius": "Radio",
+    "Viscosity": "Viscosidad",
+    "Length": "Longitud",
+    "Pressure": "Presión",
+    "Rad.R.": "Rad. der.",
+    "Str.V.": "Vol. golpe"
+  },
+  "alerts": {
+    "title": "Aviso",
+    "insufficientDrive": "La presión no alcanza para generar flujo. Aumenta la presión.",
+    "lowFlow": "El flujo es demasiado bajo para medirlo. Cambia los parámetros.",
+    "insufficientFluid": "No hay suficiente líquido en el vaso izquierdo para todos los golpes. Rellena o reduce los golpes.",
+    "noSourcePressure": "Sin presión en el vaso izquierdo no se llena la bomba.",
+    "lowInflow": "El flujo hacia la bomba es demasiado bajo.",
+    "lowOutflow": "La presión de la bomba debe superar la del vaso derecho para que haya flujo.",
+    "rateTooHigh": "La frecuencia superaría 999 golpes/min. Cambia los parámetros."
+  }
+}

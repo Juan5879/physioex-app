@@ -1,0 +1,100 @@
+{
+  "title": "Procesos químicos y físicos de la digestión",
+  "experiments": {
+    "am": "Digestión del almidón por la amilasa",
+    "pe": "Digestión de proteínas por la pepsina",
+    "li": "Digestión de grasas por la lipasa"
+  },
+  "reagents": {
+    "amylase": "Amilasa",
+    "starch": "Almidón",
+    "maltose": "Maltosa",
+    "ph2": "Tampón pH 2.0",
+    "ph7": "Tampón pH 7.0",
+    "ph9": "Tampón pH 9.0",
+    "water": "Agua desionizada",
+    "glucose": "Glucosa",
+    "cellulose": "Celulosa",
+    "peptidase": "Peptidasa",
+    "bacteria": "Bacterias",
+    "pepsin": "Pepsina",
+    "bapna": "BAPNA",
+    "lipase": "Lipasa",
+    "oil": "Aceite vegetal",
+    "bile": "Sales biliares",
+    "iki": "Lugol (IKI)",
+    "benedict": "Reactivo de Benedict"
+  },
+  "short": {
+    "amylase": "Amilasa",
+    "starch": "Almidón",
+    "maltose": "Maltosa",
+    "ph2": "pH 2.0",
+    "ph7": "pH 7.0",
+    "ph9": "pH 9.0",
+    "water": "Agua",
+    "glucose": "Glucosa",
+    "cellulose": "Celulosa",
+    "peptidase": "Peptidasa",
+    "bacteria": "Bacterias",
+    "pepsin": "Pepsina",
+    "bapna": "BAPNA",
+    "lipase": "Lipasa",
+    "oil": "Aceite",
+    "bile": "Sales biliares"
+  },
+  "fields": {
+    "temperature": "Temperatura (°C)",
+    "timer": "Temporizador (min)",
+    "elapsed": "Tiempo transcurrido",
+    "od": "Densidad óptica",
+    "ph": "pH"
+  },
+  "actions": {
+    "incubate": "Incubar",
+    "stop": "Detener",
+    "boil": "Hervir",
+    "freeze": "Congelar",
+    "lower": "Bajar",
+    "pour": "Verter muestra",
+    "analyze": "Analizar",
+    "measurePh": "Medir pH",
+    "dispose": "Desechar tubos",
+    "addTube": "Colocar tubo"
+  },
+  "columns": {
+    "tube": "Tubo",
+    "reagent": "Reactivo {{n}}",
+    "boiled": "Hervido",
+    "time": "Tiempo",
+    "temp": "Temp.",
+    "iki": "IKI",
+    "benedict": "Benedict",
+    "od": "Dens. óptica",
+    "ph": "pH"
+  },
+  "alerts": {
+    "title": "Aviso",
+    "full": "El tubo ya tiene el máximo de reactivos.",
+    "duplicate": "El tubo ya contiene {{name}}.",
+    "bufferPresent": "Ya se agregó un tampón a este tubo.",
+    "typePresent": "Ya hay un reactivo de ese tipo en el tubo.",
+    "bacteriaAlt": "Las bacterias reemplazan a la enzima y el tubo ya contiene bacterias.",
+    "enzymeAlt": "Las bacterias reemplazan a la enzima y el tubo ya contiene una enzima.",
+    "notReady": "Estos tubos no tienen la cantidad correcta de reactivos: {{tubes}}",
+    "noTubes": "Coloca al menos un tubo.",
+    "lowerFirst": "Primero llena un tubo con la cantidad correcta de reactivos y bájalo a la unidad de incubación.",
+    "benedictFirst": "Antes de hervir, agrega reactivo de Benedict a los tubos: {{tubes}}",
+    "pourFirst": "Primero vierte parte del contenido en un tubo de la gradilla de pruebas.",
+    "disposeSure": "Se borrarán los datos de esta corrida sin registrar. ¿Seguro que quieres continuar?"
+  },
+  "hints": {
+    "dropper": "Elige un frasco y haz clic en los tubos para agregar el reactivo.",
+    "tests": "Después de incubar, haz las pruebas de cada tubo y registra los datos."
+  },
+  "phase": {
+    "setup": "Preparación",
+    "incubating": "Incubando",
+    "testing": "Pruebas"
+  }
+}

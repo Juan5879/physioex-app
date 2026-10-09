@@ -10,19 +10,26 @@ interface ExperimentToolsProps<Row> {
   experiment: string
   columns: DataColumn<Row>[]
   rows: Row[]
-  plotDefaults: { x: string; y: string }
-  /** versión imprimible de la(s) gráfica(s) */
-  printableGraph: ReactNode
+  /** ejes iniciales de "Graficar datos"; sin esto no se ofrece la herramienta */
+  plotDefaults?: { x: string; y: string }
+  /** versión imprimible de la(s) gráfica(s); sin esto no se ofrece "Imprimir gráfica" */
+  printableGraph?: ReactNode
+  /** hoja de datos a la medida (por defecto, una tabla con las columnas) */
+  printableData?: ReactNode
 }
 
-/** Menú "Herramientas": Graficar datos, Imprimir datos, Imprimir gráfica */
+/**
+ * Menú "Herramientas": Graficar datos, Imprimir datos, Imprimir gráfica.
+ * Cada laboratorio ofrece sólo las herramientas que tenía en el original.
+ */
 export function ExperimentTools<Row>({
   lab,
   experiment,
   columns,
   rows,
   plotDefaults,
-  printableGraph
+  printableGraph,
+  printableData
 }: ExperimentToolsProps<Row>): ReactNode {
   const { t } = useTranslation()
   const [open, setOpen] = useState<'plot' | 'printData' | 'printGraph' | null>(null)
@@ -30,17 +37,21 @@ export function ExperimentTools<Row>({
 
   return (
     <div className="flex items-center gap-2">
-      <Button variant="ghost" onClick={() => setOpen('plot')}>
-        📈 {t('common.plotData')}
-      </Button>
+      {plotDefaults && (
+        <Button variant="ghost" onClick={() => setOpen('plot')}>
+          📈 {t('common.plotData')}
+        </Button>
+      )}
       <Button variant="ghost" onClick={() => setOpen('printData')} disabled={rows.length === 0}>
         🖨️ {t('common.printData')}
       </Button>
-      <Button variant="ghost" onClick={() => setOpen('printGraph')}>
-        🖨️ {t('common.printGraph')}
-      </Button>
+      {printableGraph && (
+        <Button variant="ghost" onClick={() => setOpen('printGraph')}>
+          🖨️ {t('common.printGraph')}
+        </Button>
+      )}
 
-      {open === 'plot' && (
+      {open === 'plot' && plotDefaults && (
         <PlotData
           title={experiment}
           columns={columns}
@@ -52,10 +63,12 @@ export function ExperimentTools<Row>({
       )}
       {open === 'printData' && (
         <PrintReport lab={lab} experiment={experiment} onDone={close}>
-          <PrintTable
-            headers={columns.map((c) => c.header)}
-            rows={rows.map((r) => columns.map((c) => c.format(r)))}
-          />
+          {printableData ?? (
+            <PrintTable
+              headers={columns.map((c) => c.header)}
+              rows={rows.map((r) => columns.map((c) => c.format(r)))}
+            />
+          )}
         </PrintReport>
       )}
       {open === 'printGraph' && (

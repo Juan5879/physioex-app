@@ -45,7 +45,8 @@
     "putWeight": "Cuelga una pesa del músculo antes de estimular.",
     "dragWeight": "Arrastra una pesa al tendón inferior para colgarla; arrástrala de vuelta para quitarla.",
     "measure": "Activa la línea de medición y muévela con las flechas para leer la fuerza en un instante.",
-    "holdToRepeat": "Mantén presionado para cambiar rápido"
+    "holdToRepeat": "Mantén presionado para cambiar rápido",
+    "apparatus": "Preparación de músculo en el soporte"
   },
   "lengthTension": "Longitud (mm)",
   "atp": "ATP"

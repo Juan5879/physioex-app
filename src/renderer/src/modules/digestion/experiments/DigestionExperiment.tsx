@@ -5,7 +5,7 @@ import { DropperBottle, TestTube } from '@/shared/components/LabGlass'
 import { PrintRuns, RunTable } from '@/shared/components/RunTable'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Modal, Notice, Panel, Readout } from '@/shared/components/ui'
+import { Button, Hint, Light, Modal, Notice, Panel, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import {
@@ -199,20 +199,21 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
 
   const tubeColor = (i: number): string => {
     const tb = tubes[i]
-    if (!tb) return '#93c5fd'
+    if (!tb) return 'var(--scale-4)'
     const x = tests[i]
     if (experiment === 'am' && x.benedict !== undefined) return BENEDICT_COLORS[colorLevel(tb.concProduct)]
     if (experiment === 'am' && x.benedictDispensed) return '#0000ff'
     if (experiment === 'pe' && phase === 'testing') return BAPNA_COLORS[colorLevel(tb.concProduct)]
     if (experiment === 'li' && tb.reagents.some((r) => r.startsWith('ph')))
       return phColor(phase === 'testing' ? finalPh(tb) : tb.pH)
-    return '#93c5fd'
+    return 'var(--scale-4)'
   }
 
   const busy = phase === 'incubating' || treating !== null
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-3 p-3">
+    <>
+      <div className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -223,21 +224,21 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-3">
-        <p className="text-xs text-bench-300">{phase === 'testing' ? t('hints.tests') : t('hints.dropper')}</p>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(88px,1fr))] gap-2">
+      <Panel title={t('panels.bench')}>
+        <Hint>{phase === 'testing' ? t('hints.tests') : t('hints.dropper')}</Hint>
+        <div className="px-reagents px-reagents--shelf">
           {reagents.map((r) => (
             <DropperBottle
               key={r}
               label={t(`reagents.${r}`)}
-              color={r.startsWith('ph') ? phColor(Number(r.slice(2))) : r === 'oil' ? '#b8960a' : '#93c5fd'}
+              color={r.startsWith('ph') ? phColor(Number(r.slice(2))) : r === 'oil' ? '#b8960a' : 'var(--scale-3)'}
               selected={dropper === r}
               disabled={phase !== 'setup'}
               onClick={() => setDropper(dropper === r ? null : r)}
             />
           ))}
         </div>
-        <div className="flex items-end justify-center gap-2 rounded-lg bg-bench-900 p-2">
+        <div className="px-well flex items-end justify-center gap-2 p-3">
           {tubes.map((tb, i) => (
             <div key={i} className="flex flex-col items-center gap-1">
               <TestTube
@@ -250,17 +251,18 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
                 onClick={() => clickTube(i)}
                 title={tb ? tb.reagents.map((r) => t(`short.${r}`)).join(', ') : t('actions.addTube')}
               />
-              {tb && frozen[i] && <span className="text-xs text-sky-300">❄</span>}
-              {tb && tb.boiled && <span className="text-xs text-orange-300">♨</span>}
+              {tb && frozen[i] && <span className="text-xs text-[color:var(--chart-3)]">❄</span>}
+              {tb && tb.boiled && <span className="text-xs text-[color:var(--chart-4)]">♨</span>}
               {phase === 'setup' && tb && (
-                <button
-                  type="button"
+                <Button
+                  size="sm"
+                  className="!h-6 !px-1.5 !text-[11px]"
+                  aria-pressed={lowered[i]}
                   onClick={() => setLowered((l) => l.map((v, j) => (j === i ? !v : v)))}
                   disabled={busy}
-                  className={`rounded px-1.5 text-xs ${lowered[i] ? 'bg-sky-600 text-white' : 'bg-bench-700 text-bench-100'}`}
                 >
                   {t('actions.lower')}
-                </button>
+                </Button>
               )}
             </div>
           ))}
@@ -268,47 +270,48 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
         {phase === 'testing' && renderTests()}
       </Panel>
 
-      <Panel className="flex flex-col gap-3">
+      <Panel
+        title={t('panels.incubator')}
+        actions={<Light on={phase === 'incubating'} label={phase === 'incubating' ? tc('common.inProgress') : tc('common.stopped')} />}
+      >
         <Stepper
+          block
           label={t('fields.temperature')}
           display={String(temp)}
           disabled={phase !== 'setup'}
           edit={{ ...TEMPERATURE[experiment], value: temp, onChange: setTemp }}
         />
         <Stepper
+          block
           label={t('fields.timer')}
           display={String(phase === 'incubating' ? time - elapsed : time)}
           disabled={phase !== 'setup'}
           edit={{ ...TIMER, value: time, onChange: setTime }}
         />
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.elapsed')}</span>
-          <Readout value={String(elapsed)} />
-        </div>
+        <ReadoutField inline label={t('fields.elapsed')} value={String(elapsed)} />
+        <Button
+          variant="primary"
+          block
+          icon={phase === 'incubating' ? undefined : 'play'}
+          onClick={incubate}
+          disabled={treating !== null || phase === 'testing'}
+        >
+          {phase === 'incubating' ? t('actions.stop') : t('actions.incubate')}
+        </Button>
         <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'incubating'} />
-            <Button variant="primary" onClick={incubate} disabled={treating !== null || phase === 'testing'} className="flex-1">
-              {phase === 'incubating' ? t('actions.stop') : t('actions.incubate')}
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Light on={treating === 'boil'} />
-            <Button
-              onClick={() => (phase === 'testing' && experiment === 'am' ? boilBenedict() : treat('boil'))}
-              disabled={busy || (phase === 'testing' && experiment !== 'am')}
-              className="flex-1"
-            >
-              {t('actions.boil')}
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Light on={treating === 'freeze'} />
-            <Button onClick={() => treat('freeze')} disabled={busy || phase !== 'setup'} className="flex-1">
-              {t('actions.freeze')}
-            </Button>
-          </div>
           <Button
+            aria-pressed={treating === 'boil'}
+            onClick={() => (phase === 'testing' && experiment === 'am' ? boilBenedict() : treat('boil'))}
+            disabled={busy || (phase === 'testing' && experiment !== 'am')}
+          >
+            {t('actions.boil')}
+          </Button>
+          <Button aria-pressed={treating === 'freeze'} onClick={() => treat('freeze')} disabled={busy || phase !== 'setup'}>
+            {t('actions.freeze')}
+          </Button>
+          <Button
+            variant="danger"
+            className="col-span-2"
             onClick={() => (phase === 'testing' && allTested && !recorded ? setConfirmDispose(true) : dispose())}
             disabled={busy || placed.length === 0}
           >
@@ -317,21 +320,21 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
         </div>
       </Panel>
 
-      <Panel className="col-span-2">
-        <RunTable
+      </div>
+
+      <RunTable
           headers={headers}
           runs={runs.runs}
           canRecord={allTested && !recorded}
           onRecord={record}
           onDelete={runs.deleteRun}
         />
-      </Panel>
 
       {alert && <Notice title={t('alerts.title')} lines={[alert]} onClose={() => setAlert(null)} />}
       {confirmDispose && (
         <Modal title={t('actions.dispose')} onClose={() => setConfirmDispose(false)}>
-          <p className="mb-5 text-bench-100">{t('alerts.disposeSure')}</p>
-          <div className="flex justify-end gap-2">
+          <p className="px-modal__text">{t('alerts.disposeSure')}</p>
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={() => setConfirmDispose(false)}>
               {tc('common.cancel')}
             </Button>
@@ -347,45 +350,47 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
           </div>
         </Modal>
       )}
-    </div>
+    </>
   )
 
   /** Pruebas de cada tubo incubado */
   function renderTests(): ReactNode {
     return (
-      <div className="overflow-x-auto rounded-lg border border-bench-600">
-        <table className="w-full text-sm">
+      <div className="px-tablewrap overflow-x-auto">
+        <table className="px-table">
           <tbody>
             {incubated.current.tubes.map((i) => {
               const tb = tubes[i] as Tube
               const x = tests[i]
               return (
-                <tr key={i} className="border-t border-bench-700 first:border-t-0">
-                  <td className="px-2 py-1 font-mono">#{i + 1}</td>
+                <tr key={i}>
+                  <td className="font-mono">#{i + 1}</td>
                   {experiment === 'am' && (
                     <>
-                      <td className="px-1 py-1">
-                        <Button onClick={() => patchTest(i, { poured: true })} disabled={x.poured}>
+                      <td>
+                        <Button size="sm" onClick={() => patchTest(i, { poured: true })} disabled={x.poured}>
                           {t('actions.pour')}
                         </Button>
                       </td>
-                      <td className="px-1 py-1">
+                      <td>
                         <Button
+                          size="sm"
                           onClick={() => (x.poured ? patchTest(i, { iki: ikiResult(tb) }) : setAlert(t('alerts.pourFirst')))}
                           disabled={x.iki !== undefined}
                         >
                           {t('reagents.iki')}
                         </Button>
                       </td>
-                      <td className="px-1 py-1">
+                      <td>
                         <span
-                          className="inline-block size-5 rounded-full border border-black align-middle"
+                          className="inline-block size-5 rounded-full border border-[color:var(--border-strong)] align-middle"
                           style={{ background: x.iki !== undefined ? IKI_COLORS[colorLevel(tb.concSubstrate)] : 'transparent' }}
                         />
                         <span className="ml-1 font-mono">{x.iki ?? ''}</span>
                       </td>
-                      <td className="px-1 py-1">
+                      <td>
                         <Button
+                          size="sm"
                           onClick={() =>
                             x.poured ? patchTest(i, { benedictDispensed: true }) : setAlert(t('alerts.pourFirst'))
                           }
@@ -394,27 +399,27 @@ export function DigestionExperiment({ experiment }: { experiment: DigestExperime
                           {t('reagents.benedict')}
                         </Button>
                       </td>
-                      <td className="px-1 py-1 font-mono">{x.benedict ?? ''}</td>
+                      <td className="font-mono">{x.benedict ?? ''}</td>
                     </>
                   )}
                   {experiment === 'pe' && (
                     <>
-                      <td className="px-1 py-1">
-                        <Button onClick={() => patchTest(i, { od: Number(fixed(opticalDensity(tb))) })} disabled={x.od !== undefined}>
+                      <td>
+                        <Button size="sm" onClick={() => patchTest(i, { od: Number(fixed(opticalDensity(tb))) })} disabled={x.od !== undefined}>
                           {t('actions.analyze')}
                         </Button>
                       </td>
-                      <td className="px-1 py-1 font-mono">{x.od !== undefined ? `${t('fields.od')}: ${fixed(x.od)}` : ''}</td>
+                      <td className="font-mono">{x.od !== undefined ? `${t('fields.od')}: ${fixed(x.od)}` : ''}</td>
                     </>
                   )}
                   {experiment === 'li' && (
                     <>
-                      <td className="px-1 py-1">
-                        <Button onClick={() => patchTest(i, { ph: Number(fixed(finalPh(tb))) })} disabled={x.ph !== undefined}>
+                      <td>
+                        <Button size="sm" onClick={() => patchTest(i, { ph: Number(fixed(finalPh(tb))) })} disabled={x.ph !== undefined}>
                           {t('actions.measurePh')}
                         </Button>
                       </td>
-                      <td className="px-1 py-1 font-mono">{x.ph !== undefined ? `pH ${fixed(x.ph)}` : ''}</td>
+                      <td className="font-mono">{x.ph !== undefined ? `pH ${fixed(x.ph)}` : ''}</td>
                     </>
                   )}
                 </tr>

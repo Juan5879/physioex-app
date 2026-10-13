@@ -1,3 +1,4 @@
+import { ResultsTable } from '@/shared/components/DataTable'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
@@ -5,7 +6,7 @@ import type { DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { PrintTable } from '@/shared/components/PrintReport'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Panel } from '@/shared/components/ui'
+import { Button, Hint, Light, Panel } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { DropperBottle, TestTube } from '../components/Figures'
 import { ProcessButtons, SpectroGraph, SpectroReadouts, useTubeProcess } from '../components/Lab'
@@ -100,7 +101,8 @@ export function InsulinStandard(): ReactNode {
   const columns = tubeColumns(t)
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -113,8 +115,8 @@ export function InsulinStandard(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-3">
-        <p className="text-xs text-bench-300">{t('hints.dropper')}</p>
+      <Panel title={t('panels.tubes')}>
+        <Hint>{t('hints.dropper')}</Hint>
         <div className="grid grid-cols-3 gap-2">
           {(['glucose', 'water', 'color'] as const).map((r) => (
             <DropperBottle
@@ -127,7 +129,7 @@ export function InsulinStandard(): ReactNode {
             />
           ))}
         </div>
-        <div className="flex items-end justify-center gap-1 rounded-lg bg-bench-900 p-2">
+        <div className="px-well flex items-end justify-center gap-1 p-3">
           {Array.from({ length: N }, (_, i) => (
             <TestTube
               key={i}
@@ -144,18 +146,15 @@ export function InsulinStandard(): ReactNode {
           ))}
         </div>
         <ProcessButtons process={process} canMix={glucoseDone && waterDone} canIncubate={colorDone} />
-        <Button onClick={cleanTubes} disabled={ps.running !== null}>
+        <Button size="sm" onClick={cleanTubes} disabled={ps.running !== null}>
           {t('actions.cleanTubes')}
         </Button>
       </Panel>
 
-      <Panel className="flex flex-col gap-3">
-        <div className="rounded-xl border-4 border-gray-400 bg-gray-300 p-2">
-          <SpectroGraph points={measured} showLine={graphed} />
-        </div>
-        <p className="text-xs text-bench-300">{t('hints.spectro')}</p>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <Light on={setup} />
+      <Panel title={t('panels.spectro')} actions={<Light on={setup} label={setup ? tc('common.ready') : tc('common.stopped')} />}>
+        <SpectroGraph points={measured} showLine={graphed} />
+        <Hint>{t('hints.spectro')}</Hint>
+        <div className="flex flex-wrap items-center gap-2">
           <Button onClick={() => setSetup(true)} disabled={setup || !ps.incubated}>
             {t('actions.setUp')}
           </Button>
@@ -187,33 +186,15 @@ export function InsulinStandard(): ReactNode {
         />
       </Panel>
 
-      <Panel className="col-span-2 flex gap-3">
-        <div className="h-36 flex-1 overflow-y-auto rounded border border-black bg-black">
-          <table className="w-full border-collapse text-sm">
-            <thead className="sticky top-0 bg-bench-600">
-              <tr>
-                {columns.map((c) => (
-                  <th key={c.key} className="px-2 py-1 text-center font-semibold">
-                    {c.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="font-mono text-lcd">
-              {table.rows.map((r) => (
-                <tr key={r.tube} className="border-t border-bench-700">
-                  {columns.map((c) => (
-                    <td key={c.key} className="px-2 py-1 text-center">
-                      {c.format(r)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex w-36 flex-col gap-1.5">
+      </div>
+
+      <Panel
+        title={tc('common.results')}
+        actions={
+        <div className="px-panel__actions">
           <Button
+            size="sm"
+            icon="plus"
             onClick={() => {
               if (current === null) return
               table.setRow({ tube: current + 1, opticalDensity: STANDARD.opticalDensity[current], glucose: STANDARD.glucose[current] })
@@ -223,12 +204,15 @@ export function InsulinStandard(): ReactNode {
           >
             {t('actions.record')}
           </Button>
-          <Button onClick={table.clear} disabled={table.rows.length === 0}>
+          <Button size="sm" variant="danger" icon="trash" onClick={table.clear} disabled={table.rows.length === 0}>
             {tc('common.clearTable')}
           </Button>
         </div>
+        }
+      >
+        <ResultsTable columns={columns} rows={table.rows} selected={null} onSelect={() => undefined} />
       </Panel>
-    </div>
+    </>
   )
 }
 

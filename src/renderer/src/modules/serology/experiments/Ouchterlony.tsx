@@ -4,8 +4,8 @@ import type { TFunction } from 'i18next'
 import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Panel } from '@/shared/components/ui'
-import { ProcedureList, useProcedure, type ProcedureStep } from '../components/Procedure'
+import { Button, Hint, Panel } from '@/shared/components/ui'
+import { ProcedurePanel, useProcedure, type ProcedureStep } from '../components/Procedure'
 import { ODD_HOURS, ODD_PAIRS, ODD_REAGENTS, type OddIdentity } from '../model/serology'
 import { useOddStore, type OddRow } from '../store'
 
@@ -30,6 +30,7 @@ export function oddColumns(t: TFunction): DataColumn<OddRow>[] {
 /** Experimento 2: identidad de antígenos por doble difusión en agar */
 export function Ouchterlony(): ReactNode {
   const { t } = useTranslation('serology')
+  const tc = useTranslation().t
   const s = useOddStore()
   const proc = useProcedure(STEPS)
   const [choices, setChoices] = useState<Record<string, OddIdentity>>({})
@@ -38,23 +39,26 @@ export function Ouchterlony(): ReactNode {
   const columns = oddColumns(t)
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.odd')} columns={columns} rows={s.rows} />
       </ToolbarPortal>
-      <Panel className="flex flex-col gap-3">
-        <ProcedureList steps={STEPS} proc={proc} unit="h" />
-        <div className="grid grid-cols-5 gap-1 text-center text-xs">
-          {ODD_REAGENTS.map((r, i) => (
-            <span key={r} className="rounded bg-bench-900 p-1">
-              {i + 1}. {t(`reagents.${r}`)}
-            </span>
-          ))}
+      <ProcedurePanel steps={STEPS} proc={proc} unit="h">
+        <div className="px-section">
+          <span className="px-panel__title">{t('panels.wells')}</span>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-2">
+            {ODD_REAGENTS.map((r, i) => (
+              <span key={r} className="px-chip !h-auto !justify-start !rounded-[var(--radius-md)] !py-1 !font-sans">
+                <b className="font-mono">{i + 1}</b> {t(`reagents.${r}`)}
+              </span>
+            ))}
+          </div>
         </div>
-      </Panel>
-      <Panel className="flex flex-col items-center gap-3">
+      </ProcedurePanel>
+      <Panel title={t('panels.agar')} bodyClassName="justify-items-center">
         <svg viewBox="0 0 100 100" className="h-64 w-64">
-          <circle cx={50} cy={50} r={46} fill="#e0f2fe" fillOpacity={0.25} stroke="#cbd5e1" />
+          <circle className="il-glass" cx={50} cy={50} r={46} strokeWidth={1} />
           {/* líneas de precipitación entre los pares que reaccionan */}
           {proc.finished &&
             ODD_PAIRS.map((p) => {
@@ -70,7 +74,7 @@ export function Ouchterlony(): ReactNode {
               const ux = (b.x - a.x) / len
               const uy = (b.y - a.y) / len
               return (
-                <g key={p.wells.join('-')} stroke="#f8fafc" strokeWidth={1.4} strokeLinecap="round">
+                <g key={p.wells.join('-')} stroke="var(--ink)" strokeWidth={1.4} strokeLinecap="round">
                   <line x1={mx - dx * k} y1={my - dy * k} x2={mx + dx * k} y2={my + dy * k} />
                   {p.identity === 'partial' && (
                     <line x1={mx + dx * k} y1={my + dy * k} x2={mx + dx * k + (dx / len) * 3 + ux * 2} y2={my + dy * k + (dy / len) * 3 + uy * 2} />
@@ -80,27 +84,32 @@ export function Ouchterlony(): ReactNode {
             })}
           {WELLS.map((w, i) => (
             <g key={i}>
-              <circle cx={w.x} cy={w.y} r={6} fill={filled ? '#bfdbfe' : proc.done >= 1 ? '#0f172a' : 'transparent'} stroke="#64748b" />
-              <text x={w.x} y={w.y + 2.5} textAnchor="middle" fontSize={6} fill="#0f172a" fontWeight={700}>
+              <circle
+                cx={w.x}
+                cy={w.y}
+                r={6}
+                style={{ fill: filled ? 'var(--scale-3)' : proc.done >= 1 ? 'var(--surface-sunken)' : 'transparent', stroke: 'var(--border-strong)' }}
+              />
+              <text x={w.x} y={w.y + 2.2} textAnchor="middle" fontSize={6} style={{ fill: 'var(--ink)' }} fontWeight={600}>
                 {i + 1}
               </text>
             </g>
           ))}
         </svg>
-        <p className="text-center text-xs text-bench-300">{t('hints.odd')}</p>
-        <div className="flex w-full flex-col gap-1">
+        <Hint>{t('hints.odd')}</Hint>
+        <div className="grid w-full gap-2">
           {ODD_PAIRS.map((p) => {
             const key = p.wells.join('-')
             return (
-              <div key={key} className="flex items-center gap-2 text-sm">
-                <span className="w-20 font-mono">
+              <div key={key} className="flex items-center gap-2">
+                <span className="w-16 font-mono text-[13px]">
                   {p.wells[0]} – {p.wells[1]}
                 </span>
                 <select
                   value={choices[key] ?? ''}
                   disabled={!proc.finished || recorded.includes(key)}
                   onChange={(e) => setChoices((c) => ({ ...c, [key]: e.target.value as OddIdentity }))}
-                  className="flex-1 rounded bg-bench-100 px-2 py-1 text-bench-900"
+                  className="px-input flex-1"
                 >
                   <option value="">—</option>
                   {(['complete', 'partial', 'none'] as const).map((o) => (
@@ -110,19 +119,19 @@ export function Ouchterlony(): ReactNode {
                   ))}
                 </select>
                 <Button
+                  size="sm"
+                  icon="check"
+                  aria-label={tc('common.recordData')}
                   onClick={() => choices[key] && s.addRow({ wells: p.wells, identity: choices[key] })}
                   disabled={!proc.finished || !choices[key] || recorded.includes(key)}
-                >
-                  ✓
-                </Button>
+                />
               </div>
             )
           })}
         </div>
       </Panel>
-      <Panel className="col-span-2">
-        <DataTable columns={columns} rows={s.rows} selected={s.selected} onSelect={s.select} onRecord={() => undefined} onDelete={s.deleteRow} onClear={s.clearRows} canRecord={false} />
-      </Panel>
     </div>
+      <DataTable columns={columns} rows={s.rows} selected={s.selected} onSelect={s.select} onRecord={() => undefined} onDelete={s.deleteRow} onClear={s.clearRows} canRecord={false} />
+    </>
   )
 }

@@ -4,7 +4,7 @@ import { DataTable } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Oscilloscope } from '@/shared/components/Oscilloscope'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Light } from '@/shared/components/ui'
+import { Button } from '@/shared/components/ui'
 import { fixed, roundTo } from '@/shared/lib/format'
 import { useSweep } from '@/shared/lib/useSweep'
 import { Apparatus } from '../components/Apparatus'
@@ -99,6 +99,8 @@ export function Isometric(): ReactNode {
   return (
     <>
       <ExperimentLayout
+        running={running}
+        traceCount={s.traces.length}
         tools={
           <ExperimentTools
             lab={t('title')}
@@ -112,6 +114,7 @@ export function Isometric(): ReactNode {
         apparatus={<Apparatus length={length} stimulusId={stimulusId} />}
         apparatusControls={
           <Stepper
+            block
             label={t('fields.muscleLength')}
             display={String(length)}
             edit={{ value: length, min: L_MIN, max: L_MAX, step: 1, onChange: (v) => s.setParams({ length: v }) }}
@@ -133,32 +136,28 @@ export function Isometric(): ReactNode {
           </>
         }
         stimulator={
-          <div className="flex flex-wrap items-start justify-around gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Light on={running} />
-                <Button variant="primary" onClick={stimulate} disabled={running}>
-                  {tc('common.stimulate')}
-                </Button>
-              </div>
-              <Stepper
-                label={t('fields.voltage')}
-                display={fixed(voltage, 1)}
-                edit={{ value: voltage, min: 0, max: V_DISPLAY_MAX, step: 0.1, onChange: (v) => s.setParams({ voltage: v }) }}
-                disabled={running}
-                canDecrement={voltage > 0}
-                canIncrement={voltage < V_DISPLAY_MAX}
-                onStep={(d) =>
-                  s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
-                }
-              />
-            </div>
+          <>
+            <Stepper
+              block
+              label={t('fields.voltage')}
+              display={fixed(voltage, 1)}
+              edit={{ value: voltage, min: 0, max: V_DISPLAY_MAX, step: 0.1, onChange: (v) => s.setParams({ voltage: v }) }}
+              disabled={running}
+              canDecrement={voltage > 0}
+              canIncrement={voltage < V_DISPLAY_MAX}
+              onStep={(d) =>
+                s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
+              }
+            />
+            <Button variant="primary" block icon="play" onClick={stimulate} disabled={running}>
+              {tc('common.stimulate')}
+            </Button>
             <ForceReadouts
               passive={fixed(passive)}
               active={last ? fixed(last.active) : ''}
               total={last ? fixed(last.total) : ''}
             />
-          </div>
+          </>
         }
         table={
           <DataTable

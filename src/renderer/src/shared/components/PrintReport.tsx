@@ -68,12 +68,12 @@ export function PrintReport({ lab, experiment, children, onDone }: PrintReportPr
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && valid && start('print')}
-            className="w-full rounded border border-bench-300 bg-white px-3 py-2 text-black"
+            className="px-input"
           />
-          <p className={`mt-1 text-xs ${valid || !name ? 'text-bench-300' : 'text-rose-400'}`}>
+          <p className={`mt-1 text-xs ${valid || !name ? 'text-[color:var(--ink-subtle)]' : 'text-[color:var(--danger)]'}`}>
             {t('common.nameHint')}
           </p>
-          <div className="mt-5 flex justify-end gap-2">
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={onDone}>
               {t('common.cancel')}
             </Button>

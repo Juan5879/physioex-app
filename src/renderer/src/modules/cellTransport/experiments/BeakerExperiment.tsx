@@ -4,7 +4,8 @@ import type { TFunction } from 'i18next'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { Button, Field, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { splitUnit } from '@/shared/lib/format'
 import {
   BeakerPair,
   BUILT_MEMBRANE_COLOR,
@@ -276,10 +277,10 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
   const side = (s: Side): ReactNode => {
     const b = beakers[s]
     return (
-      <Panel className="flex flex-col gap-3">
-        <h3 className="text-center text-sm font-semibold text-bench-100">
-          {t(s === 'L' ? 'beaker.left' : 'beaker.right')}
-        </h3>
+      <Panel
+        title={t(s === 'L' ? 'beaker.left' : 'beaker.right')}
+        actions={<Light on={b.full || dispensing === s} label={t(b.full ? 'beaker.hasSolution' : 'beaker.isEmpty')} />}
+      >
         <ConcentrationTable solutes={solutes} values={b.full ? b.conc : null} unit={t('units.mM')} />
         <BeakerControls
           solutes={solutes}
@@ -289,7 +290,6 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
           full={b.full}
           busy={busy}
           canFlush={b.full && status !== 'running'}
-          dispensing={dispensing === s}
           onChange={(sol, v) => setSetting(s, sol, v)}
           onDispense={() => dispense(s)}
           onFlush={() => flush(s)}
@@ -300,7 +300,7 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_minmax(0,1fr)_190px] gap-3 p-3">
+    <>
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -311,42 +311,87 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
         />
       </ToolbarPortal>
 
-      {side('L')}
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)] items-start gap-4">
+        {side('L')}
 
-      <div className="flex min-w-0 flex-col gap-3">
-        {experiment === 'os' && (
-          <div className="flex justify-between gap-3">
-            {(['presL', 'presR'] as const).map((k) => (
-              <div key={k} className="flex items-center gap-2">
-                <Readout value={showRates ? String(k === 'presL' ? run.presL : run.presR) : ''} />
-                <span className="text-sm font-semibold whitespace-nowrap">{t('fields.pressure')}</span>
-              </div>
-            ))}
+        <Panel title={t('panels.apparatus')}>
+          {experiment === 'os' && (
+            <div className="grid grid-cols-2 gap-3">
+              {(['presL', 'presR'] as const).map((k) => (
+                <Field
+                  key={k}
+                  label={`${splitUnit(t('fields.pressure'))?.text ?? ''} · ${t(k === 'presL' ? 'beaker.leftShort' : 'beaker.rightShort')}`}
+                >
+                  <Readout value={showRates ? String(k === 'presL' ? run.presL : run.presR) : ''} unit="mm Hg" />
+                </Field>
+              ))}
+            </div>
+          )}
+          <div className="px-well p-4">
+            <BeakerPair
+              left={{ level: beakers.L.full ? 1 : 0, color: liquidColor(beakers.L.conc) }}
+              right={{ level: beakers.R.full ? 1 : 0, color: liquidColor(beakers.R.conc) }}
+              membraneColor={membraneColor}
+              running={status === 'running'}
+              onDropMembrane={
+                usesBuilder || busy
+                  ? undefined
+                  : (data) => {
+                      setMwco(Number(data))
+                      invalidate()
+                    }
+              }
+              onHolderClick={!usesBuilder && !busy && mwco !== null ? () => pickMembrane(mwco) : undefined}
+            />
           </div>
-        )}
-        {experiment === 'at' && (
-          <Panel className="flex flex-wrap items-end justify-center gap-3">
-            <Stepper
-              label={t('fields.atp')}
-              display={fix(atpSetting, 2)}
-              edit={{
-                ...ATP,
-                value: atpSetting,
-                onChange: (v) => {
-                  setAtpSetting(v)
-                  invalidate()
-                }
+          {usesBuilder ? (
+            <MembraneBuilder
+              withPumps={experiment === 'at'}
+              carriers={carriers}
+              pumps={pumps}
+              built={built}
+              disabled={busy}
+              onCarriers={(v) => {
+                setCarriers(v)
+                invalidate()
               }}
-              disabled={atp !== null || busy}
-              canDecrement={atpSetting > ATP.min}
-              canIncrement={atpSetting < ATP.max}
-              onStep={(d) => {
-                setAtpSetting((v) => clampStep(v, d, ATP))
+              onPumps={(v) => {
+                setPumps(v)
+                invalidate()
+              }}
+              onBuild={() => {
+                setBuilt({ carriers, pumps })
+                invalidate()
+              }}
+              onRemove={() => {
+                setBuilt(null)
                 invalidate()
               }}
             />
-            <div className="flex items-center gap-2 pb-0.5">
-              <Light on={dispensing === 'atp'} />
+          ) : (
+            <MembraneRack current={mwco} onPick={pickMembrane} disabled={busy} />
+          )}
+          {experiment === 'at' && (
+            <div className="flex flex-wrap items-end gap-3">
+              <Stepper
+                label={t('fields.atp')}
+                display={fix(atpSetting, 2)}
+                edit={{
+                  ...ATP,
+                  value: atpSetting,
+                  onChange: (v) => {
+                    setAtpSetting(v)
+                    invalidate()
+                  }
+                }}
+                disabled={atp !== null || busy}
+                canDecrement={atpSetting > ATP.min}
+                canIncrement={atpSetting < ATP.max}
+                onStep={(d) => {
+                  setAtpSetting((v) => clampStep(v, d, ATP))
+                  invalidate()
+                }}
+              />
               <Button
                 onClick={() => {
                   setAtp({ dispensed: atpSetting, available: round3(atpSetting) })
@@ -357,38 +402,17 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
               >
                 {t('actions.dispenseAtp')}
               </Button>
+              <Field label={splitUnit(t('fields.availableAtp'))?.text ?? ''} className="ml-auto">
+                <Readout value={atp ? fix(atp.available, 3) : ''} unit="mM" />
+              </Field>
             </div>
-          </Panel>
-        )}
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
-          <BeakerPair
-            left={{ level: beakers.L.full ? 1 : 0, color: liquidColor(beakers.L.conc) }}
-            right={{ level: beakers.R.full ? 1 : 0, color: liquidColor(beakers.R.conc) }}
-            membraneColor={membraneColor}
-            running={status === 'running'}
-            onDropMembrane={
-              usesBuilder || busy
-                ? undefined
-                : (data) => {
-                    setMwco(Number(data))
-                    invalidate()
-                  }
-            }
-            onHolderClick={!usesBuilder && !busy && mwco !== null ? () => pickMembrane(mwco) : undefined}
-          />
-        </div>
-        <Panel className="flex flex-col gap-3">
+          )}
           <SoluteValues
             solutes={solutes}
             header={t(experiment === 'sd' ? 'fields.avgRate' : 'fields.rate')}
             values={rateValues}
+            empty={t('messages.noRates')}
           />
-          {experiment === 'at' && (
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-sm font-semibold text-bench-100">{t('fields.availableAtp')}</span>
-              <Readout value={atp ? fix(atp.available, 3) : ''} />
-            </div>
-          )}
           <TimerPanel
             maxTime={maxTime}
             elapsed={busy && run ? run.realTime : null}
@@ -402,59 +426,27 @@ export function BeakerExperiment({ experiment }: { experiment: ExpId }): ReactNo
             onStart={start}
           />
         </Panel>
+
+        {side('R')}
       </div>
 
-      {side('R')}
-
-      <Panel className="flex flex-col items-center gap-3">
-        {usesBuilder ? (
-          <MembraneBuilder
-            withPumps={experiment === 'at'}
-            carriers={carriers}
-            pumps={pumps}
-            built={built}
-            disabled={busy}
-            onCarriers={(v) => {
-              setCarriers(v)
-              invalidate()
-            }}
-            onPumps={(v) => {
-              setPumps(v)
-              invalidate()
-            }}
-            onBuild={() => {
-              setBuilt({ carriers, pumps })
-              invalidate()
-            }}
-            onRemove={() => {
-              setBuilt(null)
-              invalidate()
-            }}
-          />
-        ) : (
-          <MembraneRack current={mwco} onPick={pickMembrane} disabled={busy} />
-        )}
-      </Panel>
-
-      <Panel className="col-span-4">
-        <RunTable
-          headers={headers}
-          runs={runs}
-          canRecord={recordable !== null && status === 'done'}
-          onRecord={() => {
-            if (!recordable) return
-            addRun(
-              experiment,
-              recordRows(recordable, { L: beakers.L.start, R: beakers.R.start }, { atp: atp?.dispensed ?? 0 })
-            )
-            setRecordable(null)
-          }}
-          onDelete={(n) => deleteRun(experiment, n)}
-        />
-      </Panel>
+      <RunTable
+        headers={headers}
+        runs={runs}
+        canRecord={recordable !== null && status === 'done'}
+        onRecord={() => {
+          if (!recordable) return
+          addRun(
+            experiment,
+            recordRows(recordable, { L: beakers.L.start, R: beakers.R.start }, { atp: atp?.dispensed ?? 0 })
+          )
+          setRecordable(null)
+        }}
+        onDelete={(n) => deleteRun(experiment, n)}
+      />
 
       {notice && <Notice title={notice.title} lines={notice.lines} onClose={() => setNotice(null)} />}
-    </div>
+    </>
   )
 }
 
@@ -483,51 +475,43 @@ function MembraneBuilder({
   const { t } = useTranslation('cellTransport')
   const locked = disabled || built !== null
   return (
-    <div className="flex flex-col items-center gap-3">
-      <h3 className="text-center text-sm font-semibold text-bench-100">{t('panels.builder')}</h3>
-      <svg viewBox="0 0 80 110" className="w-20">
-        <rect x={30} y={5} width={20} height={100} rx={5} fill={built ? '#64748b' : BUILT_MEMBRANE_COLOR} />
-        {Array.from({ length: 6 }, (_, i) => (
-          <g key={i} fill="#334155">
-            <circle cx={i % 2 ? 50 : 30} cy={18 + i * 15} r={4} />
-          </g>
-        ))}
-      </svg>
-      <Stepper
-        label={t('fields.carriers')}
-        display={String(carriers)}
-        edit={{ ...CARRIERS, value: carriers, onChange: onCarriers }}
-        disabled={locked}
-        canDecrement={carriers > CARRIERS.min}
-        canIncrement={carriers < CARRIERS.max}
-        onStep={(d) => onCarriers(clampStep(carriers, d, CARRIERS))}
-      />
-      {withPumps && (
+    <div className="px-section">
+      <span className="px-panel__title">{t('panels.builder')}</span>
+      <div className="flex flex-wrap items-end gap-3">
         <Stepper
-          label={t('fields.pumps')}
-          display={String(pumps)}
-          edit={{ ...CARRIERS, value: pumps, onChange: onPumps }}
+          label={t('fields.carriers')}
+          display={String(carriers)}
+          edit={{ ...CARRIERS, value: carriers, onChange: onCarriers }}
           disabled={locked}
-          canDecrement={pumps > CARRIERS.min}
-          canIncrement={pumps < CARRIERS.max}
-          onStep={(d) => onPumps(clampStep(pumps, d, CARRIERS))}
+          canDecrement={carriers > CARRIERS.min}
+          canIncrement={carriers < CARRIERS.max}
+          onStep={(d) => onCarriers(clampStep(carriers, d, CARRIERS))}
         />
-      )}
-      {built ? (
-        <>
-          <p className="text-center text-xs text-bench-300">
-            {withPumps
-              ? t('messages.builtMembranePumps', built)
-              : t('messages.builtMembrane', built)}
-          </p>
+        {withPumps && (
+          <Stepper
+            label={t('fields.pumps')}
+            display={String(pumps)}
+            edit={{ ...CARRIERS, value: pumps, onChange: onPumps }}
+            disabled={locked}
+            canDecrement={pumps > CARRIERS.min}
+            canIncrement={pumps < CARRIERS.max}
+            onStep={(d) => onPumps(clampStep(pumps, d, CARRIERS))}
+          />
+        )}
+        {built ? (
           <Button onClick={onRemove} disabled={disabled}>
             {t('actions.remove')}
           </Button>
-        </>
-      ) : (
-        <Button variant="primary" onClick={onBuild} disabled={disabled}>
-          {t('actions.build')}
-        </Button>
+        ) : (
+          <Button onClick={onBuild} disabled={disabled}>
+            {t('actions.build')}
+          </Button>
+        )}
+      </div>
+      {built && (
+        <p className="px-hint m-0">
+          {withPumps ? t('messages.builtMembranePumps', built) : t('messages.builtMembrane', built)}
+        </p>
       )}
     </div>
   )

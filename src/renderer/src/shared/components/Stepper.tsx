@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { Readout } from './ui'
+import { useTranslation } from 'react-i18next'
+import { splitUnit } from '@/shared/lib/format'
+import { Icon } from './Icon'
 
 /** Valor editable: lo escrito se ajusta al paso y se limita a [min, max] */
 export interface StepperEdit {
@@ -23,8 +25,12 @@ interface StepperProps {
   canDecrement?: boolean
   canIncrement?: boolean
   disabled?: boolean
-  /** usar flechas ◀ ▶ en lugar de − + */
+  /** usar flechas ◀ ▶ a los lados en lugar de − + */
   arrows?: boolean
+  /** unidad, dentro del visor */
+  unit?: string
+  /** ocupar todo el ancho disponible */
+  block?: boolean
 }
 
 const HOLD_DELAY = 350
@@ -35,15 +41,22 @@ const REPEAT_MS = 50 // 20 por segundo, como el original
  * igual que los botones del SWF que cambiaban el valor en cada frame.
  */
 export function Stepper({
-  label,
+  label: rawLabel,
   display,
   edit,
   onStep,
   canDecrement,
   canIncrement,
   disabled = false,
-  arrows = false
+  arrows = false,
+  unit: rawUnit,
+  block = false
 }: StepperProps): ReactNode {
+  const { t } = useTranslation()
+  // la unidad va dentro del visor, no en el rótulo: «Voltaje (V)» → «Voltaje» + V
+  const split = typeof rawLabel === 'string' ? splitUnit(rawLabel) : null
+  const label = split ? split.text : rawLabel
+  const unit = rawUnit ?? split?.unit
   // con `edit` los botones suman o restan un paso al valor actual
   const latest = useRef(edit)
   latest.current = edit
@@ -55,30 +68,47 @@ export function Stepper({
     })
   const canDec = canDecrement ?? (edit ? edit.value > edit.min : false)
   const canInc = canIncrement ?? (edit ? edit.value < edit.max : false)
+  const empty = !/\d/.test(display)
 
+  const screen = edit ? (
+    <span className="px-readout__wrap">
+      <NumberField display={display} edit={edit} disabled={disabled} />
+      {unit && <span className="u">{unit}</span>}
+    </span>
+  ) : (
+    <output className={`px-readout ${empty ? 'is-empty' : ''}`}>
+      {empty ? '——' : display}
+      {unit && !empty && <span className="u">{unit}</span>}
+    </output>
+  )
+
+  const control = arrows ? (
+    <div className="px-cursor">
+      <StepButton dir={-1} onStep={step} enabled={!disabled && canDec} label={t('common.previous')} arrow>
+        <Icon name="chevronLeft" />
+      </StepButton>
+      {edit ? screen : <span className="px-readout__wrap">{screen}</span>}
+      <StepButton dir={1} onStep={step} enabled={!disabled && canInc} label={t('common.next')} arrow>
+        <Icon name="chevronRight" />
+      </StepButton>
+    </div>
+  ) : (
+    <div className={`px-stepper ${block ? 'px-stepper--block' : ''} ${disabled ? 'is-disabled' : ''}`}>
+      {screen}
+      <StepButton dir={-1} onStep={step} enabled={!disabled && canDec} label={t('common.decrease')}>
+        −
+      </StepButton>
+      <StepButton dir={1} onStep={step} enabled={!disabled && canInc} label={t('common.increase')}>
+        +
+      </StepButton>
+    </div>
+  )
+
+  if (!label) return control
   return (
-    <div className="flex flex-col items-center gap-1">
-      {label && <span className="text-center text-sm font-semibold text-bench-100">{label}</span>}
-      <div className="flex items-center gap-1">
-        {arrows && (
-          <StepButton dir={-1} onStep={step} enabled={!disabled && canDec}>
-            ◀
-          </StepButton>
-        )}
-        {edit ? (
-          <NumberField display={display} edit={edit} disabled={disabled} />
-        ) : (
-          <Readout value={display} dim={disabled} />
-        )}
-        {!arrows && (
-          <StepButton dir={-1} onStep={step} enabled={!disabled && canDec}>
-            −
-          </StepButton>
-        )}
-        <StepButton dir={1} onStep={step} enabled={!disabled && canInc}>
-          {arrows ? '▶' : '+'}
-        </StepButton>
-      </div>
+    <div className="px-field">
+      <span className="px-label">{label}</span>
+      {control}
     </div>
   )
 }
@@ -87,11 +117,15 @@ function StepButton({
   dir,
   onStep,
   enabled,
+  label,
+  arrow = false,
   children
 }: {
   dir: 1 | -1
   onStep: (dir: 1 | -1) => void
   enabled: boolean
+  label: string
+  arrow?: boolean
   children: ReactNode
 }): ReactNode {
   const timers = useRef<{ hold?: number; repeat?: number }>({})
@@ -130,7 +164,8 @@ function StepButton({
           if (enabled) onStep(dir)
         }
       }}
-      className="flex size-8 items-center justify-center rounded border border-bench-300 bg-bench-100 text-lg font-bold text-bench-900 hover:bg-white active:bg-bench-300 disabled:opacity-35"
+      aria-label={label}
+      className={arrow ? 'px-btn px-btn--sm' : undefined}
     >
       {children}
     </button>
@@ -178,7 +213,7 @@ function NumberField({
     <input
       type="text"
       inputMode="decimal"
-      value={draft ?? display}
+      value={draft ?? (/\d/.test(display) ? display : '——')}
       disabled={disabled}
       aria-label={`${edit.min} – ${edit.max}`}
       title={`${edit.min} – ${edit.max}`}
@@ -197,7 +232,7 @@ function NumberField({
           e.currentTarget.blur()
         }
       }}
-      className={`w-20 min-w-20 rounded border border-black bg-black px-2 py-1 text-right font-mono text-lg leading-tight tabular-nums outline-none select-text focus:border-sky-400 focus:ring-1 focus:ring-sky-400 disabled:cursor-not-allowed ${disabled ? 'text-lcd/40' : 'text-lcd'}`}
+      className={`px-readout ${disabled ? 'is-empty' : ''}`}
     />
   )
 }

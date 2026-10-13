@@ -1,18 +1,25 @@
 @import 'tailwindcss';
+@import './styles/fonts.css';
+@import './styles/tokens.css';
+@import './styles/physioex.css' layer(components);
+@import './styles/app.css' layer(components);
 
-@theme {
-  --color-bench-50: #eef3f9;
-  --color-bench-100: #d6e2f0;
-  --color-bench-300: #8fa9c9;
-  --color-bench-500: #3f618c;
-  --color-bench-600: #2f4d74;
-  --color-bench-700: #233b5b;
-  --color-bench-800: #182a42;
-  --color-bench-900: #0f1c2e;
-  --color-lcd: #39ff6a;
-  --color-trace-a: #ffe14d;
-  --color-trace-b: #4dd2ff;
-  --font-mono: 'Cascadia Mono', 'Consolas', ui-monospace, monospace;
+/*
+ * Los colores heredados de los laboratorios (bench-*, lcd, trace-*) apuntan a los tokens del
+ * rediseño, así cualquier utilidad de Tailwind que quede sigue el tema claro/oscuro.
+ */
+@theme inline {
+  --color-bench-50: var(--ink);
+  --color-bench-100: var(--ink-muted);
+  --color-bench-300: var(--ink-subtle);
+  --color-bench-500: var(--border-strong);
+  --color-bench-600: var(--border);
+  --color-bench-700: var(--surface-raised);
+  --color-bench-800: var(--surface);
+  --color-bench-900: var(--bg);
+  --color-lcd: var(--readout-ink);
+  --color-trace-a: var(--chart-2);
+  --color-trace-b: var(--chart-1);
 }
 
 html,
@@ -22,10 +29,6 @@ body,
 }
 
 body {
-  margin: 0;
-  background: var(--color-bench-900);
-  color: var(--color-bench-50);
-  font-family: 'Segoe UI', system-ui, sans-serif;
   user-select: none;
 }
 

@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
 import { Panel } from '@/shared/components/ui'
 
 /**
- * Distribución común de los tres experimentos, como la pantalla original:
- * reactivos | cámara del nervio | osciloscopio, con el estimulador y la tabla debajo.
+ * Distribución común de los tres experimentos:
+ * Preparación (cámara del nervio y agentes) | Osciloscopio | Estimulador, con Resultados debajo.
  */
 export function NerveLayout({
   reagents,
@@ -23,17 +24,23 @@ export function NerveLayout({
   table: ReactNode
   tools: ReactNode
 }): ReactNode {
+  const { t } = useTranslation()
+  const tn = useTranslation('nerve').t
   return (
-    <div className="grid grid-cols-[200px_150px_minmax(0,1fr)] gap-3 p-3">
-      <Panel className="row-span-2 flex flex-col gap-2">{reagents}</Panel>
-      <div className="flex flex-col gap-2">{chamber}</div>
-      <div className="flex min-w-0 flex-col rounded-2xl border-4 border-gray-400 bg-gray-300 p-2 shadow-xl">
-        {scope}
-        <div className="mt-2 flex flex-wrap items-center justify-end gap-3">{scopeActions}</div>
-        <ToolbarPortal>{tools}</ToolbarPortal>
+    <>
+      <ToolbarPortal>{tools}</ToolbarPortal>
+      <div className="grid grid-cols-[250px_minmax(0,1fr)_250px] items-start gap-4">
+        <Panel title={t('common.preparation')}>
+          {chamber}
+          <div className="grid gap-2">{reagents}</div>
+        </Panel>
+        <Panel title={tn('panels.scope')} bodyClassName="!gap-0">
+          {scope}
+          <div className="px-chart__bar justify-end">{scopeActions}</div>
+        </Panel>
+        <Panel title={t('common.stimulator')}>{stimulator}</Panel>
       </div>
-      <Panel className="col-span-2">{stimulator}</Panel>
-      <Panel className="col-span-3">{table}</Panel>
-    </div>
+      {table}
+    </>
   )
 }

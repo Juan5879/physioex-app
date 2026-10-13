@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Light } from '@/shared/components/ui'
+import { Icon } from '@/shared/components/Icon'
+import { Hint, Panel } from '@/shared/components/ui'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 
 export interface ProcedureStep {
@@ -62,7 +63,31 @@ export function useProcedure(steps: ProcedureStep[]): {
   }
 }
 
-/** Lista de pasos con el botón del paso actual */
+/** Panel «Protocolo»: pasos en orden con su estado y, debajo, contenido extra opcional */
+export function ProcedurePanel({
+  steps,
+  proc,
+  unit,
+  children
+}: {
+  steps: ProcedureStep[]
+  proc: ReturnType<typeof useProcedure>
+  unit: string
+  children?: ReactNode
+}): ReactNode {
+  const { t } = useTranslation('serology')
+  return (
+    <Panel
+      title={t('panels.protocol')}
+      actions={<span className="px-eyebrow">{t('panels.progress', { done: Math.min(proc.done, steps.length), total: steps.length })}</span>}
+    >
+      <ProcedureList steps={steps} proc={proc} unit={unit} />
+      {children}
+    </Panel>
+  )
+}
+
+/** Lista de pasos (`.px-steps`); el paso actual es el botón que lo ejecuta */
 export function ProcedureList({
   steps,
   proc,
@@ -74,30 +99,42 @@ export function ProcedureList({
 }): ReactNode {
   const { t } = useTranslation('serology')
   return (
-    <div className="flex flex-col gap-1.5">
-      <p className="text-xs text-bench-300">{t('hints.procedure')}</p>
-      {steps.map((s, i) => {
-        const current = i === proc.done
-        const past = i < proc.done
-        return (
-          <div key={s.key} className="flex items-center gap-2">
-            <span className={`w-5 text-center font-mono text-sm ${past ? 'text-lime-400' : 'text-bench-300'}`}>{past ? '✓' : i + 1}</span>
-            <Button
-              onClick={proc.doStep}
-              disabled={!current || proc.incubating}
-              className={`flex-1 text-left ${current ? 'ring-1 ring-sky-400' : ''}`}
+    <div className="grid gap-3">
+      <Hint>{t('hints.procedure')}</Hint>
+      <ol className="px-steps">
+        {steps.map((s, i) => {
+          const current = i === proc.done
+          const past = i < proc.done
+          return (
+            <li
+              key={s.key}
+              className={`px-step ${past ? 'is-done' : current ? 'is-current' : ''} ${current && proc.incubating ? '!cursor-wait' : ''}`}
+              role={current ? 'button' : undefined}
+              tabIndex={current && !proc.incubating ? 0 : undefined}
+              aria-current={current ? 'step' : undefined}
+              onClick={current && !proc.incubating ? proc.doStep : undefined}
+              onKeyDown={(e) => {
+                if (current && !proc.incubating && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault()
+                  proc.doStep()
+                }
+              }}
             >
-              {t(`steps.${s.key}`)}
-            </Button>
-            {s.incubate && current && (
-              <span className="flex items-center gap-1 font-mono text-xs">
-                <Light on={proc.incubating} />
-                {proc.elapsed}/{s.incubate} {unit}
+              <span className="n">{past ? <Icon name="check" className="!size-3" /> : i + 1}</span>
+              <span>{t(`steps.${s.key}`)}</span>
+              <span className="s">
+                {past
+                  ? t('panels.stepDone')
+                  : current
+                    ? s.incubate && proc.incubating
+                      ? `${proc.elapsed}/${s.incubate} ${unit}`
+                      : t('panels.stepNext')
+                    : ''}
               </span>
-            )}
-          </div>
-        )
-      })}
+            </li>
+          )
+        })}
+      </ol>
     </div>
   )
 }

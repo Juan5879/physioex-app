@@ -20,7 +20,8 @@
   "probes": {
     "probe1": "Direct Heart Stimulation",
     "probe2": "Vagus Nerve Stimulation",
-    "hint": "Click an electrode to place it; click it again to remove it."
+    "hint": "Click an electrode to place it; click it again to remove it.",
+    "mode": "Stimulation mode"
   },
   "actions": {
     "single": "Single Stimulus",
@@ -48,5 +49,12 @@
   },
   "hints": {
     "droppers": "The droppers are enabled when the heart rate is normal; wash with 23° Ringer's to return to it."
+  },
+  "units": {
+    "bpm": "bpm"
+  },
+  "panels": {
+    "ringer": "Ringer’s solution",
+    "agents": "Agents"
   }
 }

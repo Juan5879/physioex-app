@@ -33,6 +33,8 @@ export function Sedimentation(): ReactNode {
 
   return (
     <BloodLayout
+      rightTitle={t('panels.sedimentation')}
+      running={clock.running}
       left={
         <>
           <ToolbarPortal>
@@ -46,7 +48,7 @@ export function Sedimentation(): ReactNode {
             label={t('actions.prepare')}
             onSelect={(i) => setRack((r) => [...r, i])}
           />
-          <div className="flex items-end justify-center gap-4 rounded-lg bg-bench-900 p-3">
+          <div className="px-well flex items-end justify-center gap-4 p-4">
             {rack.map((i) => {
               const d = esrDistance(i, minutes)
               return (
@@ -55,12 +57,13 @@ export function Sedimentation(): ReactNode {
                   type="button"
                   disabled={!done}
                   onClick={() => setMeasured(i)}
-                  className={`flex flex-col items-center gap-1 rounded p-1 ${measured === i ? 'ring-2 ring-sky-400' : ''}`}
+                  aria-pressed={measured === i}
+                  className="px-option !gap-1 !p-1.5 disabled:cursor-not-allowed"
                 >
                   <svg viewBox="0 0 24 120" className="h-40 w-7">
-                    <rect x={4} y={4} width={16} height={110} rx={4} fill="#e0f2fe" fillOpacity={0.15} stroke="#cbd5e1" />
-                    <rect x={5} y={10} width={14} height={d * 2} fill="#fde68a" fillOpacity={0.85} />
-                    <rect x={5} y={10 + d * 2} width={14} height={100 - d * 2} fill="#b91c1c" />
+                    <rect x={4} y={4} width={16} height={110} rx={4} className="il-glass" strokeWidth={1.5} />
+                    <rect x={5} y={10} width={14} height={d * 2} style={{ fill: 'var(--signal)' }} fillOpacity={0.45} />
+                    <rect x={5} y={10 + d * 2} width={14} height={100 - d * 2} style={{ fill: 'var(--chart-4)' }} />
                   </svg>
                   <span className="font-mono text-xs">{i + 1}</span>
                 </button>
@@ -68,7 +71,7 @@ export function Sedimentation(): ReactNode {
             })}
           </div>
           {measured !== null && done && (
-            <div className="rounded-lg border border-bench-500 p-2 text-sm">
+            <div className="px-chip !h-auto !justify-start !rounded-[var(--radius-md)] !py-1.5 !font-sans">
               {t('fields.sample')} {measured + 1}: {t('values.mm', { v: esrDistance(measured, ESR_MINUTES) })}
             </div>
           )}
@@ -76,7 +79,7 @@ export function Sedimentation(): ReactNode {
       }
       right={
         <>
-          <span className="text-sm text-bench-100">
+          <span className="px-label">
             {t('fields.timer')}: {ESR_MINUTES}
           </span>
           <Button variant="primary" onClick={() => clock.start(ESR_MINUTES)} disabled={clock.running || done || rack.length === 0}>

@@ -39,20 +39,23 @@ export function RespLayout({
   results: ReactNode
   table: ReactNode
 }): ReactNode {
+  const { t } = useTranslation('respiratory')
   return (
-    <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 p-3">
-      <div className="flex flex-col gap-3">
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">{apparatus}</div>
-        <Panel>{controls}</Panel>
+    <>
+      <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-start gap-4">
+        <Panel title={t('panels.apparatus')}>
+          <div className="px-well p-4">{apparatus}</div>
+          {controls}
+        </Panel>
+        <Panel title={t('panels.spirometer')}>
+          <div>
+            {scope}
+            <div className="px-chart__bar justify-end">{scopeActions}</div>
+          </div>
+          <div className="px-section">{results}</div>
+        </Panel>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex min-w-0 flex-col rounded-2xl border-4 border-gray-400 bg-gray-300 p-2 shadow-xl">
-          {scope}
-          <div className="mt-2 flex justify-end gap-2">{scopeActions}</div>
-        </div>
-        <Panel>{results}</Panel>
-      </div>
-      <Panel className="col-span-2">{table}</Panel>
-    </div>
+      {table}
+    </>
   )
 }

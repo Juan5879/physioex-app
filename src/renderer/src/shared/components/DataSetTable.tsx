@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DataSetState } from '@/shared/lib/createDataSetStore'
-import { DataTable, type DataColumn } from './DataTable'
-import { Button, Modal } from './ui'
+import { ResultsTable, TableActions, type DataColumn } from './DataTable'
+import { Button, Field, Modal, Panel } from './ui'
 
 /**
  * Lista de conjuntos de datos con su tabla. Con `editable` se pueden agregar conjuntos
@@ -14,7 +14,8 @@ export function DataSetTable<Row>({
   onRecord,
   canRecord,
   editable = false,
-  label
+  label,
+  className = ''
 }: {
   store: DataSetState<Row>
   columns: DataColumn<Row>[]
@@ -23,6 +24,7 @@ export function DataSetTable<Row>({
   editable?: boolean
   /** rótulo de cada conjunto (por defecto su nombre) */
   label?: (name: string) => string
+  className?: string
 }): ReactNode {
   const { t } = useTranslation()
   const [adding, setAdding] = useState<string | null>(null)
@@ -31,46 +33,59 @@ export function DataSetTable<Row>({
   const validName = adding !== null && /^[\p{L}\p{N} .]+$/u.test(adding.trim())
 
   return (
-    <div className="flex gap-3">
-      <div className="flex w-36 shrink-0 flex-col gap-1.5">
-        <span className="text-center text-sm font-semibold text-bench-100">{t('common.dataSets')}</span>
-        <div className="h-28 overflow-y-auto rounded border border-black bg-black font-mono text-sm text-lcd">
-          {store.sets.map((d, i) => (
-            <button
-              key={`${d.name}-${i}`}
-              type="button"
-              onClick={() => store.selectSet(i)}
-              className={`block w-full truncate px-2 py-0.5 text-left ${i === store.selected ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
-            >
-              {label ? label(d.name) : d.name}
-            </button>
-          ))}
-        </div>
-        {editable && (
-          <>
-            <Button onClick={() => setAdding('')}>{t('common.addDataSet')}</Button>
-            <Button onClick={() => setConfirmDelete(true)} disabled={!current}>
-              {t('common.deleteDataSet')}
-            </Button>
-          </>
-        )}
-      </div>
-      <div className="min-w-0 flex-1">
-        <DataTable
-          columns={columns}
+    <Panel
+      title={t('common.results')}
+      className={className}
+      actions={
+        <TableActions
           rows={current?.rows ?? []}
           selected={store.selectedRow}
-          onSelect={store.selectRow}
           onRecord={onRecord}
           onDelete={store.deleteRow}
           onClear={store.clearRows}
           canRecord={canRecord && Boolean(current)}
         />
+      }
+    >
+      <div className="px-results">
+        <div className="px-results__side">
+          <span className="px-label">{t('common.dataSets')}</span>
+          <div className="px-setlist" role="listbox" aria-label={t('common.dataSets')}>
+            {store.sets.map((d, i) => (
+              <button
+                key={`${d.name}-${i}`}
+                type="button"
+                role="option"
+                aria-selected={i === store.selected}
+                onClick={() => store.selectSet(i)}
+              >
+                <span className="truncate">{label ? label(d.name) : d.name}</span>
+                <span className="c">{d.rows.length}</span>
+              </button>
+            ))}
+          </div>
+          {editable && (
+            <>
+              <Button size="sm" block icon="plus" onClick={() => setAdding('')}>
+                {t('common.addDataSet')}
+              </Button>
+              <Button size="sm" block onClick={() => setConfirmDelete(true)} disabled={!current}>
+                {t('common.deleteDataSet')}
+              </Button>
+            </>
+          )}
+        </div>
+        <ResultsTable
+          columns={columns}
+          rows={current?.rows ?? []}
+          selected={store.selectedRow}
+          onSelect={store.selectRow}
+        />
       </div>
 
       {adding !== null && (
         <Modal title={t('common.addDataSet')} onClose={() => setAdding(null)}>
-          <label className="mb-1 block text-sm text-bench-100">{t('common.dataSetName')}</label>
+          <Field label={t('common.dataSetName')}>
           <input
             autoFocus
             value={adding}
@@ -82,9 +97,10 @@ export function DataSetTable<Row>({
                 setAdding(null)
               }
             }}
-            className="w-full rounded border border-bench-300 bg-white px-3 py-2 text-black select-text"
+            className="px-input"
           />
-          <div className="mt-5 flex justify-end gap-2">
+          </Field>
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={() => setAdding(null)}>
               {t('common.cancel')}
             </Button>
@@ -103,8 +119,8 @@ export function DataSetTable<Row>({
       )}
       {confirmDelete && current && (
         <Modal title={t('common.deleteDataSet')} onClose={() => setConfirmDelete(false)}>
-          <p className="mb-5 text-bench-100">{t('common.confirmDeleteDataSet', { name: current.name })}</p>
-          <div className="flex justify-end gap-2">
+          <p className="px-modal__text">{t('common.confirmDeleteDataSet', { name: current.name })}</p>
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
               {t('common.cancel')}
             </Button>
@@ -120,7 +136,7 @@ export function DataSetTable<Row>({
           </div>
         </Modal>
       )}
-    </div>
+    </Panel>
   )
 }
 

@@ -6,8 +6,8 @@ import { DataSetTable, PrintDataSets } from '@/shared/components/DataSetTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
-import { fixed } from '@/shared/lib/format'
+import { Button, Field, Hint, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { fixed, splitUnit } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { RatFigure, Syringe } from '../components/Figures'
 import {
@@ -146,7 +146,7 @@ export function Metabolism(): ReactNode {
   const label = (name: string): string => t(`sets.${name}`)
 
   return (
-    <div className="grid grid-cols-[170px_minmax(0,1fr)_300px] gap-3 p-3">
+    <>
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -157,8 +157,8 @@ export function Metabolism(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-2">
-        <span className="text-center text-sm font-semibold text-bench-100">{t('panels.syringe')}</span>
+      <div className="grid grid-cols-[200px_minmax(0,1fr)_300px] items-start gap-4">
+      <Panel title={t('panels.syringes')} bodyClassName="!gap-2">
         {HORMONES.map((h) => (
           <Syringe
             key={h}
@@ -168,60 +168,73 @@ export function Metabolism(): ReactNode {
             onClick={() => (injected ? setAlert('cleanRat') : setSyringe(syringe === h ? null : h))}
           />
         ))}
-        {syringe && <p className="text-center text-xs text-sky-300">{t('alerts.pickRat')}</p>}
+        {syringe && <Hint>{t('alerts.pickRat')}</Hint>}
       </Panel>
 
-      <Panel className="flex flex-col gap-3">
-        <p className="text-xs text-bench-300">{t('hints.metabolism')}</p>
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <Chamber rat={inChamber} breathing={running} label={inChamber ? t(`rats.${inChamber}`) : t('panels.chamber')} />
-          <Manometer diff={diff} label={t('panels.manometer')} equal={t('levelEqual')} off={t('levelOff')} />
-          <div className="flex flex-col gap-2">
+      <Panel
+        title={t('panels.apparatus')}
+        actions={<Light on={inChamber !== null} label={inChamber ? t(`rats.${inChamber}`) : t('panels.chamberEmpty')} />}
+      >
+        <Hint>{t('hints.metabolism')}</Hint>
+        <div className="grid grid-cols-[minmax(0,1fr)_200px] items-center gap-4">
+          <div className="px-well flex items-end justify-center gap-6 p-4">
+            <Chamber rat={inChamber} breathing={running} label={t('panels.chamber')} />
+            <Manometer diff={diff} label={t('panels.manometer')} />
+          </div>
+          <div className="grid gap-3">
+            <Field label={t('fields.clamp')}>
+              <Button
+                block
+                aria-pressed={clampOpen}
+                onClick={() => {
+                  setClampOpen(!clampOpen)
+                  vent(!clampOpen, tChamber)
+                }}
+              >
+                {clampOpen ? t('actions.clampOpen') : t('actions.clampClosed')}
+              </Button>
+            </Field>
+            <Field label={t('fields.tConnector')}>
             <Button
-              onClick={() => {
-                setClampOpen(!clampOpen)
-                vent(!clampOpen, tChamber)
-              }}
-              className={clampOpen ? '' : 'ring-2 ring-sky-400'}
-            >
-              {clampOpen ? t('actions.clampOpen') : t('actions.clampClosed')}
-            </Button>
-            <Button
+              block
               onClick={() => {
                 setTChamber(!tChamber)
                 vent(clampOpen, !tChamber)
               }}
               disabled={injecting}
-              className="max-w-52 whitespace-normal"
+              className="!h-auto min-h-[var(--control-height)] !whitespace-normal py-1.5"
             >
               {tChamber ? t('actions.tChamber') : t('actions.tSyringe')}
             </Button>
+            </Field>
+            <Light on={diff === 0} label={diff === 0 ? t('panels.manometerEqual') : t('panels.manometerOff')} />
           </div>
         </div>
       </Panel>
 
-      <Panel className="flex flex-col gap-2">
+      <Panel title={t('panels.subjects')} bodyClassName="!gap-2">
         {RATS.map((rat) => {
           const away = inChamber === rat
           const blocked = injected !== null && injected.rat !== rat
           return (
-            <div key={rat} className="flex items-center gap-2 rounded-lg border border-bench-500 bg-bench-900 p-1.5">
+            <div key={rat} className="flex items-stretch gap-2">
               <button
                 type="button"
                 onClick={() => (syringe ? inject(rat) : moveRat(rat))}
                 disabled={running || (blocked && !syringe)}
                 title={away ? t('actions.toCage') : t('actions.toChamber')}
-                className="flex min-w-0 flex-1 items-center gap-2 text-left text-xs font-semibold disabled:opacity-40"
+                aria-pressed={away}
+                className="px-reagent min-w-0 flex-1 disabled:cursor-not-allowed disabled:opacity-45"
               >
                 <span className={away ? 'opacity-20' : ''}>
                   <RatFigure small />
                 </span>
                 <span>
                   {t(`rats.${rat}`)}
-                  {injected?.rat === rat && <span className="block text-xs text-sky-300">{t(`hormones.${injected.hormone}`)}</span>}
+                  {injected?.rat === rat && <small>{t(`hormones.${injected.hormone}`)}</small>}
                 </span>
               </button>
-              <Button onClick={() => clean(rat)} disabled={running || injected?.rat !== rat}>
+              <Button size="sm" className="!h-auto" onClick={() => clean(rat)} disabled={running || injected?.rat !== rat}>
                 {t('actions.clean')}
               </Button>
             </div>
@@ -229,7 +242,9 @@ export function Metabolism(): ReactNode {
         })}
       </Panel>
 
-      <Panel className="col-span-3 flex flex-wrap items-end justify-around gap-4">
+      </div>
+
+      <Panel title={t('panels.controls')} bodyClassName="!flex flex-wrap items-end gap-x-6 gap-y-4">
         <div className="flex items-end gap-3">
           <Stepper
             label={t('fields.timer')}
@@ -243,10 +258,11 @@ export function Metabolism(): ReactNode {
               onChange: (v) => setTimer(Math.round(v * 60))
             }}
           />
-          <div className="flex items-center gap-2 pb-0.5">
-            <Light on={running} />
+          <div className="flex h-[34px] items-center gap-3">
+            <Light on={running} label="" />
             <Button
               variant="primary"
+              icon="play"
               disabled={running || !inChamber || timer <= 0}
               onClick={() => {
                 setElapsed(0)
@@ -257,10 +273,9 @@ export function Metabolism(): ReactNode {
               {t('actions.start')}
             </Button>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm font-semibold text-bench-100">{t('fields.elapsed')}</span>
-            <Readout value={clock(elapsed)} />
-          </div>
+          <Field label={splitUnit(t('fields.elapsed'))?.text ?? t('fields.elapsed')}>
+            <Readout value={clock(elapsed)} unit={splitUnit(t('fields.elapsed'))?.unit} />
+          </Field>
         </div>
         <div className="flex items-end gap-3">
           <Stepper
@@ -277,10 +292,9 @@ export function Metabolism(): ReactNode {
           </Button>
         </div>
         <div className="flex items-end gap-3">
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm font-semibold text-bench-100">{t('fields.weight')}</span>
-            <Readout value={weight ? fixed(weight, 1) : '0'} />
-          </div>
+          <Field label={splitUnit(t('fields.weight'))?.text ?? t('fields.weight')}>
+            <Readout value={weight ? fixed(weight, 1) : ''} unit={splitUnit(t('fields.weight'))?.unit} />
+          </Field>
           <Button onClick={() => inChamber && setWeight(ratWeight(inChamber))} disabled={!inChamber || weight !== 0}>
             {t('actions.weigh')}
           </Button>
@@ -288,12 +302,11 @@ export function Metabolism(): ReactNode {
             {t('actions.clear')}
           </Button>
         </div>
-        <Button onClick={resetApparatus} disabled={running}>
+        <Button variant="ghost" className="ml-auto" onClick={resetApparatus} disabled={running}>
           {t('actions.resetApparatus')}
         </Button>
       </Panel>
 
-      <Panel className="col-span-3">
         <DataSetTable
           store={sets}
           columns={columns}
@@ -305,50 +318,61 @@ export function Metabolism(): ReactNode {
             setRecordable(false)
           }}
         />
-      </Panel>
 
       {alert && <Notice title={t('alerts.title')} lines={[t(`alerts.${alert}`)]} onClose={() => setAlert(null)} />}
-    </div>
+    </>
   )
 }
 
 /** Campana de vidrio con la rata */
 function Chamber({ rat, breathing, label }: { rat: Rat | null; breathing: boolean; label: string }): ReactNode {
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-2">
       <svg viewBox="0 0 180 150" className="w-48">
-        <path d="M 20 140 V 50 Q 20 15 90 15 Q 160 15 160 50 V 140 Z" fill="#e0f2fe" fillOpacity={0.15} stroke="#cbd5e1" strokeWidth={2} />
-        <rect x={70} y={5} width={40} height={14} rx={3} fill="#111827" />
-        <rect x={15} y={138} width={150} height={8} rx={2} fill="#374151" />
-        <rect x={30} y={110} width={120} height={6} fill="#9ca3af" />
+        <path className="il-glass" d="M 20 140 V 50 Q 20 15 90 15 Q 160 15 160 50 V 140 Z" />
+        <rect className="il-glass" x={70} y={5} width={40} height={14} rx={3} />
+        <rect className="il-metal" x={15} y={138} width={150} height={6} rx={3} />
+        <line className="il-thin" x1={36} x2={144} y1={112} y2={112} />
         {rat && (
           <g transform="translate(45 60)" className={breathing ? 'animate-pulse' : ''}>
             <RatFigure />
           </g>
         )}
       </svg>
-      <span className="text-sm font-semibold text-bench-100">{label}</span>
+      <span className="il-label text-[11px] uppercase">{label}</span>
     </div>
   )
 }
 
 /** Manómetro en U: la diferencia de niveles es O₂ consumido − O₂ inyectado */
-function Manometer({ diff, label, equal, off }: { diff: number; label: string; equal: string; off: string }): ReactNode {
+function Manometer({ diff, label }: { diff: number; label: string }): ReactNode {
   const d = Math.max(-40, Math.min(40, diff * 2.5))
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-2">
       <svg viewBox="0 0 80 150" className="w-20">
-        <path d="M 20 10 V 120 Q 20 140 40 140 Q 60 140 60 120 V 10" fill="none" stroke="#cbd5e1" strokeWidth={10} strokeLinecap="round" />
         <path
-          d={`M 20 ${75 - d} V 120 Q 20 140 40 140 Q 60 140 60 120 V ${75 + d}`}
+          d="M 20 10 V 120 Q 20 140 40 140 Q 60 140 60 120 V 10"
           fill="none"
-          stroke="#60a5fa"
-          strokeWidth={6}
+          stroke="var(--border-strong)"
+          strokeWidth={12}
+          strokeLinecap="round"
         />
-        <line x1={10} x2={70} y1={75} y2={75} stroke="#9ca3af" strokeDasharray="3 3" />
+        <path
+          d="M 20 10 V 120 Q 20 140 40 140 Q 60 140 60 120 V 10"
+          fill="none"
+          stroke="var(--surface-raised)"
+          strokeWidth={8}
+          strokeLinecap="round"
+        />
+        <path
+          className="il-liquid-stroke"
+          d={`M 20 ${75 - d} V 120 Q 20 140 40 140 Q 60 140 60 120 V ${75 + d}`}
+          strokeWidth={8}
+          strokeLinecap="butt"
+        />
+        <line className="il-mark" x1={6} x2={74} y1={75} y2={75} />
       </svg>
-      <span className="text-sm font-semibold text-bench-100">{label}</span>
-      <span className={`text-xs ${diff === 0 ? 'text-lime-300' : 'text-bench-300'}`}>{diff === 0 ? equal : off}</span>
+      <span className="il-label text-[11px] uppercase">{label}</span>
     </div>
   )
 }

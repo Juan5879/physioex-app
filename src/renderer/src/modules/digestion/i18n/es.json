@@ -96,5 +96,9 @@
     "setup": "Preparación",
     "incubating": "Incubando",
     "testing": "Pruebas"
+  },
+  "panels": {
+    "bench": "Mesada",
+    "incubator": "Incubadora"
   }
 }

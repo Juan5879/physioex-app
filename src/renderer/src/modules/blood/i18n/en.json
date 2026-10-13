@@ -69,5 +69,13 @@
     "hb": "Move the slider until the standard color matches the sample.",
     "chol": "Choose the chart color that matches the strip.",
     "recorded": "That sample has already been recorded."
+  },
+  "panels": {
+    "samples": "Blood samples",
+    "centrifuge": "Centrifuge",
+    "sedimentation": "Sedimentation",
+    "colorimeter": "Colorimeter",
+    "hemoglobinometer": "Hemoglobinometer",
+    "typing": "Typing"
   }
 }

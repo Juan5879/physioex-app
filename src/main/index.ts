@@ -14,7 +14,7 @@ function createWindow(): void {
     minHeight: 720,
     show: false,
     autoHideMenuBar: true,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#0d1218',
     title: 'PhysioEx',
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),

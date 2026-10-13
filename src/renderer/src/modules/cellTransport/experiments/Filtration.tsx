@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { Button, Field, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { splitUnit } from '@/shared/lib/format'
 import { fix, FiltrationApparatus, liquidColor, MEMBRANE_COLORS } from '../components/Apparatus'
 import { BeakerControls, clampStep, MembraneRack, PrintRuns, RunTable, SoluteValues, TimerPanel } from '../components/Panels'
 import { useMinuteClock } from '../components/useMinuteClock'
@@ -31,6 +32,7 @@ type Analysis = 'none' | 'due' | 'running' | 'done'
 /** Experimento 4: filtración a presión a través de membranas de distinto poro */
 export function Filtration(): ReactNode {
   const { t } = useTranslation('cellTransport')
+  const tc = useTranslation().t
   const runs = useRunsStore((s) => s.runs.fl)
   const addRun = useRunsStore((s) => s.addRun)
   const deleteRun = useRunsStore((s) => s.deleteRun)
@@ -150,7 +152,7 @@ export function Filtration(): ReactNode {
   )
 
   return (
-    <div className="grid grid-cols-[230px_minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -161,8 +163,52 @@ export function Filtration(): ReactNode {
         />
       </ToolbarPortal>
 
-      <div className="row-span-2 flex flex-col gap-3">
-        <Panel>
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
+        <Panel
+          title={t('beaker.top')}
+          actions={<Light on={full || dispensing} label={t(full ? 'beaker.hasSolution' : 'beaker.isEmpty')} />}
+        >
+          <BeakerControls
+            solutes={SOLUTES}
+            setting={setting}
+            unit={t('units.mgml')}
+            locked={full || running}
+            full={full}
+            busy={running}
+            canFlush={full && !running && analysis !== 'due' && analysis !== 'running'}
+            onChange={(s, v) => {
+              setSetting((c) => ({ ...c, [s]: v }))
+              invalidate()
+            }}
+            onDispense={() => {
+              setFull(true)
+              invalidate()
+              setDispensing(true)
+              window.setTimeout(() => setDispensing(false), 650)
+            }}
+            onFlush={flush}
+            onDeionized={() => {
+              setSetting({})
+              invalidate()
+            }}
+          />
+          <div className="px-section">
+            <TimerPanel
+              maxTime={maxTime}
+              elapsed={running && run ? run.realTime : null}
+              running={running}
+              locked={running}
+              label={running ? t('actions.stop') : t('actions.start')}
+              onChangeTime={(v) => {
+                setMaxTime(v)
+                invalidate()
+              }}
+              onStart={start}
+            />
+          </div>
+        </Panel>
+
+        <Panel title={t('panels.apparatus')}>
           <Stepper
             label={t('fields.pressure')}
             display={String(pressure)}
@@ -182,121 +228,85 @@ export function Filtration(): ReactNode {
               invalidate()
             }}
           />
-        </Panel>
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
-          <FiltrationApparatus
-            top={{ level: full ? 1 - drained : 0, color }}
-            bottom={{ level: full ? drained : 0, color: drained > 0 ? '#9fd6d6' : color }}
-            membraneColor={mwco !== null ? MEMBRANE_COLORS[mwco] : null}
-            onDropMembrane={
-              running || analysis === 'due'
-                ? undefined
-                : (data) => {
-                    setMwco(Number(data))
-                    invalidate()
-                  }
-            }
+          <div className="px-well p-4">
+            <FiltrationApparatus
+              top={{ level: full ? 1 - drained : 0, color }}
+              bottom={{ level: full ? drained : 0, color: drained > 0 ? 'var(--scale-3)' : color }}
+              membraneColor={mwco !== null ? MEMBRANE_COLORS[mwco] : null}
+              onDropMembrane={
+                running || analysis === 'due'
+                  ? undefined
+                  : (data) => {
+                      setMwco(Number(data))
+                      invalidate()
+                    }
+              }
+            />
+          </div>
+          <MembraneRack
+            current={mwco}
+            onPick={(m) => {
+              setMwco((cur) => (cur === m ? null : m))
+              invalidate()
+            }}
+            disabled={running || analysis === 'due' || analysis === 'running'}
           />
-        </div>
+        </Panel>
+
+        <Panel
+          title={t('panels.filtrate')}
+          actions={<Light on={analysis === 'running'} label={analysis === 'running' ? tc('common.inProgress') : tc('common.ready')} />}
+        >
+          <Field label={splitUnit(t('fields.filtrationRate'))?.text ?? ''}>
+            <Readout value={run && finished ? fix(run.result.rate, 2) : ''} unit="ml/min" />
+          </Field>
+          <SoluteValues
+            solutes={SOLUTES}
+            header={t('fields.filtrateConc')}
+            values={filtrateValues}
+            empty={t('messages.noFiltrate')}
+          />
+          <div className="px-section">
+            <span className="px-panel__title">{t('panels.analysis')}</span>
+            <Button block onClick={analyze} disabled={analysis !== 'due' || mwco === null}>
+              {t('actions.startAnalysis')}
+            </Button>
+            <SoluteValues
+              solutes={SOLUTES}
+              header={t('fields.residue')}
+              values={residueValues}
+              empty={t('messages.noResidue')}
+            />
+          </div>
+        </Panel>
       </div>
 
-      <Panel className="flex flex-col gap-3">
-        <h3 className="text-center text-sm font-semibold text-bench-100">{t('beaker.top')}</h3>
-        <BeakerControls
-          solutes={SOLUTES}
-          setting={setting}
-          unit={t('units.mgml')}
-          locked={full || running}
-          full={full}
-          busy={running}
-          canFlush={full && !running && analysis !== 'due' && analysis !== 'running'}
-          dispensing={dispensing}
-          onChange={(s, v) => {
-            setSetting((c) => ({ ...c, [s]: v }))
-            invalidate()
-          }}
-          onDispense={() => {
-            setFull(true)
-            invalidate()
-            setDispensing(true)
-            window.setTimeout(() => setDispensing(false), 650)
-          }}
-          onFlush={flush}
-          onDeionized={() => {
-            setSetting({})
-            invalidate()
-          }}
-        />
-        <TimerPanel
-          maxTime={maxTime}
-          elapsed={running && run ? run.realTime : null}
-          running={running}
-          locked={running}
-          label={running ? t('actions.stop') : t('actions.start')}
-          onChangeTime={(v) => {
-            setMaxTime(v)
-            invalidate()
-          }}
-          onStart={start}
-        />
-      </Panel>
-
-      <Panel className="flex flex-col items-center gap-3">
-        <h3 className="text-center text-sm font-semibold text-bench-100">{t('panels.analysis')}</h3>
-        <div className="flex items-center gap-2">
-          <Light on={analysis === 'running'} />
-          <Button onClick={analyze} disabled={analysis !== 'due' || mwco === null}>
-            {t('actions.startAnalysis')}
-          </Button>
-        </div>
-        <SoluteValues solutes={SOLUTES} header={t('fields.residue')} values={residueValues} />
-        <MembraneRack
-          current={mwco}
-          onPick={(m) => {
-            setMwco((cur) => (cur === m ? null : m))
-            invalidate()
-          }}
-          disabled={running || analysis === 'due' || analysis === 'running'}
-          vertical={false}
-        />
-      </Panel>
-
-      <Panel className="col-span-2 flex flex-col gap-3">
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.filtrationRate')}</span>
-          <Readout value={run && finished ? fix(run.result.rate, 2) : ''} />
-        </div>
-        <SoluteValues solutes={SOLUTES} header={t('fields.filtrateConc')} values={filtrateValues} />
-      </Panel>
-
-      <Panel className="col-span-3">
-        <RunTable
-          headers={headers}
-          runs={runs}
-          canRecord={recordable && run !== null}
-          onRecord={() => {
-            if (!run) return
-            addRun(
-              'fl',
-              SOLUTES.map((s) => ({
-                solute: s,
-                cells: [
-                  String(run.mwco),
-                  String(run.pressure),
-                  fix(run.result.rate, 2),
-                  t(residuePresent(run.top, s) ? 'residue.present' : 'residue.absent'),
-                  fix(run.top[s] ?? 0, 2),
-                  fix(run.result.filtrate[s] ?? 0, 2)
-                ]
-              }))
-            )
-            setRecordable(false)
-          }}
-          onDelete={(n) => deleteRun('fl', n)}
-        />
-      </Panel>
+      <RunTable
+        headers={headers}
+        runs={runs}
+        canRecord={recordable && run !== null}
+        onRecord={() => {
+          if (!run) return
+          addRun(
+            'fl',
+            SOLUTES.map((s) => ({
+              solute: s,
+              cells: [
+                String(run.mwco),
+                String(run.pressure),
+                fix(run.result.rate, 2),
+                t(residuePresent(run.top, s) ? 'residue.present' : 'residue.absent'),
+                fix(run.top[s] ?? 0, 2),
+                fix(run.result.filtrate[s] ?? 0, 2)
+              ]
+            }))
+          )
+          setRecordable(false)
+        }}
+        onDelete={(n) => deleteRun('fl', n)}
+      />
 
       {notice && <Notice title={notice.title} lines={notice.lines} onClose={() => setNotice(null)} />}
-    </div>
+    </>
   )
 }

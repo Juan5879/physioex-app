@@ -6,8 +6,8 @@ import { DataSetTable, PrintDataSets } from '@/shared/components/DataSetTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
-import { fixed } from '@/shared/lib/format'
+import { Button, Light, Notice, Panel, ReadoutField } from '@/shared/components/ui'
+import { fixed, splitUnit } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { PumpApparatus } from '../components/Apparatus'
 import { PM, PM_BEAKER, PM_CONV, pumpCalc, round1, type PumpAlert } from '../model/cardio'
@@ -50,6 +50,7 @@ type Phase = 'ready' | 'pumping' | 'refilling'
 /** Experimento 2: la bomba como modelo del corazón (volumen sistólico, frecuencia, resistencias) */
 export function PumpMechanics(): ReactNode {
   const { t } = useTranslation('cardioDynamics')
+  const tc = useTranslation().t
   const store = usePumpSets()
   const [pressureL, setPressureL] = useState<number>(PM.pressureL.initial)
   const [pressurePump, setPressurePump] = useState<number>(PM.pressurePump.initial)
@@ -179,7 +180,7 @@ export function PumpMechanics(): ReactNode {
   const current = store.sets[store.selected]
 
   return (
-    <div className="grid grid-cols-1 gap-3 p-3">
+    <>
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -191,156 +192,156 @@ export function PumpMechanics(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-2">
-        <div className="grid grid-cols-3 justify-items-center gap-2">
+      <div className="grid grid-cols-[240px_minmax(0,1fr)_240px] items-start gap-4">
+        <Panel title={t('panels.parameters')}>
           <Stepper
-            label={t('fields.pressure')}
+            block
+            label={t('fields.pressureL')}
             display={String(pressureL)}
             disabled={busy}
             edit={{ ...PM.pressureL, value: pressureL, onChange: param(setPressureL) }}
           />
           <Stepper
+            block
             label={t('fields.pumpPressure')}
             display={String(pressurePump)}
             disabled={busy}
             edit={{ ...PM.pressurePump, value: pressurePump, onChange: param(setPressurePump) }}
           />
           <Stepper
-            label={t('fields.pressure')}
+            block
+            label={t('fields.pressureR')}
             display={String(pressureR)}
             disabled={busy}
             edit={{ ...PM.pressureR, value: pressureR, onChange: param(setPressureR) }}
           />
-        </div>
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
-          <PumpApparatus
-            levelL={volL / PM_BEAKER}
-            levelR={volR / PM_BEAKER}
-            pumpFill={chamber / 120}
-            radiusL={radiusL}
-            radiusR={radiusR}
-            valveL={valves.L}
-            valveR={valves.R}
-          />
-        </div>
-        <div className="grid grid-cols-3 justify-items-center">
-          {[volL, null, volR].map((v, i) =>
-            v === null ? (
-              <span key={i} />
-            ) : (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <span className="text-sm font-semibold text-bench-100">{t('fields.volume')}</span>
-                <Readout value={String(Math.round(v))} />
-              </div>
-            )
-          )}
-        </div>
-      </Panel>
+          <div className="px-section">
+            <span className="px-panel__title">{splitUnit(t('fields.flowTubeRadius'))?.text}</span>
+            <Stepper
+              block
+              label={t('fields.radiusL')}
+              display={fixed(radiusL, 1)}
+              disabled={busy}
+              edit={{ ...PM.radius, value: radiusL, onChange: param(setRadiusL) }}
+            />
+            <Stepper
+              block
+              label={t('fields.radiusR')}
+              display={fixed(radiusR, 1)}
+              disabled={busy}
+              edit={{ ...PM.radius, value: radiusR, onChange: param(setRadiusR) }}
+            />
+          </div>
+        </Panel>
 
-      <Panel className="flex flex-wrap items-start justify-around gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'pumping' && job.current?.auto === true} />
-            <Button variant="primary" onClick={() => pump(true)} disabled={busy} className="flex-1">
-              {t('actions.autoPump')}
-            </Button>
+        <Panel title={t('panels.apparatus')} actions={<span className="px-eyebrow">{t('panels.sourceToDest')}</span>}>
+          <div className="px-well p-4">
+            <PumpApparatus
+              levelL={volL / PM_BEAKER}
+              levelR={volR / PM_BEAKER}
+              pumpFill={chamber / 120}
+              radiusL={radiusL}
+              radiusR={radiusR}
+              valveL={valves.L}
+              valveR={valves.R}
+            />
           </div>
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'pumping' && job.current?.auto === false} />
-            <Button onClick={() => pump(false)} disabled={busy} className="flex-1">
-              {t('actions.single')}
-            </Button>
+          <div className="grid grid-cols-2 gap-4">
+            <ReadoutField label={`${splitUnit(t('fields.volume'))?.text} · ${t('panels.source')}`} unit="ml" value={String(Math.round(volL))} />
+            <ReadoutField
+              label={`${splitUnit(t('fields.volume'))?.text} · ${t('panels.dest')}`}
+              unit="ml"
+              value={String(Math.round(volR))}
+              className="justify-self-end"
+            />
           </div>
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'refilling'} />
-            <Button
-              onClick={() => {
-                setCanRefill(false)
-                setPhase('refilling')
-              }}
-              disabled={busy || !canRefill || volL >= PM_BEAKER}
-              className="flex-1"
-            >
-              {t('actions.refill')}
-            </Button>
+          <div className="px-section">
+            <span className="px-panel__title">{splitUnit(t('fields.pumpVolume'))?.text}</span>
+            <div className="flex flex-wrap items-end gap-4">
+              <Stepper
+                label={t('fields.start')}
+                unit="ml"
+                display={String(volStart)}
+                disabled={busy}
+                edit={{
+                  min: volEnd,
+                  max: PM.volumeStart.max,
+                  step: 1,
+                  value: volStart,
+                  onChange: param((v) => {
+                    setVolStart(v)
+                    setChamber(v)
+                  })
+                }}
+              />
+              <Stepper
+                label={t('fields.end')}
+                unit="ml"
+                display={String(volEnd)}
+                disabled={busy}
+                edit={{ min: PM.volumeEnd.min, max: volStart, step: 1, value: volEnd, onChange: param(setVolEnd) }}
+              />
+              <ReadoutField label={t('fields.stroke')} unit="ml" value={String(strokeVolume)} />
+            </div>
           </div>
-        </div>
-        <Stepper
-          label={t('fields.maxStrokes')}
-          display={String(strokesLeft ?? strokes)}
-          disabled={busy}
-          edit={{ ...PM.strokes, value: strokes, onChange: setStrokes }}
-        />
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.pumpVolume')}</span>
-          <Stepper
-            label={t('fields.start')}
-            display={String(volStart)}
-            disabled={busy}
-            edit={{ min: volEnd, max: PM.volumeStart.max, step: 1, value: volStart, onChange: param((v) => {
-              setVolStart(v)
-              setChamber(v)
-            }) }}
-          />
-          <Stepper
-            label={t('fields.end')}
-            display={String(volEnd)}
-            disabled={busy}
-            edit={{ min: PM.volumeEnd.min, max: volStart, step: 1, value: volEnd, onChange: param(setVolEnd) }}
-          />
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-bench-100">{t('fields.stroke')}</span>
-            <Readout value={String(strokeVolume)} />
-          </div>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.flowTubeRadius')}</span>
-          <Stepper
-            label={t('fields.radiusL')}
-            display={fixed(radiusL, 1)}
-            disabled={busy}
-            edit={{ ...PM.radius, value: radiusL, onChange: param(setRadiusL) }}
-          />
-          <Stepper
-            label={t('fields.radiusR')}
-            display={fixed(radiusR, 1)}
-            disabled={busy}
-            edit={{ ...PM.radius, value: radiusR, onChange: param(setRadiusR) }}
-          />
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.flow')}</span>
-          <Readout value={result ? fixed(result.flow, 1) : ''} className="w-32" />
-          <span className="text-sm font-semibold text-bench-100">{t('fields.rate')}</span>
-          <Readout value={result ? fixed(result.rate, 1) : ''} className="w-32" />
-        </div>
-      </Panel>
+        </Panel>
 
-      <Panel>
-        <DataSetTable
-          store={store}
-          columns={columns}
-          editable
-          label={label}
-          canRecord={recordable && result !== null}
-          onRecord={() => {
-            if (!result) return
-            store.addRow({
-              flow: result.flow,
-              radiusL,
-              radiusR,
-              strokeVolume,
-              rate: result.rate,
-              pressureL,
-              pressureDif: pressurePump - pressureR
-            })
-            setRecordable(false)
-          }}
-        />
-      </Panel>
+        <Panel
+          title={t('panels.pump')}
+          actions={<Light on={phase !== 'ready'} label={tc(phase === 'ready' ? 'common.ready' : 'common.inProgress')} />}
+        >
+          <Stepper
+            block
+            label={t('fields.maxStrokes')}
+            display={String(strokesLeft ?? strokes)}
+            disabled={busy}
+            edit={{ ...PM.strokes, value: strokes, onChange: setStrokes }}
+          />
+          <Button variant="primary" block icon="play" onClick={() => pump(true)} disabled={busy}>
+            {t('actions.autoPump')}
+          </Button>
+          <Button block onClick={() => pump(false)} disabled={busy}>
+            {t('actions.single')}
+          </Button>
+          <Button
+            block
+            onClick={() => {
+              setCanRefill(false)
+              setPhase('refilling')
+            }}
+            disabled={busy || !canRefill || volL >= PM_BEAKER}
+          >
+            {t('actions.refill')}
+          </Button>
+          <div className="px-section">
+            <ReadoutField inline label={t('fields.flow')} value={result ? fixed(result.flow, 1) : ''} />
+            <ReadoutField inline label={t('fields.rate')} value={result ? fixed(result.rate, 1) : ''} />
+          </div>
+        </Panel>
+      </div>
+
+      <DataSetTable
+        store={store}
+        columns={columns}
+        editable
+        label={label}
+        canRecord={recordable && result !== null}
+        onRecord={() => {
+          if (!result) return
+          store.addRow({
+            flow: result.flow,
+            radiusL,
+            radiusR,
+            strokeVolume,
+            rate: result.rate,
+            pressureL,
+            pressureDif: pressurePump - pressureR
+          })
+          setRecordable(false)
+        }}
+      />
 
       {alert && <Notice title={t('alerts.title')} lines={[t(`alerts.${alert}`)]} onClose={() => setAlert(null)} />}
-    </div>
+    </>
   )
 }
-

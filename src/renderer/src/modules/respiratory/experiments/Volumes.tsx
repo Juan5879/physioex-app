@@ -5,7 +5,7 @@ import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Readout } from '@/shared/components/ui'
+import { Button, Light, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { BellJar, LungScope, RespLayout, ResultCell } from '../components/Bench'
@@ -93,20 +93,17 @@ export function Volumes(): ReactNode {
       <RespLayout
         apparatus={<BellJar scale={running && r ? r.lungScale : 100} radius={radius} />}
         controls={
-          <div className="flex flex-wrap items-end justify-around gap-3">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-sm font-semibold text-bench-100">{t('fields.flow')}</span>
-              <Readout value={running && r ? fixed(r.flow, 2) : '----'} />
-            </div>
+          <div className="flex flex-wrap items-end gap-4">
+            <ReadoutField label={t('fields.flow')} value={running && r ? fixed(r.flow, 2) : '----'} />
             <Stepper
               label={t('fields.radius')}
               display={fixed(radius, 2)}
               disabled={running}
               edit={{ ...RADIUS, value: radius, onChange: (v) => s.setParams({ radius: v }) }}
             />
-            <div className="flex items-center gap-2">
-              <Light on={running} />
-              <Button variant="primary" onClick={start}>
+            <div className="flex h-[34px] items-center gap-3">
+              <Light on={running} label="" />
+              <Button variant="primary" icon={running ? undefined : 'play'} onClick={start}>
                 {running ? t('actions.stop') : t('actions.start')}
               </Button>
             </div>
@@ -122,12 +119,12 @@ export function Volumes(): ReactNode {
         }
         scope={scope()}
         scopeActions={
-          <Button className="border border-gray-500 bg-gray-100" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
+          <Button size="sm" icon="eraser" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
             {tc('common.clearTracings')}
           </Button>
         }
         results={
-          <div className="grid grid-cols-2 gap-2">
+          <div className="px-metrics">
             <ResultCell label={t('fields.tidal')} value={num(res?.tidal ?? null)} />
             <ResultCell label={t('fields.vitalCapacity')} value={num(res?.vitalCapacity ?? null)} />
             <ResultCell label={t('fields.expReserve')} value={num(res?.expReserve ?? null)} />

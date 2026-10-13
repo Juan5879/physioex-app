@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom'
+import { labs } from '@/modules/registry'
 import { ToolbarHost } from './ToolbarSlot'
 
 export interface LabExperiment {
@@ -9,8 +11,8 @@ export interface LabExperiment {
 }
 
 /**
- * Encabezado de un laboratorio con las pestañas de sus experimentos y el lugar del menú
- * de herramientas, más las rutas de cada experimento.
+ * Encabezado de un laboratorio (`.px-labhead`: rótulo, título y herramientas a la derecha), las
+ * pestañas numeradas de sus actividades y las rutas de cada una.
  */
 export function LabShell({
   title,
@@ -22,38 +24,51 @@ export function LabShell({
   base: string
   experiments: LabExperiment[]
 }): ReactNode {
+  const { t } = useTranslation()
+  const lab = labs.find((l) => `/lab/${l.id}` === base)
   // Rutas absolutas: en React Router v7 los enlaces relativos dentro de una ruta con comodín
   // (/lab/:labId/*) se resuelven contra la URL completa y provocaban un bucle de redirecciones.
   return (
-    <div className="mx-auto max-w-[1500px]">
+    <div className="px-container">
       <ToolbarHost
         renderTarget={(ref) => (
-          <div className="flex flex-wrap items-end gap-x-4 border-b border-bench-600 px-3 pt-1.5">
-            <h1 className="pb-1.5 text-lg font-bold">{title}</h1>
-            <nav className="flex flex-wrap gap-1">
+          <>
+            <div className="px-labhead">
+              <div>
+                {lab && (
+                  <div className="px-eyebrow">
+                    {t('app.labEyebrow', { number: labNumber(lab.number), system: t(`systems.${lab.id}`) })}
+                  </div>
+                )}
+                <h1>{title}</h1>
+              </div>
+              <div ref={ref} className="px-labhead__actions" />
+            </div>
+            <nav className="px-tabs" aria-label={title}>
               {experiments.map((e, i) => (
-                <NavLink
-                  key={e.path}
-                  to={`${base}/${e.path}`}
-                  className={({ isActive }) =>
-                    `rounded-t-lg px-3 py-1.5 text-sm font-semibold ${isActive ? 'bg-bench-700 text-white' : 'text-bench-300 hover:bg-bench-800 hover:text-white'}`
-                  }
-                >
-                  {i + 1}. {e.label}
+                <NavLink key={e.path} to={`${base}/${e.path}`} className="px-tab">
+                  <span className="n">{labNumber(i + 1)}</span>
+                  {e.label}
                 </NavLink>
               ))}
             </nav>
-            <div ref={ref} className="ml-auto pb-1" />
-          </div>
+          </>
         )}
       >
-        <Routes>
-          {experiments.map((e) => (
-            <Route key={e.path} path={e.path} element={e.element} />
-          ))}
-          <Route path="*" element={<Navigate to={`${base}/${experiments[0].path}`} replace />} />
-        </Routes>
+        <div className="px-labbody">
+          <Routes>
+            {experiments.map((e) => (
+              <Route key={e.path} path={e.path} element={e.element} />
+            ))}
+            <Route path="*" element={<Navigate to={`${base}/${experiments[0].path}`} replace />} />
+          </Routes>
+        </div>
       </ToolbarHost>
     </div>
   )
+}
+
+/** Número con dos cifras («02») */
+export function labNumber(n: number): string {
+  return String(n).padStart(2, '0')
 }

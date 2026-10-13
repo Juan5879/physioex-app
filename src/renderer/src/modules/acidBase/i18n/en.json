@@ -56,5 +56,10 @@
   },
   "sets": {
     "PCO2": "PCO₂"
+  },
+  "panels": {
+    "apparatus": "Apparatus",
+    "parameters": "Parameters",
+    "nephron": "Nephron"
   }
 }

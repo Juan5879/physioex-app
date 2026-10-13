@@ -84,45 +84,45 @@ export function Breathing(): ReactNode {
       <RespLayout
         apparatus={<BellJar scale={running && r ? r.lungScale : 100} radius={radius} bag={running && r?.bagOn} />}
         controls={
-          <div className="flex flex-wrap items-end justify-around gap-3">
+          <div className="flex flex-wrap items-end gap-4">
             <Stepper
               label={t('fields.radius')}
               display={fixed(radius, 1)}
               disabled={running}
               edit={{ ...RADIUS, value: radius, onChange: (v) => s.setParams({ radius: v }) }}
             />
-            <div className="flex items-center gap-2">
-              <Light on={running} />
-              <Button variant="primary" onClick={start}>
+            <div className="flex h-[34px] items-center gap-3">
+              <Light on={running} label="" />
+              <Button variant="primary" icon={running ? undefined : 'play'} onClick={start}>
                 {running ? t('actions.stop') : t('actions.start')}
               </Button>
             </div>
-            <Readout value={condition} className="min-w-48 text-center" />
+            <Readout text value={condition} className="min-w-48" />
           </div>
         }
         scope={scope()}
         scopeActions={
-          <Button className="border border-gray-500 bg-gray-100" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
+          <Button size="sm" icon="eraser" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
             {tc('common.clearTracings')}
           </Button>
         }
         results={
-          <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-3">
-            <div className="flex flex-col gap-2">
-              <Button onClick={() => r?.rapid()} disabled={!running || unusual}>
+          <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-3">
+            <div className="grid content-start gap-2">
+              <Button size="sm" onClick={() => r?.rapid()} disabled={!running || unusual}>
                 {t('actions.rapid')}
               </Button>
-              <Button onClick={() => r?.rebreathe()} disabled={!running || unusual}>
+              <Button size="sm" onClick={() => r?.rebreathe()} disabled={!running || unusual}>
                 {t('actions.rebreathing')}
               </Button>
-              <Button onClick={() => r?.holdBreath()} disabled={!running || unusual}>
+              <Button size="sm" onClick={() => r?.holdBreath()} disabled={!running || unusual}>
                 {t('actions.holding')}
               </Button>
-              <Button onClick={() => r?.normalBreathing()} disabled={!running || !unusual}>
+              <Button size="sm" onClick={() => r?.normalBreathing()} disabled={!running || !unusual}>
                 {t('actions.normal')}
               </Button>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="grid gap-2">
               <ResultCell label={t('fields.pco2')} value={running && r ? fixed(r.pco2) : res ? fixed(res.pco2) : '----'} />
               <ResultCell label={t('fields.maxPco2')} value={running && r ? fixed(r.maxPco2) : res ? fixed(res.maxPco2) : '----'} />
               <ResultCell label={t('fields.minPco2')} value={running && r ? fixed(r.minPco2) : res ? fixed(res.minPco2) : '----'} />

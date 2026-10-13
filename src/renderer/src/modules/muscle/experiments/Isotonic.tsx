@@ -4,7 +4,7 @@ import { DataTable } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Oscilloscope, ticks } from '@/shared/components/Oscilloscope'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Light, Modal, Readout } from '@/shared/components/ui'
+import { Button, Modal, Readout } from '@/shared/components/ui'
 import { fixed, roundTo } from '@/shared/lib/format'
 import { useSweep } from '@/shared/lib/useSweep'
 import { Apparatus, WeightTray } from '../components/Apparatus'
@@ -91,6 +91,8 @@ export function Isotonic(): ReactNode {
   return (
     <>
       <ExperimentLayout
+        running={running}
+        traceCount={s.traces.length}
         tools={
           <ExperimentTools
             lab={t('title')}
@@ -116,9 +118,10 @@ export function Isotonic(): ReactNode {
           />
         }
         apparatusControls={
-          <div className="flex flex-col items-center gap-3">
+          <div className="grid gap-4">
             <WeightTray weights={IT.weights} current={weight} onPick={setWeight} locked={running} />
             <Stepper
+              block
               label={t('fields.platformHeight')}
               display={String(platform)}
               edit={{
@@ -151,48 +154,48 @@ export function Isotonic(): ReactNode {
           </>
         }
         stimulator={
-          <div className="flex flex-wrap items-start justify-around gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Light on={running} />
-                <Button variant="primary" onClick={stimulate} disabled={running}>
-                  {tc('common.stimulate')}
-                </Button>
-              </div>
-              <Stepper
-                label={t('fields.voltage')}
-                display={fixed(voltage, 1)}
-                edit={{
-                  value: voltage,
-                  min: 0,
-                  max: V_DISPLAY_MAX,
-                  step: 0.1,
-                  onChange: (v) => {
-                    setLast(null)
-                    s.setParams({ voltage: v })
-                  }
-                }}
-                disabled={running}
-                canDecrement={voltage > 0}
-                canIncrement={voltage < V_DISPLAY_MAX}
-                onStep={(d) => {
+          <>
+            <Stepper
+              block
+              label={t('fields.voltage')}
+              display={fixed(voltage, 1)}
+              edit={{
+                value: voltage,
+                min: 0,
+                max: V_DISPLAY_MAX,
+                step: 0.1,
+                onChange: (v) => {
                   setLast(null)
-                  s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
-                }}
-              />
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-sm font-semibold text-bench-100">{t('fields.muscleLength')}</span>
-              <Readout value={fixed(weight > 0 ? length : 50, 1)} />
-              <span className="text-sm font-semibold text-bench-100">{t('fields.velocity')}</span>
-              <Readout value={last ? fixed(last.velocity) : ''} />
+                  s.setParams({ voltage: v })
+                }
+              }}
+              disabled={running}
+              canDecrement={voltage > 0}
+              canIncrement={voltage < V_DISPLAY_MAX}
+              onStep={(d) => {
+                setLast(null)
+                s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
+              }}
+            />
+            <Button variant="primary" block icon="play" onClick={stimulate} disabled={running}>
+              {tc('common.stimulate')}
+            </Button>
+            <div className="px-section">
+              <div className="px-row">
+                <span className="px-label">{t('short.length')}</span>
+                <Readout value={fixed(weight > 0 ? length : 50, 1)} unit="mm" />
+              </div>
+              <div className="px-row">
+                <span className="px-label">{t('short.velocity')}</span>
+                <Readout value={last ? fixed(last.velocity) : ''} unit="mm/ms" />
+              </div>
             </div>
             <ForceReadouts
               passive={fixed(passive)}
               active={last ? fixed(last.active) : ''}
               total={last ? fixed(last.total) : ''}
             />
-          </div>
+          </>
         }
         table={
           <DataTable

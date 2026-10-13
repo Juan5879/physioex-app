@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Oscilloscope } from '@/shared/components/Oscilloscope'
 import { Button, Light, Readout } from '@/shared/components/ui'
-import { fixed } from '@/shared/lib/format'
+import { fixed, splitUnit } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { CENTRIFUGE_FRAMES, INCUBATE_FRAMES, MIX_FRAMES, STANDARD, standardLine } from '../model/endocrine'
 
@@ -71,9 +71,9 @@ export function ProcessButtons({
   const { state, run, removePellet } = process
   const busy = state.running !== null
   const row = (step: Step | 'pellet', label: string, enabled: boolean, onClick: () => void): ReactNode => (
-    <div className="flex items-center gap-2">
-      <Light on={state.running === step} />
-      <Button onClick={onClick} disabled={!enabled || busy} className="flex-1">
+    <div className="flex items-center gap-3">
+      <Light on={state.running === step} label="" />
+      <Button size="sm" onClick={onClick} disabled={!enabled || busy} className="flex-1">
         {label}
       </Button>
     </div>
@@ -136,11 +136,15 @@ export function SpectroGraph({
 export function SpectroReadouts({ od, glucose }: { od: number | null; glucose: number | null }): ReactNode {
   const { t } = useTranslation('endocrine')
   return (
-    <div className="grid grid-cols-[auto_auto] items-center justify-center gap-x-3 gap-y-1">
-      <Readout value={od === null ? '0' : fixed(od, 2)} />
-      <span className="text-sm">{t('fields.opticalDensity')}</span>
-      <Readout value={glucose === null ? '0' : String(glucose)} />
-      <span className="text-sm">{t('fields.glucose')}</span>
+    <div className="px-metrics">
+      <div className="px-metric">
+        <span className="px-label">{t('fields.opticalDensity')}</span>
+        <Readout value={od === null ? '' : fixed(od, 2)} />
+      </div>
+      <div className="px-metric">
+        <span className="px-label">{splitUnit(t('fields.glucose'))?.text ?? t('fields.glucose')}</span>
+        <Readout value={glucose === null ? '' : String(glucose)} unit={splitUnit(t('fields.glucose'))?.unit} />
+      </div>
     </div>
   )
 }

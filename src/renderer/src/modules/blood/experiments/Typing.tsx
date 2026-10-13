@@ -37,6 +37,7 @@ export function Typing(): ReactNode {
 
   return (
     <BloodLayout
+      rightTitle={t('panels.typing')}
       left={
         <>
           <ToolbarPortal>
@@ -52,22 +53,22 @@ export function Typing(): ReactNode {
               setLit(false)
             }}
           />
-          <div className="flex justify-center gap-6 rounded-xl bg-bench-900 p-4">
+          <div className="px-well flex justify-center gap-6 p-4">
             {SERA.map((serum) => (
               <div key={serum} className="flex flex-col items-center gap-1">
                 <svg viewBox="0 0 60 60" className="h-20 w-20">
-                  <circle cx={30} cy={30} r={26} fill={lit ? '#f8fafc' : '#cbd5e1'} stroke="#64748b" />
+                  <circle cx={30} cy={30} r={26} className="il-glass" style={lit ? { stroke: 'var(--accent)' } : undefined} />
                   {sample !== null && mixed && (
                     result?.[serum] ? (
                       // aglutinación: grumos
                       Array.from({ length: 9 }, (_, k) => (
-                        <circle key={k} cx={18 + (k % 3) * 12} cy={18 + Math.floor(k / 3) * 12} r={4} fill="#7f1d1d" />
+                        <circle key={k} cx={18 + (k % 3) * 12} cy={18 + Math.floor(k / 3) * 12} r={4} style={{ fill: 'var(--chart-4)' }} fillOpacity={0.6} />
                       ))
                     ) : (
-                      <circle cx={30} cy={30} r={20} fill="#dc2626" fillOpacity={0.75} />
+                      <circle cx={30} cy={30} r={20} style={{ fill: 'var(--chart-4)' }} fillOpacity={0.75} />
                     )
                   )}
-                  {sample !== null && !mixed && <circle cx={30} cy={30} r={8} fill="#dc2626" />}
+                  {sample !== null && !mixed && <circle cx={30} cy={30} r={8} style={{ fill: 'var(--chart-4)' }} />}
                 </svg>
                 <span className="rounded px-2 text-xs font-semibold text-black" style={{ background: SERUM_COLOR[serum] }}>
                   Anti-{serum}
@@ -83,13 +84,13 @@ export function Typing(): ReactNode {
             {t('actions.addSera')}
           </Button>
           <div className="flex items-center gap-2">
-            <Light on={lit} />
+            <Light on={lit} label="" />
             <Button onClick={() => setLit(!lit)} disabled={!mixed}>
               {t('actions.observe')}
             </Button>
           </div>
           {lit && result && (
-            <div className="rounded-lg border border-bench-500 p-2 text-sm">
+            <div className="px-chip !h-auto !justify-start !rounded-[var(--radius-md)] !py-1.5 !font-sans">
               {SERA.map((sr) => `Anti-${sr}: ${t(result[sr] ? 'values.positive' : 'values.negative')}`).join(' · ')}
             </div>
           )}

@@ -7,8 +7,8 @@ import { DropperBottle } from '@/shared/components/LabGlass'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
-import { fixed } from '@/shared/lib/format'
+import { Button, Hint, Light, Notice, Panel, Readout, ReadoutField } from '@/shared/components/ui'
+import { fixed, splitUnit } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { Beaker, Nephron } from '../components/Nephron'
 import { UF, segmentConcentration, urineConcentration, urineFormation, type Segment, type UrineResult } from '../model/renal'
@@ -35,6 +35,7 @@ export function urineColumns(t: TFunction): DataColumn<UrineRow>[] {
 /** Experimento 2: reabsorción de glucosa, gradiente medular, ADH y aldosterona */
 export function UrineFormation(): ReactNode {
   const { t } = useTranslation('renal')
+  const tc = useTranslation().t
   const sets = useUrineSets()
   const [carriers, setCarriers] = useState<number>(UF.carriers.initial)
   const [appliedCarriers, setAppliedCarriers] = useState<number>(UF.carriers.initial)
@@ -83,12 +84,13 @@ export function UrineFormation(): ReactNode {
         : run.res.urineVolume * Math.min(1, (frame - URINE_FROM) / URINE_FRAMES)
       : run.res.urineVolume
     : null
-  const coating = adh && ald ? '#ffff00' : adh ? '#00ff00' : ald ? '#ff0000' : null
+  const coating = adh && ald ? 'var(--signal)' : adh ? 'var(--scale-3)' : ald ? 'var(--chart-4)' : null
   const columns = urineColumns(t)
   const label = (n: string): string => t(`sets.${n}`, { defaultValue: n })
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_200px] gap-3 p-3">
+    <>
+      <div className="grid grid-cols-[minmax(0,1fr)_240px] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -99,22 +101,23 @@ export function UrineFormation(): ReactNode {
         />
       </ToolbarPortal>
 
-      <div className="flex flex-col gap-3">
-        <Panel className="flex flex-wrap items-end justify-center gap-3" >
-          <Button onClick={() => setAppliedCarriers(carriers)} disabled={running}>
-            {t('actions.addCarriers')}
-          </Button>
+      <Panel
+        title={t('panels.nephron')}
+        actions={<Light on={running} label={tc(running ? 'common.inProgress' : 'common.stopped')} />}
+      >
+        <div className="flex flex-wrap items-end gap-3">
           <Stepper
             label={t('fields.carriers')}
             display={String(carriers)}
             disabled={running}
             edit={{ ...UF.carriers, value: carriers, onChange: setCarriers }}
           />
-          <span className="pb-2 text-xs text-bench-300">
-            ({appliedCarriers})
-          </span>
-        </Panel>
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
+          <Button onClick={() => setAppliedCarriers(carriers)} disabled={running}>
+            {t('actions.addCarriers')}
+          </Button>
+          <span className="px-chip mb-1">{appliedCarriers}</span>
+        </div>
+        <div className="px-well p-3">
           <Nephron
             afferent={0.5}
             efferent={0.45}
@@ -127,19 +130,16 @@ export function UrineFormation(): ReactNode {
             onProbe={run ? (segment, pos) => setReading({ segment, value: segmentConcentration(segment, pos, appliedGradient, run.adh, urineConc) }) : undefined}
           />
         </div>
-        <Panel className="flex flex-wrap items-end justify-around gap-3">
-          <div className="flex flex-col items-center gap-1" title={t('hints.probe')}>
-            <span className="text-sm font-semibold text-bench-100">
-              {t('fields.concentration')}
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="px-field" title={t('hints.probe')}>
+            <span className="px-label">
+              {splitUnit(t('fields.concentration'))?.text ?? t('fields.concentration')}
               {reading ? ` · ${t(`segments.${reading.segment}`)}` : ''}
             </span>
-            <Readout value={reading ? fixed(reading.value) : run ? '----' : ''} />
-          </div>
-          <div className="flex items-center gap-2">
-            <Light on={running} />
-            <Button variant="primary" onClick={start} disabled={running}>
-              {t('actions.start')}
-            </Button>
+            <Readout
+              value={reading ? fixed(reading.value) : run ? '----' : ''}
+              unit={splitUnit(t('fields.concentration'))?.unit}
+            />
           </div>
           <Stepper
             label={t('fields.concGradient')}
@@ -150,35 +150,41 @@ export function UrineFormation(): ReactNode {
           <Button onClick={() => setAppliedGradient(gradient)} disabled={running}>
             {t('actions.dispense')}
           </Button>
-        </Panel>
-      </div>
+          <Button variant="primary" icon="play" className="ml-auto" onClick={start} disabled={running}>
+            {t('actions.start')}
+          </Button>
+        </div>
+      </Panel>
 
-      <Panel className="flex flex-col items-center gap-3">
+      <Panel title={t('panels.collector')}>
+        <div className="grid grid-cols-2 gap-2">
         <DropperBottle
           label={t('reagents.aldosterone')}
-          color="#fca5a5"
+          color="var(--chart-4)"
           disabled={running}
           selected={ald}
           onClick={() => (ald ? setAlert('aldPresent') : setAld(true))}
         />
         <DropperBottle
           label={t('reagents.adh')}
-          color="#86efac"
+          color="var(--scale-3)"
           disabled={running}
           selected={adh}
           onClick={() => (adh ? setAlert('adhPresent') : setAdh(true))}
         />
-        <Button onClick={() => setValveOpen(!valveOpen)} disabled={running}>
+        </div>
+        <Hint>{t('hints.applyFirst')}</Hint>
+        <Button block aria-pressed={valveOpen} onClick={() => setValveOpen(!valveOpen)} disabled={running}>
           {valveOpen ? t('actions.valveOpen') : t('actions.valveClosed')}
         </Button>
-        <Beaker level={(urineShown ?? 0) * 0.12 / 70 * 4} color="#fde047" />
-        <span className="text-sm font-semibold text-bench-100">{t('fields.urineVolume')}</span>
-        <Readout value={urineShown !== null ? fixed(urineShown) : ''} />
-        <p className="text-center text-xs text-bench-300">{t('hints.applyFirst')}</p>
+        <div className="px-well flex justify-center p-3">
+          <Beaker level={(urineShown ?? 0) * 0.12 / 70 * 4} color="var(--signal)" />
+        </div>
+        <ReadoutField label={t('fields.urineVolume')} value={urineShown !== null ? fixed(urineShown) : ''} />
       </Panel>
+      </div>
 
-      <Panel className="col-span-2">
-        <DataSetTable
+      <DataSetTable
           store={sets}
           columns={columns}
           editable
@@ -198,9 +204,8 @@ export function UrineFormation(): ReactNode {
             setRecordable(false)
           }}
         />
-      </Panel>
 
       {alert && <Notice title={t('alerts.title')} lines={[t(`alerts.${alert}`)]} onClose={() => setAlert(null)} />}
-    </div>
+    </>
   )
 }

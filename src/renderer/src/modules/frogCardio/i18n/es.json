@@ -20,7 +20,8 @@
   "probes": {
     "probe1": "Estimulación directa del corazón",
     "probe2": "Estimulación del nervio vago",
-    "hint": "Haz clic en un electrodo para colocarlo; vuelve a hacer clic para quitarlo."
+    "hint": "Haz clic en un electrodo para colocarlo; vuelve a hacer clic para quitarlo.",
+    "mode": "Modo de estimulación"
   },
   "actions": {
     "single": "Estímulo único",
@@ -48,5 +49,12 @@
   },
   "hints": {
     "droppers": "Los goteros se habilitan cuando la frecuencia es normal; para volver a ella, lava con Ringer a 23°."
+  },
+  "units": {
+    "bpm": "lpm"
+  },
+  "panels": {
+    "ringer": "Solución de Ringer",
+    "agents": "Agentes"
   }
 }

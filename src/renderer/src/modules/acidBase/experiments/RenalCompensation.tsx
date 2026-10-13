@@ -6,7 +6,7 @@ import { DataSetTable, PrintDataSets } from '@/shared/components/DataSetTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Panel, Readout } from '@/shared/components/ui'
+import { Button, Light, Panel, Readout, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { Beaker, Nephron } from '@/modules/renal/components/Nephron'
@@ -29,6 +29,7 @@ export function renalColumns(t: TFunction): DataColumn<RenalRow>[] {
 /** Experimento 3: los riñones compensan una PCO₂ alterada excretando H⁺ o HCO₃⁻ */
 export function RenalCompensation(): ReactNode {
   const { t } = useTranslation('acidBase')
+  const tc = useTranslation().t
   const sets = useRenalSets()
   const [index, setIndex] = useState(RENAL_DEFAULT)
   const [ph, setPh] = useState(() => noisyPh(RENAL.ph[RENAL_DEFAULT]))
@@ -71,7 +72,8 @@ export function RenalCompensation(): ReactNode {
   const label = (n: string): string => t(`sets.${n}`, { defaultValue: n })
 
   return (
-    <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[260px_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -81,14 +83,12 @@ export function RenalCompensation(): ReactNode {
           printableData={<PrintDataSets sets={sets.sets} columns={columns} label={label} />}
         />
       </ToolbarPortal>
-      <Panel className="flex flex-col items-center gap-3">
-        <div className="flex gap-2">
-          <Beaker level={level} color="#b91c1c" />
-          <Beaker level={1 - level} color="#fca5a5" />
+      <Panel title={t('panels.parameters')}>
+        <div className="px-well flex justify-center gap-3 p-3">
+          <Beaker level={level} color="var(--chart-4)" />
+          <Beaker level={1 - level} color="var(--chart-4)" />
         </div>
-        <div className="flex gap-2">
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'running'} />
+        <div className="grid grid-cols-2 gap-2">
             <Button
               variant="primary"
               onClick={() => {
@@ -107,16 +107,13 @@ export function RenalCompensation(): ReactNode {
             >
               {phase === 'running' ? t('actions.stop') : t('actions.start')}
             </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Light on={phase === 'refilling'} />
             <Button onClick={() => setPhase('refilling')} disabled={phase !== 'done'}>
               {t('actions.refill')}
             </Button>
-          </div>
         </div>
         {/* PCO₂: 8 valores fijos del original */}
         <Stepper
+          block
           label={t('fields.pco2')}
           display={String(RENAL.pco2[index])}
           disabled={phase !== 'ready'}
@@ -131,13 +128,13 @@ export function RenalCompensation(): ReactNode {
             onChange: (v) => pick(RENAL.pco2.reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a)))
           }}
         />
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.bloodPh')}</span>
-          <Readout value={fixed(ph)} />
-        </div>
+        <ReadoutField inline label={t('fields.bloodPh')} value={fixed(ph)} />
       </Panel>
-      <div className="flex flex-col gap-3">
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
+      <Panel
+        title={t('panels.nephron')}
+        actions={<Light on={phase === 'running' || phase === 'refilling'} label={tc(phase === 'running' || phase === 'refilling' ? 'common.inProgress' : 'common.stopped')} />}
+      >
+        <div className="px-well p-3">
           <Nephron
             afferent={0.5}
             efferent={0.45}
@@ -146,20 +143,22 @@ export function RenalCompensation(): ReactNode {
             valveOpen
           />
         </div>
-        <Panel className="flex items-center justify-center gap-6">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.urine')}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-sm">{t('fields.h')}</span>
-            <Readout value={result ? t(`levels.${result.h}`) : ''} className="min-w-28 text-center" />
+        <div className="px-section">
+          <span className="px-panel__title">{t('fields.urine')}</span>
+          <div className="px-metrics">
+            <div className="px-metric">
+              <span className="px-label">{t('fields.h')}</span>
+              <Readout text value={result ? t(`levels.${result.h}`) : ''} className="min-w-32" />
+            </div>
+            <div className="px-metric">
+              <span className="px-label">{t('fields.hco3')}</span>
+              <Readout text value={result ? t(`levels.${result.hco3}`) : ''} className="min-w-32" />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm">{t('fields.hco3')}</span>
-            <Readout value={result ? t(`levels.${result.hco3}`) : ''} className="min-w-28 text-center" />
-          </div>
-        </Panel>
-      </div>
-      <Panel className="col-span-2">
-        <DataSetTable
+        </div>
+      </Panel>
+    </div>
+      <DataSetTable
           store={sets}
           columns={columns}
           editable
@@ -171,7 +170,6 @@ export function RenalCompensation(): ReactNode {
             setRecordable(false)
           }}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

@@ -21,7 +21,9 @@
     "radiusR": "Radio der. (mm)",
     "flowTubeRadius": "Radio del tubo de flujo (mm)",
     "rate": "Frecuencia (golpes/min)",
-    "tubeDiameter": "Diámetro del tubo"
+    "tubeDiameter": "Diámetro del tubo",
+    "pressureL": "Presión de la fuente (mm Hg)",
+    "pressureR": "Presión de destino (mm Hg)"
   },
   "columns": {
     "flow": "Flujo",
@@ -59,5 +61,13 @@
     "lowInflow": "El flujo hacia la bomba es demasiado bajo.",
     "lowOutflow": "La presión de la bomba debe superar la del vaso derecho para que haya flujo.",
     "rateTooHigh": "La frecuencia superaría 999 golpes/min. Cambia los parámetros."
+  },
+  "panels": {
+    "parameters": "Parámetros",
+    "apparatus": "Aparato",
+    "pump": "Bomba",
+    "sourceToDest": "Fuente → destino",
+    "source": "fuente",
+    "dest": "destino"
   }
 }

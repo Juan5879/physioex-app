@@ -86,5 +86,16 @@
     "odd": "Observa las líneas de precipitación entre los pocillos y elige la relación de cada par.",
     "elisa": "Haz clic en un pocillo para medir su densidad óptica.",
     "wb": "Haz clic en una tira para ver sus bandas."
+  },
+  "panels": {
+    "protocol": "Protocolo",
+    "progress": "{{done}} de {{total}}",
+    "stepDone": "Hecho",
+    "stepNext": "Siguiente",
+    "microscope": "Microscopio",
+    "agar": "Placa de agar",
+    "plate": "Placa de ELISA",
+    "membrane": "Membrana",
+    "wells": "Pocillos"
   }
 }

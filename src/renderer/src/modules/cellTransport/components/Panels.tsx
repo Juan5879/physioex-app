@@ -1,7 +1,9 @@
-import { useState, type ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { RunTable as SharedRunTable } from '@/shared/components/RunTable'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Light, Modal, Readout } from '@/shared/components/ui'
+import { Button, Field, Light, MiniTable, Readout } from '@/shared/components/ui'
+import { splitUnit } from '@/shared/lib/format'
 import { CONC, MWCO, TIMER, type SoluteId } from '../model/constants'
 import type { Conc } from '../model/transport'
 import type { RunRecord } from '../store'
@@ -19,7 +21,6 @@ export function BeakerControls({
   full,
   busy,
   canFlush,
-  dispensing,
   onChange,
   onDispense,
   onFlush,
@@ -33,7 +34,6 @@ export function BeakerControls({
   full: boolean
   busy: boolean
   canFlush: boolean
-  dispensing: boolean
   onChange: (s: SoluteId, v: number) => void
   onDispense: () => void
   onFlush: () => void
@@ -42,15 +42,17 @@ export function BeakerControls({
   const { t } = useTranslation('cellTransport')
   const allZero = solutes.every((s) => (setting[s] ?? 0) === 0)
   return (
-    <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(165px,1fr))] gap-x-2 gap-y-2">
+    <>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3">
         {solutes.map((s) => {
           const v = setting[s] ?? 0
           const name = t(`controlSolutes.${s}`, { defaultValue: t(`solutes.${s}`) })
           return (
             <Stepper
               key={s}
-              label={`${name} (${unit})`}
+              block
+              label={name}
+              unit={unit}
               display={fix(v, 2)}
               edit={{ ...CONC, value: v, onChange: (nv) => onChange(s, nv) }}
               disabled={locked}
@@ -61,19 +63,18 @@ export function BeakerControls({
           )
         })}
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        <Light on={dispensing} />
-        <Button onClick={onDispense} disabled={full || busy}>
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" onClick={onDispense} disabled={full || busy}>
           {t('actions.dispense')}
         </Button>
-        <Button onClick={onFlush} disabled={!canFlush}>
+        <Button size="sm" onClick={onFlush} disabled={!canFlush}>
           {t('actions.flush')}
         </Button>
-        <Button onClick={onDeionized} disabled={full || busy || allZero}>
+        <Button size="sm" onClick={onDeionized} disabled={full || busy || allZero}>
           {t('actions.deionized')}
         </Button>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -81,45 +82,39 @@ export function BeakerControls({
 export function MembraneRack({
   current,
   onPick,
-  disabled,
-  vertical = true
+  disabled
 }: {
   current: number | null
   onPick: (mwco: number) => void
   disabled: boolean
-  vertical?: boolean
 }): ReactNode {
   const { t } = useTranslation('cellTransport')
   return (
-    <div className="flex flex-col items-center gap-2" title={t('messages.pickMembrane')}>
-      <h3 className="text-center text-sm font-semibold text-bench-100">{t('panels.dialysis')}</h3>
-      <div className={`grid gap-2 ${vertical ? 'grid-cols-2' : 'grid-cols-4'}`}>
-        {MWCO.map((m) => {
-          const inHolder = current === m
-          return (
-            <button
-              key={m}
-              type="button"
-              disabled={disabled}
-              draggable={!disabled && !inHolder}
-              onDragStart={(e) => e.dataTransfer.setData('text/membrane', String(m))}
-              onClick={() => onPick(m)}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-1.5 text-xs font-semibold disabled:opacity-40 ${inHolder ? 'border-sky-400 bg-bench-800' : 'border-bench-500 bg-bench-900 hover:bg-bench-800'}`}
-            >
-              <span
-                className={`block rounded ${vertical ? 'h-20 w-4' : 'h-4 w-20'} ${inHolder ? 'opacity-20' : ''}`}
-                style={{ background: MEMBRANE_COLORS[m] }}
-              />
-              {m} (MWCO)
-            </button>
-          )
-        })}
+    <div className="px-field" title={t('messages.pickMembrane')}>
+      <span className="px-label">{t('panels.membraneHint')}</span>
+      <div className="px-options grid-cols-[repeat(auto-fit,minmax(104px,1fr))]">
+        {MWCO.map((m) => (
+          <button
+            key={m}
+            type="button"
+            className="px-option !flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-45"
+            aria-pressed={current === m}
+            disabled={disabled}
+            draggable={!disabled && current !== m}
+            onDragStart={(e) => e.dataTransfer.setData('text/membrane', String(m))}
+            onClick={() => onPick(m)}
+            style={{ '--c': MEMBRANE_COLORS[m] } as CSSProperties}
+          >
+            <span className="swatch !h-5 !w-2.5" />
+            <span className="v whitespace-nowrap">{m} MWCO</span>
+          </button>
+        ))}
       </div>
     </div>
   )
 }
 
-/** Temporizador, tiempo transcurrido y botón Iniciar/Pausa/Reanudar */
+/** Temporizador, botón Iniciar/Pausa/Reanudar y tiempo transcurrido */
 export function TimerPanel({
   maxTime,
   elapsed,
@@ -138,9 +133,10 @@ export function TimerPanel({
   onStart: () => void
 }): ReactNode {
   const { t } = useTranslation('cellTransport')
+  const tc = useTranslation().t
   const shown = elapsed === null ? maxTime : maxTime - elapsed
   return (
-    <div className="flex flex-wrap items-end justify-center gap-4">
+    <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
       <Stepper
         label={t('fields.timer')}
         display={String(shown)}
@@ -150,16 +146,15 @@ export function TimerPanel({
         canIncrement={maxTime < TIMER.max}
         onStep={(d) => onChangeTime(clampStep(maxTime, d, TIMER))}
       />
-      <div className="flex items-center gap-2 pb-0.5">
-        <Light on={running} />
-        <Button variant="primary" onClick={onStart} className="min-w-24">
+      <div className="flex h-[34px] items-center gap-3">
+        <Light on={running} label={running ? tc('common.inProgress') : tc('common.stopped')} />
+        <Button variant="primary" icon="play" onClick={onStart} className="min-w-28">
           {label}
         </Button>
       </div>
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-sm font-semibold text-bench-100">{t('fields.elapsed')}</span>
-        <Readout value={String(elapsed ?? 0)} />
-      </div>
+      <Field label={splitUnit(t('fields.elapsed'))?.text ?? t('fields.elapsed')} className="ml-auto">
+        <Readout value={String(elapsed ?? 0)} unit="min" />
+      </Field>
     </div>
   )
 }
@@ -168,37 +163,28 @@ export function TimerPanel({
 export function SoluteValues({
   solutes,
   header,
-  values
+  values,
+  empty
 }: {
   solutes: SoluteId[]
   header: string
   /** `null` = vacío; si no, el texto de cada soluto */
   values: Partial<Record<SoluteId, string>> | null
+  empty: string
 }): ReactNode {
   const { t } = useTranslation('cellTransport')
   return (
-    <table className="w-full border-collapse text-sm">
-      <thead>
-        <tr className="text-bench-100">
-          <th className="px-1 font-semibold">{t('fields.solute')}</th>
-          <th className="px-1 font-semibold">{header}</th>
-        </tr>
-      </thead>
-      <tbody className="font-mono text-lcd">
-        {solutes.map((s) => (
-          <tr key={s} className="border-t border-bench-700 bg-black">
-            <td className="px-2 py-0.5 text-center">{values ? t(`solutes.${s}`) : '\u00a0'}</td>
-            <td className="px-2 py-0.5 text-right tabular-nums">{values?.[s] ?? ''}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <MiniTable
+      headers={[t('fields.solute'), header]}
+      rows={values && solutes.map((s) => [t(`solutes.${s}`), values[s] ?? ''])}
+      empty={empty}
+    />
   )
 }
 
 /**
- * Lista de corridas con "Registrar datos" y "Borrar corrida", y la tabla de la corrida
- * seleccionada (una fila por soluto), como el panel inferior del original.
+ * Panel Resultados: lista de corridas con «Registrar datos» y «Borrar corrida», y la tabla de la
+ * corrida seleccionada (una fila por soluto).
  */
 export function RunTable({
   headers,
@@ -214,95 +200,16 @@ export function RunTable({
   onDelete: (setNum: number) => void
 }): ReactNode {
   const { t } = useTranslation('cellTransport')
-  const tc = useTranslation().t
-  const [selected, setSelected] = useState<number | null>(null)
-  const [confirm, setConfirm] = useState(false)
-  // por defecto se muestra la última corrida registrada
-  const shown = runs.find((r) => r.setNum === selected) ?? runs[runs.length - 1] ?? null
   const hasHash = runs.some((r) => r.rows.some((row) => row.cells.some((c) => c.endsWith('#'))))
-
   return (
-    <div className="flex gap-3">
-      <div className="flex w-24 shrink-0 flex-col">
-        <span className="mb-1 text-center text-sm font-semibold text-bench-100">{t('fields.runNumber')}</span>
-        <div className="h-36 overflow-y-auto rounded border border-black bg-black font-mono text-lcd">
-          {runs.map((r) => (
-            <button
-              key={r.setNum}
-              type="button"
-              onClick={() => setSelected(r.setNum)}
-              className={`block w-full px-2 py-0.5 text-center ${shown?.setNum === r.setNum ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
-            >
-              {r.setNum}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="flex w-36 shrink-0 flex-col justify-center gap-1.5">
-        <Button
-          onClick={() => {
-            onRecord()
-            setSelected(null)
-          }}
-          disabled={!canRecord}
-        >
-          {t('actions.record')}
-        </Button>
-        <Button onClick={() => setConfirm(true)} disabled={!shown}>
-          {t('actions.deleteRun')}
-        </Button>
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="h-40 overflow-y-auto rounded border border-black bg-black">
-          <table className="w-full border-collapse text-sm">
-            <thead className="sticky top-0 bg-bench-600">
-              <tr>
-                {headers.map((h) => (
-                  <th key={h} className="px-2 py-1 text-center font-semibold whitespace-nowrap">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="font-mono text-lcd">
-              {shown?.rows.map((row) => (
-                <tr key={row.solute} className="border-t border-bench-700">
-                  <td className="px-2 py-1 text-center">{t(`solutes.${row.solute}`)}</td>
-                  {row.cells.map((c, i) => (
-                    <td key={i} className="px-2 py-1 text-center tabular-nums">
-                      {c}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {!shown && <p className="p-3 text-center text-sm text-bench-300">{t('messages.noRuns')}</p>}
-        </div>
-        {hasHash && <p className="mt-1 text-xs text-bench-300">{t('messages.hashLegend')}</p>}
-      </div>
-
-      {confirm && shown && (
-        <Modal title={t('actions.deleteRun')} onClose={() => setConfirm(false)}>
-          <p className="mb-5 text-bench-100">{t('messages.deleteRun', { run: shown.setNum })}</p>
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={() => setConfirm(false)}>
-              {tc('common.cancel')}
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                onDelete(shown.setNum)
-                setSelected(null)
-                setConfirm(false)
-              }}
-            >
-              {t('actions.deleteRun')}
-            </Button>
-          </div>
-        </Modal>
-      )}
-    </div>
+    <SharedRunTable
+      headers={headers}
+      runs={runs.map((r) => ({ setNum: r.setNum, rows: r.rows.map((row) => [t(`solutes.${row.solute}`), ...row.cells]) }))}
+      canRecord={canRecord}
+      onRecord={onRecord}
+      onDelete={onDelete}
+      footer={hasHash && <p className="px-hint m-0">{t('messages.hashLegend')}</p>}
+    />
   )
 }
 

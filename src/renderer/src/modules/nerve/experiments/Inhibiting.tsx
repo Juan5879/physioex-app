@@ -4,8 +4,8 @@ import type { TFunction } from 'i18next'
 import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Notice, Readout } from '@/shared/components/ui'
-import { fixed, roundTo } from '@/shared/lib/format'
+import { Button, Notice, Readout, Seg } from '@/shared/components/ui'
+import { fixed, roundTo, splitUnit } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { DEFAULT_NERVE, Dropper, LitButton, NerveChamber, NerveScope } from '../components/Bench'
 import { NerveLayout } from '../components/NerveLayout'
@@ -28,9 +28,9 @@ const CLEAN_MS = 600
 const ETHER_WEARS_OFF = 180
 
 const INHIBITORS: Array<{ id: Inhibitor; key: string; color: string }> = [
-  { id: 'Lido', key: 'reagents.lido', color: '#c4b5fd' },
-  { id: 'Cura', key: 'reagents.cura', color: '#fdba74' },
-  { id: 'Ethr', key: 'reagents.ethr', color: '#e5e7eb' }
+  { id: 'Lido', key: 'reagents.lido', color: 'var(--chart-3)' },
+  { id: 'Cura', key: 'reagents.cura', color: 'var(--signal)' },
+  { id: 'Ethr', key: 'reagents.ethr', color: 'var(--ink-subtle)' }
 ]
 
 export function iniColumns(t: TFunction): DataColumn<IniRow>[] {
@@ -198,19 +198,27 @@ export function Inhibiting(): ReactNode {
         scope={scope()}
         scopeActions={
           <>
+            <span className="mr-auto flex items-center gap-3">
+              {t('fields.scale')}
+              <Seg
+                label={t('fields.scale')}
+                value={scale}
+                disabled={repeating}
+                options={[
+                  { value: 'msec', label: 'ms' },
+                  { value: 'min', label: 'min' }
+                ]}
+                onChange={(v) => {
+                  if (v === scale) return
+                  s.clearTraces()
+                  setLast(null)
+                  s.setParams({ scale: v })
+                }}
+              />
+            </span>
             <Button
-              className="border border-gray-500 bg-gray-100"
-              disabled={repeating}
-              onClick={() => {
-                s.clearTraces()
-                setLast(null)
-                s.setParams({ scale: scale === 'msec' ? 'min' : 'msec' })
-              }}
-            >
-              {t(scale === 'msec' ? 'fields.timeMin' : 'fields.timeMs')}
-            </Button>
-            <Button
-              className="border border-gray-500 bg-gray-100"
+              size="sm"
+              icon="eraser"
               disabled={repeating || s.traces.length === 0}
               onClick={() => {
                 s.clearTraces()
@@ -222,17 +230,10 @@ export function Inhibiting(): ReactNode {
           </>
         }
         stimulator={
-          <div className="flex flex-wrap items-end justify-around gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex gap-3">
-                <LitButton on={lit || repeating} variant="primary" onClick={stimulate} disabled={locked}>
-                  {t('actions.stimulate')}
-                </LitButton>
-                <LitButton on={!repeating && scale === 'min'} onClick={stop} disabled={!repeating}>
-                  {t('actions.stop')}
-                </LitButton>
-              </div>
+          <>
+            <div className="grid gap-3">
               <Stepper
+                block
                 label={t('fields.voltage')}
                 display={fixed(voltage, 1)}
                 edit={{ ...VOLTAGE, value: voltage, onChange: (v) => s.setParams({ voltage: v }) }}
@@ -245,12 +246,20 @@ export function Inhibiting(): ReactNode {
                   }))
                 }
               />
+              <LitButton on={lit || repeating} variant="primary" onClick={stimulate} disabled={locked}>
+                {t('actions.stimulate')}
+              </LitButton>
+              <LitButton on={!repeating && scale === 'min'} onClick={stop} disabled={!repeating}>
+                {t('actions.stop')}
+              </LitButton>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-sm font-semibold text-bench-100">{t('fields.elapsed')}</span>
-              <Readout value={fixed(elapsed, 2)} />
-            </div>
+            <div className="px-section">
+              <div className="px-row">
+                <span className="px-label">{splitUnit(t('fields.elapsed'))?.text ?? t('fields.elapsed')}</span>
+                <Readout value={fixed(elapsed, 2)} unit={splitUnit(t('fields.elapsed'))?.unit} />
+              </div>
             <Stepper
+              block
               label={t('fields.interval')}
               display={fixed(interval, 1)}
               edit={{ ...INTERVAL, value: interval, onChange: (v) => s.setParams({ interval: v }) }}
@@ -263,7 +272,8 @@ export function Inhibiting(): ReactNode {
                 }))
               }
             />
-          </div>
+            </div>
+          </>
         }
         table={
           <DataTable

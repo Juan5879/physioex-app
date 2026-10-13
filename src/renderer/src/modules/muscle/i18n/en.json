@@ -45,7 +45,8 @@
     "putWeight": "Hang a weight on the muscle before stimulating.",
     "dragWeight": "To attach a weight, drag it to the bottom tendon; drag it back to remove it.",
     "measure": "Turn on the measurement line and move it with the arrows to read the force at a given time.",
-    "holdToRepeat": "Hold to change quickly"
+    "holdToRepeat": "Hold to change quickly",
+    "apparatus": "Muscle preparation on the stand"
   },
   "lengthTension": "Length (mm)",
   "atp": "ATP"

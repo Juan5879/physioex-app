@@ -38,6 +38,8 @@ export function Cholesterol(): ReactNode {
 
   return (
     <BloodLayout
+      rightTitle={t('panels.colorimeter')}
+      running={clock.running}
       left={
         <>
           <ToolbarPortal>
@@ -57,7 +59,7 @@ export function Cholesterol(): ReactNode {
               {t('actions.nextPatient')}
             </Button>
           </div>
-          <p className="text-xs text-bench-300">{t('hints.chol')}</p>
+          <p className="px-hint m-0">{t('hints.chol')}</p>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <svg viewBox="-60 -60 120 120" className="h-56 w-56">
               {CHOL_WHEEL.map((w, i) => {
@@ -69,7 +71,7 @@ export function Cholesterol(): ReactNode {
                 return (
                   <g key={w.value} onClick={() => step === 'ready' && setChoice(w.value)} className={step === 'ready' ? 'cursor-pointer' : ''}>
                     <path d={d} fill={w.color} stroke={choice === w.value ? '#38bdf8' : '#fff'} strokeWidth={choice === w.value ? 3 : 1} />
-                    <text x={34 * Math.cos(am)} y={34 * Math.sin(am) + 3} textAnchor="middle" fontSize={8} fill="#0f172a" fontWeight={700}>
+                    <text x={34 * Math.cos(am)} y={34 * Math.sin(am) + 3} textAnchor="middle" fontSize={8} fill="#0f172a" fontWeight={600}>
                       {w.value === 300 ? '300+' : w.value}
                     </text>
                   </g>
@@ -78,10 +80,10 @@ export function Cholesterol(): ReactNode {
             </svg>
             <div className="flex flex-col items-center gap-1">
               <div
-                className="h-24 w-10 rounded border border-bench-300"
+                className="h-24 w-10 rounded-[var(--radius-sm)] border border-[color:var(--border-strong)]"
                 style={{ background: step === 'ready' ? cholColor(CHOLESTEROL[patient]) : step === 'timing' ? '#a3e635' : '#f8fafc' }}
               />
-              <span className="text-xs text-bench-100">{t('fields.strip')}</span>
+              <span className="il-label text-[11px]">{t('fields.strip')}</span>
             </div>
           </div>
         </>

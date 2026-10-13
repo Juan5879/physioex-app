@@ -69,13 +69,14 @@ export function Metabolic(): ReactNode {
   const show = (v: number | undefined, dec = false): string => (v === undefined ? '----' : dec ? fixed(v) : String(v))
 
   return (
-    <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.maa')} columns={columns} rows={s.rows} printableGraph={scope(true)} />
       </ToolbarPortal>
-      <div className="flex flex-col gap-3">
-        <Panel className="flex justify-center">
+      <Panel title={t('panels.apparatus')}>
           <Stepper
+            block
             label={t('fields.metabolicRate')}
             display={String(METABOLIC.rate[index])}
             disabled={running}
@@ -90,37 +91,35 @@ export function Metabolic(): ReactNode {
               }
             }}
           />
-        </Panel>
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
+        <div className="px-well p-4">
           <BellJar scale={running && r ? 200 - r.lungSize : 100} radius={5} />
         </div>
-        <Panel className="flex items-center justify-center gap-2">
-          <Light on={running} />
-          <Button variant="primary" onClick={start}>
+        <div className="flex items-center gap-3">
+          <Light on={running && r !== null && r.beat % 2 === 1} label={running ? tc('common.inProgress') : tc('common.stopped')} />
+          <Button variant="primary" icon={running ? undefined : 'play'} className="ml-auto" onClick={start}>
             {running ? t('actions.stop') : t('actions.start')}
           </Button>
-          <span className={`ml-4 text-2xl ${running && r && r.beat % 2 === 1 ? 'scale-110' : ''}`}>🫀</span>
-        </Panel>
-      </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col rounded-2xl border-4 border-gray-400 bg-gray-300 p-2 shadow-xl">
+        </div>
+      </Panel>
+      <Panel title={tc('common.recording')}>
+        <div>
           {scope()}
-          <div className="mt-2 flex justify-end">
-            <Button className="border border-gray-500 bg-gray-100" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
+          <div className="px-chart__bar justify-end">
+            <Button size="sm" icon="eraser" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
               {tc('common.clearTracings')}
             </Button>
           </div>
         </div>
-        <Panel className="grid grid-cols-3 gap-2">
+        <div className="px-section px-metrics">
           <ResultCell label={t('fields.bpm')} value={show(last?.bpm)} />
           <ResultCell label={t('fields.pco2')} value={show(last?.pco2)} />
           <ResultCell label={t('fields.hco3')} value={show(last?.hco3)} />
           <ResultCell label={t('fields.bloodPh')} value={show(last?.ph, true)} />
           <ResultCell label={t('fields.h')} value={show(last?.h)} />
-        </Panel>
-      </div>
-      <Panel className="col-span-2">
-        <DataTable
+        </div>
+      </Panel>
+    </div>
+      <DataTable
           columns={columns}
           rows={s.rows}
           selected={s.selected}
@@ -133,7 +132,6 @@ export function Metabolic(): ReactNode {
           onClear={s.clearRows}
           canRecord={!running && last !== null && last !== recorded}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

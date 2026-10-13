@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { create, type StoreApi, type UseBoundStore } from 'zustand'
-import { Button, Modal } from './ui'
+import { EmptyTable, HeaderText } from './DataTable'
+import { Button, Modal, Panel } from './ui'
 
 /** Una corrida registrada: varias filas (p. ej. una por tubo) con celdas ya formateadas */
 export interface Run {
@@ -35,7 +36,9 @@ export function RunTable({
   canRecord,
   onRecord,
   onDelete,
-  extraButtons
+  extraButtons,
+  footer,
+  className = ''
 }: {
   headers: string[]
   runs: Run[]
@@ -43,73 +46,91 @@ export function RunTable({
   onRecord: () => void
   onDelete: (setNum: number) => void
   extraButtons?: ReactNode
+  /** nota bajo la tabla (p. ej. leyenda de símbolos) */
+  footer?: ReactNode
+  className?: string
 }): ReactNode {
   const { t } = useTranslation()
   const [selected, setSelected] = useState<number | null>(null)
   const [confirm, setConfirm] = useState(false)
   const shown = runs.find((r) => r.setNum === selected) ?? runs.at(-1) ?? null
+  // columna numérica si todas sus celdas son números (con o sin unidad o signo)
+  const numeric = headers.map((_, j) => (shown?.rows ?? []).every((r) => /^[-+]?\d/.test(r[j] ?? '')))
 
   return (
-    <div className="flex gap-3">
-      <div className="flex w-20 shrink-0 flex-col">
-        <span className="mb-1 text-center text-sm font-semibold text-bench-100">{t('common.run')}</span>
-        <div className="h-36 overflow-y-auto rounded border border-black bg-black font-mono text-lcd">
-          {runs.map((r) => (
-            <button
-              key={r.setNum}
-              type="button"
-              onClick={() => setSelected(r.setNum)}
-              className={`block w-full px-2 py-0.5 text-center ${shown?.setNum === r.setNum ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
-            >
-              {r.setNum}
-            </button>
-          ))}
+    <Panel
+      title={t('common.results')}
+      className={className}
+      actions={
+        <div className="px-panel__actions">
+          {extraButtons}
+          <Button
+            size="sm"
+            icon="plus"
+            onClick={() => {
+              onRecord()
+              setSelected(null)
+            }}
+            disabled={!canRecord}
+          >
+            {t('common.recordData')}
+          </Button>
+          <Button size="sm" variant="danger" icon="trash" onClick={() => setConfirm(true)} disabled={!shown}>
+            {t('common.deleteRun')}
+          </Button>
         </div>
-      </div>
-      <div className="flex w-36 shrink-0 flex-col justify-center gap-1.5">
-        <Button
-          onClick={() => {
-            onRecord()
-            setSelected(null)
-          }}
-          disabled={!canRecord}
-        >
-          {t('common.recordData')}
-        </Button>
-        <Button onClick={() => setConfirm(true)} disabled={!shown}>
-          {t('common.deleteRun')}
-        </Button>
-        {extraButtons}
-      </div>
-      <div className="h-44 min-w-0 flex-1 overflow-auto rounded border border-black bg-black">
-        <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 bg-bench-600">
-            <tr>
-              {headers.map((h) => (
-                <th key={h} className="px-2 py-1 text-center font-semibold whitespace-nowrap">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="font-mono text-lcd">
-            {shown?.rows.map((row, i) => (
-              <tr key={i} className="border-t border-bench-700">
-                {row.map((c, j) => (
-                  <td key={j} className="px-2 py-1 text-center whitespace-nowrap">
-                    {c}
-                  </td>
+      }
+    >
+      <div className="px-results">
+        <div className="px-results__side">
+          <span className="px-label">{t('common.runs')}</span>
+          <div className="px-setlist" role="listbox" aria-label={t('common.runs')}>
+            {runs.map((r) => (
+              <button
+                key={r.setNum}
+                type="button"
+                role="option"
+                aria-selected={shown?.setNum === r.setNum}
+                onClick={() => setSelected(r.setNum)}
+              >
+                {t('common.run')} {r.setNum}
+                <span className="c">{r.rows.length}</span>
+              </button>
+            ))}
+            {runs.length === 0 && <div className="px-empty">{t('common.noRuns')}</div>}
+          </div>
+        </div>
+        <div className="px-tablewrap px-tablewrap--scroll">
+          <table className="px-table">
+            <thead>
+              <tr>
+                {headers.map((h, j) => (
+                  <th key={h} className={numeric[j] ? 'num' : undefined}>
+                    <HeaderText>{h}</HeaderText>
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!shown && <p className="p-3 text-center text-sm text-bench-300">{t('common.noData')}</p>}
+            </thead>
+            <tbody>
+              {shown?.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((c, j) => (
+                    <td key={j} className={numeric[j] ? 'num' : undefined}>
+                      {c}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!shown && <EmptyTable />}
+        </div>
       </div>
+      {footer}
       {confirm && shown && (
         <Modal title={t('common.deleteRun')} onClose={() => setConfirm(false)}>
-          <p className="mb-5 text-bench-100">{t('common.confirmDeleteRun', { run: shown.setNum })}</p>
-          <div className="flex justify-end gap-2">
+          <p className="px-modal__text">{t('common.confirmDeleteRun', { run: shown.setNum })}</p>
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={() => setConfirm(false)}>
               {t('common.cancel')}
             </Button>
@@ -126,7 +147,7 @@ export function RunTable({
           </div>
         </Modal>
       )}
-    </div>
+    </Panel>
   )
 }
 

@@ -14,7 +14,8 @@
     "timeMs": "Tiempo (ms)",
     "timeSec": "Tiempo (s)",
     "timeMin": "Tiempo (min)",
-    "amplitude": "Potencial"
+    "amplitude": "Potencial",
+    "scale": "Escala"
   },
   "actions": {
     "singleStimulus": "Estímulo único",
@@ -51,7 +52,8 @@
     "chamber": "Cámara del nervio",
     "stimulator": "Estimulador",
     "bioAmp": "Bioamplificador",
-    "nerves": "Nervios"
+    "nerves": "Nervios",
+    "scope": "Osciloscopio"
   },
   "columns": {
     "voltage": "Voltaje",

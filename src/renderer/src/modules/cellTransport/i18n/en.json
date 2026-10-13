@@ -28,7 +28,14 @@
     "left": "Left beaker",
     "right": "Right beaker",
     "top": "Top beaker",
-    "bottom": "Filtrate"
+    "bottom": "Filtrate",
+    "leftShort": "LEFT",
+    "rightShort": "RIGHT",
+    "topShort": "TOP",
+    "bottomShort": "FILTR.",
+    "empty": "Empty beaker",
+    "hasSolution": "Filled",
+    "isEmpty": "Empty"
   },
   "actions": {
     "dispense": "Dispense",
@@ -66,7 +73,10 @@
     "dialysis": "Dialysis Membranes",
     "builder": "Membrane Builder",
     "analysis": "Membrane Residue Analysis",
-    "holder": "Membrane holder"
+    "holder": "Membrane holder",
+    "apparatus": "Apparatus",
+    "membraneHint": "Dialysis membrane (drag to the holder)",
+    "filtrate": "Filtrate"
   },
   "columns": {
     "solute": "Solute",
@@ -118,7 +128,10 @@
     "noRuns": "No runs recorded yet.",
     "builtMembrane": "Membrane with {{carriers}} carriers",
     "builtMembranePumps": "Membrane with {{carriers}} carriers and {{pumps}} pumps",
-    "pickMembrane": "Click a membrane (or drag it) to place it in the holder; click it again to remove it."
+    "pickMembrane": "Click a membrane (or drag it) to place it in the holder; click it again to remove it.",
+    "noRates": "No diffusion data",
+    "noFiltrate": "No filtration data",
+    "noResidue": "No residue analysis"
   },
   "run": "Run {{n}}"
 }

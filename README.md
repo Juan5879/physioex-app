@@ -39,6 +39,26 @@ En desarrollo (`pnpm dev`) no se buscan actualizaciones.
 
 `latest.yml` es obligatorio: es el archivo que la app consulta para saber si hay una versión nueva.
 
+## Aviso de Windows SmartScreen
+
+El instalador **no está firmado**, así que la primera vez Windows muestra «Windows protegió su PC». Para
+instalar: **Más información → Ejecutar de todas formas**. Las notas de cada release (`scripts/release.mjs`)
+incluyen estas instrucciones.
+
+- Sólo afecta a la primera instalación: `electron-updater` descarga las actualizaciones sin la marca de
+  «descargado de internet», así que no vuelven a disparar el aviso.
+- Para que el aviso desaparezca en las descargas nuevas se puede enviar cada instalador a Microsoft
+  (https://www.microsoft.com/wdsi/filesubmission, opción *Software developer* → *Incorrectly detected*),
+  para que lo analice; a veces eso acelera que el aviso deje de aparecer, aunque no está garantizado.
+  Es gratis, pero hay que repetirlo en cada versión.
+- La firma gratuita para proyectos open source (SignPath Foundation) no aplica mientras el repo incluya el
+  material del tutorial de histología original, que no es open source.
+
+## Licencia
+
+Código bajo licencia MIT (ver `LICENSE`). Las imágenes y textos del tutorial de histología pertenecen a sus
+dueños y no están cubiertos por esa licencia.
+
 ## Estructura
 
 ```

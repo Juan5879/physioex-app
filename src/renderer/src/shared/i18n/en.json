@@ -2,7 +2,7 @@
   "app": {
     "title": "PhysioEx",
     "subtitle": "Laboratory simulations in physiology",
-    "home": "Main menu",
+    "home": "Home",
     "language": "Language",
     "comingSoon": "Coming soon",
     "selectLab": "Choose a lab",
@@ -10,7 +10,20 @@
     "errorBody": "An unexpected error occurred on this screen. You can go back to the main menu and keep working.",
     "reference": "Reference material",
     "referenceHint": "Images with descriptions to study and review.",
-    "histologyHint": "More than 260 tissue images with labels and descriptions, by system, by tissue type or A to Z."
+    "histologyHint": "More than 260 tissue images with labels and descriptions, by system, by tissue type or A to Z.",
+    "brandTag": "Academic recreation",
+    "eyebrow": "Laboratory simulator · Human physiology",
+    "intro": "Physiology laboratory simulations. Choose a lab to get started; each one is split into activities you can move through with the tabs at the top.",
+    "labsHeading": "Laboratories",
+    "available": "{{count}} available",
+    "labEyebrow": "Lab {{number}} · {{system}}",
+    "aboutTitle": "About this version",
+    "aboutBody": "This is an unofficial academic recreation of PhysioEx™. The original simulator was built in Adobe Flash, a technology discontinued in 2020; this version adapts it to current technology so it can still be used in class.",
+    "footer": "Unofficial academic recreation of PhysioEx™. The original simulator was built in Adobe Flash, now discontinued; this version adapts it to current technology.",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "nav": "Navigation"
   },
   "labs": {
     "cellTransport": "Cell Transport Mechanisms and Permeability",
@@ -75,12 +88,46 @@
     "measuring": "measuring",
     "run": "Run",
     "deleteRun": "Delete Run",
-    "confirmDeleteRun": "The data for run {{run}} will be erased. Are you sure you want to proceed?"
+    "confirmDeleteRun": "The data for run {{run}} will be erased. Are you sure you want to proceed?",
+    "results": "Results",
+    "ready": "Ready",
+    "stopped": "Stopped",
+    "inProgress": "Running",
+    "traces_one": "{{count}} trace",
+    "traces_other": "{{count}} traces",
+    "emptyTitle": "No data recorded yet",
+    "emptyHint": "Take a measurement and press “Record data”.",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "previous": "Previous",
+    "next": "Next",
+    "timeCursor": "Time cursor",
+    "preparation": "Preparation",
+    "recording": "Recording",
+    "stimulator": "Stimulator",
+    "runs": "Runs",
+    "noRuns": "No runs yet",
+    "recordingNow": "Recording"
   },
   "updates": {
     "downloading": "Downloading update v{{version}}… {{percent}}%",
     "downloadingHint": "The download continues in the background; you can keep working.",
     "ready": "Update v{{version}} ready",
     "readyHint": "It will be installed automatically when you close the program."
+  },
+  "systems": {
+    "cellTransport": "Cellular",
+    "muscle": "Muscular",
+    "nerve": "Nervous",
+    "endocrine": "Endocrine",
+    "cardioDynamics": "Cardiovascular",
+    "frogCardio": "Cardiovascular",
+    "respiratory": "Respiratory",
+    "digestion": "Digestive",
+    "renal": "Renal",
+    "acidBase": "Acid-base",
+    "blood": "Blood",
+    "histology": "Histology",
+    "serology": "Immunology"
   }
 }

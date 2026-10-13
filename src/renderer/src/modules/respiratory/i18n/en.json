@@ -76,5 +76,9 @@
   "hints": {
     "valve": "Opening the valve lets air into the pleural cavity and the lung collapses (pneumothorax).",
     "forced": "ERV and FVC start at the beginning of the next breath."
+  },
+  "panels": {
+    "apparatus": "Apparatus",
+    "spirometer": "Spirometer"
   }
 }

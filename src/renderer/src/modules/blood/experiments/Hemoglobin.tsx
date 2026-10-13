@@ -28,21 +28,22 @@ export function Hemoglobin(): ReactNode {
 
   return (
     <BloodLayout
+      rightTitle={t('panels.hemoglobinometer')}
       left={
         <>
           <ToolbarPortal>
             <ExperimentTools lab={t('title')} experiment={t('experiments.hb')} columns={columns} rows={s.rows} />
           </ToolbarPortal>
           <SampleBar count={HEMOGLOBIN.length} selected={sample} used={recorded} onSelect={setSample} label={t('actions.insertChamber')} />
-          <p className="text-xs text-bench-300">{t('hints.hb')}</p>
-          <div className="flex items-center justify-center gap-0 rounded-xl border-4 border-gray-500 bg-black p-4">
+          <p className="px-hint m-0">{t('hints.hb')}</p>
+          <div className="px-well flex items-center justify-center gap-0 p-4">
             <div className="flex flex-col items-center gap-1">
               <div className="h-28 w-24 rounded-l-full" style={{ background: sample !== null ? swatch(HB_SAMPLE_GREEN[sample]) : '#111' }} />
-              <span className="text-xs text-bench-100">{t('fields.sampleColor')}</span>
+              <span className="il-label text-[11px]">{t('fields.sampleColor')}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <div className="h-28 w-24 rounded-r-full" style={{ background: swatch(hbGreen(reading)) }} />
-              <span className="text-xs text-bench-100">{t('fields.standard')}</span>
+              <span className="il-label text-[11px]">{t('fields.standard')}</span>
             </div>
           </div>
         </>
@@ -62,7 +63,7 @@ export function Hemoglobin(): ReactNode {
             value={reading}
             disabled={sample === null}
             onChange={(e) => setReading(Number(e.target.value))}
-            className="w-full accent-emerald-500"
+            className="px-range !w-full"
           />
         </>
       }

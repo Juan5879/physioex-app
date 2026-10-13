@@ -4,7 +4,7 @@ import { DataTable } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Oscilloscope, ticks, type ScopePoint } from '@/shared/components/Oscilloscope'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Light } from '@/shared/components/ui'
+import { Button } from '@/shared/components/ui'
 import { fixed, roundTo } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { Apparatus } from '../components/Apparatus'
@@ -108,6 +108,8 @@ export function MultipleStimulus(): ReactNode {
   return (
     <>
       <ExperimentLayout
+        running={running}
+        traceCount={s.traces.length}
         tools={
           <ExperimentTools
             lab={t('title')}
@@ -121,6 +123,7 @@ export function MultipleStimulus(): ReactNode {
         apparatus={<Apparatus length={length} stimulusId={stimulusId} />}
         apparatusControls={
           <Stepper
+            block
             label={t('fields.muscleLength')}
             display={String(length)}
             edit={{ value: length, min: L_MIN, max: L_MAX, step: 1, onChange: (v) => s.setParams({ length: v }) }}
@@ -140,44 +143,33 @@ export function MultipleStimulus(): ReactNode {
           </>
         }
         stimulator={
-          <div className="flex flex-wrap items-start justify-around gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Light on={mode === 'single'} />
-                <Button variant="primary" onClick={singleStimulus} disabled={mode === 'train'}>
-                  {t('actions.singleStimulus')}
-                </Button>
-              </div>
-              <Stepper
-                label={t('fields.voltage')}
-                display={fixed(voltage, 1)}
-                edit={{ value: voltage, min: 0, max: V_DISPLAY_MAX, step: 0.1, onChange: (v) => s.setParams({ voltage: v }) }}
-                disabled={running}
-                canDecrement={voltage > 0}
-                canIncrement={voltage < V_DISPLAY_MAX}
-                onStep={(d) =>
-                  s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
-                }
-              />
-            </div>
+          <>
+            <Stepper
+              block
+              label={t('fields.voltage')}
+              display={fixed(voltage, 1)}
+              edit={{ value: voltage, min: 0, max: V_DISPLAY_MAX, step: 0.1, onChange: (v) => s.setParams({ voltage: v }) }}
+              disabled={running}
+              canDecrement={voltage > 0}
+              canIncrement={voltage < V_DISPLAY_MAX}
+              onStep={(d) =>
+                s.setParams((p) => ({ voltage: Math.min(V_DISPLAY_MAX, Math.max(0, roundTo(p.voltage + d * 0.1, 1))) }))
+              }
+            />
+            <Button variant="primary" block icon="play" onClick={singleStimulus} disabled={mode === 'train'}>
+              {t('actions.singleStimulus')}
+            </Button>
             <ForceReadouts
               passive={fixed(passive)}
               active={running ? '----' : last ? fixed(last.active) : ''}
               total={running ? '----' : last ? fixed(last.total) : ''}
             />
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Light on={mode === 'train'} />
-                <Button
-                  variant={mode === 'train' ? 'danger' : 'primary'}
-                  onClick={toggleTrain}
-                  disabled={mode === 'single'}
-                >
-                  {mode === 'train' ? t('actions.stopStimulus') : t('actions.multipleStimulus')}
-                </Button>
-              </div>
+            <div className="px-section">
+              <span className="px-panel__title">{t('actions.multipleStimulus')}</span>
               <Stepper
+                block
                 label={t('fields.stimRate')}
+                unit="/s"
                 display={String(rate)}
                 edit={{ value: rate, min: MS.rateMin, max: MS.rateMax, step: 1, onChange: (v) => s.setParams({ rate: v }) }}
                 disabled={running}
@@ -185,8 +177,17 @@ export function MultipleStimulus(): ReactNode {
                 canIncrement={rate < MS.rateMax}
                 onStep={(d) => s.setParams((p) => ({ rate: Math.min(MS.rateMax, Math.max(MS.rateMin, p.rate + d)) }))}
               />
+              <Button
+                block
+                variant={mode === 'train' ? 'danger' : 'secondary'}
+                icon={mode === 'train' ? undefined : 'play'}
+                onClick={toggleTrain}
+                disabled={mode === 'single'}
+              >
+                {mode === 'train' ? t('actions.stopStimulus') : t('actions.multipleStimulus')}
+              </Button>
             </div>
-          </div>
+          </>
         }
         table={
           <DataTable

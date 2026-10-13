@@ -21,7 +21,9 @@
     "radiusR": "Right radius (mm)",
     "flowTubeRadius": "Flow tube radius (mm)",
     "rate": "Rate (strokes/min)",
-    "tubeDiameter": "Tube Diameter"
+    "tubeDiameter": "Tube Diameter",
+    "pressureL": "Source pressure (mm Hg)",
+    "pressureR": "Destination pressure (mm Hg)"
   },
   "columns": {
     "flow": "Flow",
@@ -59,5 +61,13 @@
     "lowInflow": "Flow into the pump is too low.",
     "lowOutflow": "Pump pressure must exceed the right beaker pressure for flow to occur.",
     "rateTooHigh": "The rate would exceed 999 strokes/min. Change the parameters."
+  },
+  "panels": {
+    "parameters": "Parameters",
+    "apparatus": "Apparatus",
+    "pump": "Pump",
+    "sourceToDest": "Source → destination",
+    "source": "source",
+    "dest": "destination"
   }
 }

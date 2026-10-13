@@ -41,11 +41,11 @@ export function PlotData<Row>({
 
   const axisSelect = (label: string, value: string, onChange: (v: string) => void): ReactNode => (
     <label className="flex items-center gap-2 text-sm">
-      <span className="font-semibold">{label}</span>
+      <span className="px-label">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded border border-bench-300 bg-bench-900 px-2 py-1"
+        className="px-input !w-auto"
       >
         {columns.map((c) => (
           <option key={c.key} value={c.key}>
@@ -63,7 +63,7 @@ export function PlotData<Row>({
         {axisSelect(t('common.yAxis'), yKey, setYKey)}
       </div>
       {rows.length === 0 ? (
-        <p className="py-10 text-center text-bench-300">{t('common.noData')}</p>
+        <p className="px-empty">{t('common.noData')}</p>
       ) : (
         <Oscilloscope
           xMax={xMax}
@@ -78,7 +78,7 @@ export function PlotData<Row>({
           ]}
         />
       )}
-      <div className="mt-4 flex justify-end">
+      <div className="px-modal__actions">
         <Button onClick={onClose}>{t('common.close')}</Button>
       </div>
     </Modal>

@@ -35,12 +35,14 @@ export function Hematocrit(): ReactNode {
 
   return (
     <BloodLayout
+      rightTitle={t('panels.centrifuge')}
+      running={clock.running}
       left={
         <>
           <ToolbarPortal>
             <ExperimentTools lab={t('title')} experiment={t('experiments.hct')} columns={columns} rows={s.rows} />
           </ToolbarPortal>
-          <p className="text-xs text-bench-300">{t('hints.hct')}</p>
+          <p className="px-hint m-0">{t('hints.hct')}</p>
           <SampleBar
             count={HEMATOCRIT.length}
             selected={null}
@@ -48,7 +50,7 @@ export function Hematocrit(): ReactNode {
             disabled={clock.running || spun || loaded.length >= 6}
             onSelect={(i) => setLoaded((l) => [...l, i])}
           />
-          <div className="flex items-end justify-center gap-3 rounded-lg bg-bench-900 p-3">
+          <div className="px-well flex items-end justify-center gap-3 p-4">
             {loaded.map((i) => {
               const smp = HEMATOCRIT[i]
               return (
@@ -57,20 +59,21 @@ export function Hematocrit(): ReactNode {
                   type="button"
                   disabled={!spun}
                   onClick={() => setMeasured(i)}
-                  className={`flex flex-col items-center gap-1 rounded p-1 ${measured === i ? 'ring-2 ring-sky-400' : ''}`}
+                  aria-pressed={measured === i}
+                  className="px-option !gap-1 !p-1.5 disabled:cursor-not-allowed"
                 >
                   <svg viewBox="0 0 16 110" className={`h-40 w-5 ${clock.running ? 'animate-pulse' : ''}`}>
-                    <rect x={4} y={4} width={8} height={102} rx={3} fill="#e0f2fe" fillOpacity={0.15} stroke="#cbd5e1" />
+                    <rect x={4} y={4} width={8} height={102} rx={3} className="il-glass" strokeWidth={1.5} />
                     {spun ? (
                       <>
-                        <rect x={5} y={105 - smp.rbc} width={6} height={smp.rbc} fill="#991b1b" />
-                        <rect x={5} y={105 - smp.rbc - smp.buffy * 2} width={6} height={smp.buffy * 2} fill="#f8fafc" />
-                        <rect x={5} y={6} width={6} height={99 - smp.rbc - smp.buffy * 2} fill="#fde68a" fillOpacity={0.8} />
+                        <rect x={5} y={105 - smp.rbc} width={6} height={smp.rbc} style={{ fill: 'var(--chart-4)' }} />
+                        <rect x={5} y={105 - smp.rbc - smp.buffy * 2} width={6} height={smp.buffy * 2} style={{ fill: 'var(--ink)' }} />
+                        <rect x={5} y={6} width={6} height={99 - smp.rbc - smp.buffy * 2} style={{ fill: 'var(--signal)' }} fillOpacity={0.45} />
                       </>
                     ) : (
-                      <rect x={5} y={6} width={6} height={99} fill="#b91c1c" />
+                      <rect x={5} y={6} width={6} height={99} style={{ fill: 'var(--chart-4)' }} />
                     )}
-                    <rect x={3} y={100} width={10} height={8} fill="#f59e0b" />
+                    <rect x={3} y={100} width={10} height={8} className="il-metal" />
                   </svg>
                   <span className="font-mono text-xs">{i + 1}</span>
                 </button>
@@ -78,7 +81,7 @@ export function Hematocrit(): ReactNode {
             })}
           </div>
           {measured !== null && spun && (
-            <div className="rounded-lg border border-bench-500 p-2 text-sm">
+            <div className="px-chip !h-auto !justify-start !rounded-[var(--radius-md)] !py-1.5 !font-sans">
               {t('fields.sample')} {measured + 1}: {t('columns.hct')} {hematocrit(HEMATOCRIT[measured])} · {t('columns.wbc')}{' '}
               {wbcPercent(HEMATOCRIT[measured])}%
             </div>

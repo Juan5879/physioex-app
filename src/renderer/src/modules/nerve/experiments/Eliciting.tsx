@@ -5,7 +5,7 @@ import type { DataColumn } from '@/shared/components/DataTable'
 import { DataTable } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
-import { Button, Notice } from '@/shared/components/ui'
+import { Button, Notice, Seg } from '@/shared/components/ui'
 import { fixed, roundTo } from '@/shared/lib/format'
 import { useSweep } from '@/shared/lib/useSweep'
 import { DEFAULT_NERVE, Dropper, DRAG_TYPE, LitButton, NerveChamber, NerveScope } from '../components/Bench'
@@ -199,7 +199,7 @@ export function Eliciting(): ReactNode {
             />
             <Dropper
               label={t('reagents.HCl')}
-              color="#fde047"
+              color="var(--signal)"
               item="HCl"
               onApply={() => applyDrop('HCl')}
               disabled={locked}
@@ -207,7 +207,7 @@ export function Eliciting(): ReactNode {
             />
             {bar.pos === 'rack' && <GlassBar hot={false} onApply={applyBar} disabled={locked} busy={busy === 'bar'} />}
             <div
-              className="mt-auto flex flex-col items-center gap-2 rounded-lg border border-bench-500 bg-bench-900 p-2"
+              className="px-section"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault()
@@ -216,7 +216,7 @@ export function Eliciting(): ReactNode {
               onClick={() => bar.pos === 'rack' && !locked && setBar((b) => ({ ...b, pos: 'heater' }))}
               title={t('hints.dragBar')}
             >
-              <span className="text-sm font-semibold text-bench-100">{t('panels.heater')}</span>
+              <span className="px-panel__title">{t('panels.heater')}</span>
               {bar.pos === 'heater' && (
                 <GlassBar hot={bar.hot} heating={bar.heating} onApply={applyBar} disabled={locked} busy={busy === 'bar'} />
               )}
@@ -244,19 +244,27 @@ export function Eliciting(): ReactNode {
         scope={scope()}
         scopeActions={
           <>
+            <span className="mr-auto flex items-center gap-3">
+              {t('fields.scale')}
+              <Seg
+                label={t('fields.scale')}
+                value={scale}
+                disabled={multiRunning}
+                options={[
+                  { value: 'msec', label: 'ms' },
+                  { value: 'sec', label: 's' }
+                ]}
+                onChange={(v) => {
+                  if (v === scale) return
+                  s.clearTraces()
+                  setLast(null)
+                  s.setParams({ scale: v })
+                }}
+              />
+            </span>
             <Button
-              className="border border-gray-500 bg-gray-100"
-              disabled={multiRunning}
-              onClick={() => {
-                s.clearTraces()
-                setLast(null)
-                s.setParams({ scale: scale === 'msec' ? 'sec' : 'msec' })
-              }}
-            >
-              {t(scale === 'msec' ? 'fields.timeSec' : 'fields.timeMs')}
-            </Button>
-            <Button
-              className="border border-gray-500 bg-gray-100"
+              size="sm"
+              icon="eraser"
               disabled={multiRunning || s.traces.length === 0}
               onClick={() => {
                 s.clearTraces()
@@ -268,12 +276,11 @@ export function Eliciting(): ReactNode {
           </>
         }
         stimulator={
-          <div className="flex flex-wrap items-end justify-around gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <LitButton on={lit} variant="primary" onClick={singleStim} disabled={locked}>
-                {t('actions.singleStimulus')}
-              </LitButton>
+          <>
+            <div className="grid gap-3">
+              <span className="px-panel__title">{t('actions.singleStimulus')}</span>
               <Stepper
+                block
                 label={t('fields.voltage')}
                 display={fixed(voltage, 1)}
                 edit={{ ...VOLTAGE, value: voltage, onChange: (v) => s.setParams({ voltage: v }) }}
@@ -286,12 +293,14 @@ export function Eliciting(): ReactNode {
                   }))
                 }
               />
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <LitButton on={multiRunning} variant="primary" onClick={multiStim} disabled={locked}>
-                {t('actions.multipleStimulus')}
+              <LitButton on={lit} variant="primary" onClick={singleStim} disabled={locked}>
+                {t('actions.singleStimulus')}
               </LitButton>
+            </div>
+            <div className="px-section">
+              <span className="px-panel__title">{t('actions.multipleStimulus')}</span>
               <Stepper
+                block
                 label={t('fields.stimRate')}
                 display={fixed(stimRate, 1)}
                 edit={{ ...STIM_RATE, value: stimRate, onChange: (v) => s.setParams({ stimRate: v }) }}
@@ -304,8 +313,11 @@ export function Eliciting(): ReactNode {
                   }))
                 }
               />
+              <LitButton on={multiRunning} onClick={multiStim} disabled={locked}>
+                {t('actions.multipleStimulus')}
+              </LitButton>
             </div>
-          </div>
+          </>
         }
         table={
           <DataTable
@@ -354,12 +366,12 @@ function GlassBar({
         onApply()
       }}
       title={t('hints.dragBar')}
-      className={`flex w-full flex-col items-center gap-1 rounded-lg border border-bench-500 bg-bench-900 p-2 text-sm font-semibold hover:bg-bench-800 disabled:opacity-60 ${busy ? 'animate-pulse' : ''}`}
+      className={`px-reagent w-full disabled:cursor-not-allowed disabled:opacity-60 ${busy ? 'animate-pulse' : ''}`}
     >
       <span
-        className="block h-3 w-32 rounded-full"
+        className="block h-6 w-1.5 shrink-0 rounded-full"
         style={{
-          background: hot || heating ? 'linear-gradient(90deg,#fecaca,#f97316,#fecaca)' : 'linear-gradient(90deg,#e0f2fe,#bae6fd,#e0f2fe)',
+          background: hot || heating ? 'var(--chart-4)' : 'var(--border-strong)',
           transition: `background ${HEAT_MS}ms`
         }}
       />

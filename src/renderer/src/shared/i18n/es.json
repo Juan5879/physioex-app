@@ -2,7 +2,7 @@
   "app": {
     "title": "PhysioEx",
     "subtitle": "Simulaciones de laboratorio de fisiología",
-    "home": "Menú principal",
+    "home": "Inicio",
     "language": "Idioma",
     "comingSoon": "Próximamente",
     "selectLab": "Elige un laboratorio",
@@ -10,7 +10,20 @@
     "errorBody": "Ocurrió un error inesperado en esta pantalla. Puedes volver al menú principal y seguir trabajando.",
     "reference": "Material de consulta",
     "referenceHint": "Imágenes con descripciones para estudiar y repasar.",
-    "histologyHint": "Más de 260 imágenes de tejidos con rótulos y descripciones, por sistema, por tipo de tejido o de la A a la Z."
+    "histologyHint": "Más de 260 imágenes de tejidos con rótulos y descripciones, por sistema, por tipo de tejido o de la A a la Z.",
+    "brandTag": "Recreación académica",
+    "eyebrow": "Simulador de laboratorio · Fisiología humana",
+    "intro": "Simulaciones de laboratorio de fisiología. Elige un laboratorio para comenzar; cada uno se divide en actividades que se recorren con las pestañas superiores.",
+    "labsHeading": "Laboratorios",
+    "available": "{{count}} disponibles",
+    "labEyebrow": "Laboratorio {{number}} · {{system}}",
+    "aboutTitle": "Acerca de esta versión",
+    "aboutBody": "Esta es una recreación académica no oficial de PhysioEx™. El simulador original estaba desarrollado en Adobe Flash, tecnología discontinuada en 2020; esta versión lo adapta a tecnologías actuales para que pueda seguir usándose en la cursada.",
+    "footer": "Recreación académica no oficial de PhysioEx™. El simulador original fue creado en Adobe Flash, hoy discontinuado; esta versión lo adapta a tecnologías actuales.",
+    "theme": "Tema",
+    "themeDark": "Oscuro",
+    "themeLight": "Claro",
+    "nav": "Navegación"
   },
   "labs": {
     "cellTransport": "Mecanismos de transporte celular y permeabilidad",
@@ -75,12 +88,46 @@
     "measuring": "midiendo",
     "run": "Corrida",
     "deleteRun": "Borrar corrida",
-    "confirmDeleteRun": "Se borrarán los datos de la corrida {{run}}. ¿Seguro que quieres continuar?"
+    "confirmDeleteRun": "Se borrarán los datos de la corrida {{run}}. ¿Seguro que quieres continuar?",
+    "results": "Resultados",
+    "ready": "Listo",
+    "stopped": "Detenido",
+    "inProgress": "En curso",
+    "traces_one": "{{count}} trazo",
+    "traces_other": "{{count}} trazos",
+    "emptyTitle": "Aún no hay datos registrados",
+    "emptyHint": "Realiza una medición y presiona «Registrar datos».",
+    "decrease": "Disminuir",
+    "increase": "Aumentar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "timeCursor": "Cursor de tiempo",
+    "preparation": "Preparación",
+    "recording": "Registro",
+    "stimulator": "Estimulador",
+    "runs": "Corridas",
+    "noRuns": "Sin corridas",
+    "recordingNow": "Registrando"
   },
   "updates": {
     "downloading": "Descargando actualización v{{version}}… {{percent}}%",
     "downloadingHint": "La descarga continúa en segundo plano; puedes seguir trabajando.",
     "ready": "Actualización v{{version}} lista",
     "readyHint": "Se instalará automáticamente al cerrar el programa."
+  },
+  "systems": {
+    "cellTransport": "Celular",
+    "muscle": "Muscular",
+    "nerve": "Nervioso",
+    "endocrine": "Endocrino",
+    "cardioDynamics": "Cardiovascular",
+    "frogCardio": "Cardiovascular",
+    "respiratory": "Respiratorio",
+    "digestion": "Digestivo",
+    "renal": "Renal",
+    "acidBase": "Ácido-base",
+    "blood": "Sangre",
+    "histology": "Histología",
+    "serology": "Inmunología"
   }
 }

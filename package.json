@@ -4,6 +4,7 @@
   "description": "Simulaciones de laboratorio de fisiología (reconstrucción de PhysioEx)",
   "main": "./out/main/index.js",
   "author": "Juan",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dist": "pnpm build && electron-builder --win --publish never --config.directories.output=%LOCALAPPDATA%/physioex-build",
-    "release": "pnpm dist && node scripts/release.mjs"
+    "release": "pnpm dist && node scripts/release.mjs",
+    "icons": "electron scripts/build-icon.cjs"
   },
   "build": {
     "appId": "com.physioex.app",
@@ -27,6 +29,7 @@
     ],
     "win": {
       "target": "nsis",
+      "icon": "build/icon.ico",
       "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "publish": [

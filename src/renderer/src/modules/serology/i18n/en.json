@@ -86,5 +86,16 @@
     "odd": "Look at the precipitin lines between the wells and choose the relationship of each pair.",
     "elisa": "Click a well to measure its optical density.",
     "wb": "Click a strip to see its bands."
+  },
+  "panels": {
+    "protocol": "Protocol",
+    "progress": "{{done}} of {{total}}",
+    "stepDone": "Done",
+    "stepNext": "Next",
+    "microscope": "Microscope",
+    "agar": "Agar plate",
+    "plate": "ELISA plate",
+    "membrane": "Membrane",
+    "wells": "Wells"
   }
 }

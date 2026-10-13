@@ -24,15 +24,15 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
     const { error } = this.state
     if (!error) return this.props.children
     return (
-      <div className="mx-auto max-w-xl p-10 text-center">
-        <h1 className="mb-3 text-2xl font-bold">{i18n.t('app.errorTitle')}</h1>
-        <p className="mb-6 text-bench-300">{i18n.t('app.errorBody')}</p>
-        <pre className="mb-6 overflow-auto rounded bg-black/40 p-3 text-left text-xs text-rose-300">
+      <div className="px-container" style={{ maxWidth: 640, paddingTop: 'var(--space-6)', textAlign: 'center' }}>
+        <h1 className="mb-3 font-[family-name:var(--font-display)] text-2xl font-semibold">{i18n.t('app.errorTitle')}</h1>
+        <p className="mb-6 text-[color:var(--ink-muted)]">{i18n.t('app.errorBody')}</p>
+        <pre className="px-well mb-6 overflow-auto p-3 text-left font-mono text-xs text-[color:var(--danger)]">
           {error.message}
         </pre>
         <button
           type="button"
-          className="rounded-md bg-sky-500 px-4 py-2 font-semibold text-white hover:bg-sky-400"
+          className="px-btn px-btn--primary"
           onClick={() => {
             window.location.hash = '#/'
             this.setState({ error: null })

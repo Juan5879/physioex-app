@@ -71,5 +71,11 @@
   "hints": {
     "probe": "Haz clic sobre el túbulo (a la altura que quieras) para medir la concentración con la sonda.",
     "applyFirst": "Los cambios de transportadores y gradiente se aplican con sus botones."
+  },
+  "panels": {
+    "parameters": "Parámetros",
+    "nephron": "Nefrona",
+    "collector": "Colector",
+    "glomerulus": "Glomérulo"
   }
 }

@@ -14,7 +14,8 @@
     "timeMs": "Time (msec)",
     "timeSec": "Time (sec)",
     "timeMin": "Time (min)",
-    "amplitude": "Potential"
+    "amplitude": "Potential",
+    "scale": "Scale"
   },
   "actions": {
     "singleStimulus": "Single Stimulus",
@@ -51,7 +52,8 @@
     "chamber": "Nerve Chamber",
     "stimulator": "Stimulator",
     "bioAmp": "Bio-Amplifier",
-    "nerves": "Nerves"
+    "nerves": "Nerves",
+    "scope": "Oscilloscope"
   },
   "columns": {
     "voltage": "Voltage",

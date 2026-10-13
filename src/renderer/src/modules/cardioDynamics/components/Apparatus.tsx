@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-const BLOOD = '#b91c1c'
+const BLOOD = 'var(--chart-4)'
 
 /** Vaso con tapa; `level` 0–1 */
 export function Beaker({
@@ -21,11 +21,9 @@ export function Beaker({
   const liquid = Math.max(0, Math.min(1, level)) * (h - 8)
   return (
     <g>
-      {lid && <rect x={x - 5} y={y - 10} width={w + 10} height={10} rx={3} fill="#1f2937" />}
-      <rect x={x} y={y} width={w} height={h} rx={6} fill="#e5f3f8" fillOpacity={0.2} stroke="#cbd5e1" strokeWidth={2} />
-      <rect x={x + 3} y={y + h - 4 - liquid} width={w - 6} height={liquid} rx={4} fill={BLOOD} fillOpacity={0.9} />
-      <rect x={x + 8} y={y + 8} width={6} height={h - 20} rx={3} fill="#fff" fillOpacity={0.3} />
-      <rect x={x - 3} y={y + h} width={w + 6} height={8} rx={2} fill="#374151" />
+      {lid && <rect className="il-metal" x={x - 5} y={y - 10} width={w + 10} height={6} rx={3} />}
+      <rect className="il-glass" x={x} y={y} width={w} height={h} rx={8} />
+      <rect x={x + 6} y={y + h - 6 - liquid * 0.97} width={w - 12} height={liquid * 0.97} rx={4} style={{ fill: BLOOD }} />
     </g>
   )
 }
@@ -56,20 +54,20 @@ export function VesselApparatus({
   const rightX = tubeX + tubeLen + 10
   const filled = tubeLen * Math.max(0, Math.min(1, tubeFill))
   return (
-    <svg viewBox="0 0 640 260" className="w-full">
+    <svg viewBox="0 0 640 260" className="block w-full">
       <Beaker x={20} y={50} w={150} h={170} level={leftLevel} />
       <Beaker x={rightX} y={50} w={150} h={170} level={1 - leftLevel} lid={false} />
       {/* tubo */}
-      <rect x={tubeX} y={cy - thick / 2} width={tubeLen} height={thick} fill="#e5e7eb" fillOpacity={0.35} stroke="#9ca3af" />
+      <rect className="il-glass" x={tubeX} y={cy - thick / 2} width={tubeLen} height={thick} strokeWidth={1.5} />
       <rect
         x={tubeFillFromRight ? tubeX + tubeLen - filled : tubeX}
         y={cy - thick / 2}
         width={filled}
         height={thick}
-        fill={BLOOD}
+        style={{ fill: BLOOD }}
       />
-      <rect x={tubeX - 10} y={cy - 14} width={12} height={28} rx={2} fill="#4b5563" />
-      <rect x={rightX - 12} y={cy - 14} width={12} height={28} rx={2} fill="#4b5563" />
+      <rect className="il-metal" x={tubeX - 10} y={cy - 14} width={12} height={28} rx={2} />
+      <rect className="il-metal" x={rightX - 12} y={cy - 14} width={12} height={28} rx={2} />
     </svg>
   )
 }
@@ -95,19 +93,19 @@ export function PumpApparatus({
 }): ReactNode {
   const tube = (x: number, w: number, r: number, open: boolean): ReactNode => (
     <g>
-      <rect x={x} y={232 - r * 2} width={w} height={r * 4} fill={open ? BLOOD : '#7f1d1d'} fillOpacity={open ? 0.9 : 0.5} />
-      <rect x={x + w / 2 - 4} y={185} width={8} height={30} fill={open ? '#9ca3af' : '#374151'} />
-      <rect x={x + w / 2 - 9} y={open ? 172 : 205} width={18} height={10} rx={2} fill="#6b7280" />
+      <rect x={x} y={232 - r * 2} width={w} height={r * 4} style={{ fill: BLOOD }} fillOpacity={open ? 1 : 0.4} />
+      <rect className="il-metal" x={x + w / 2 - 3} y={185} width={6} height={30} />
+      <rect className={open ? 'il-glass' : 'il-metal'} x={x + w / 2 - 9} y={open ? 172 : 205} width={18} height={10} rx={2} />
     </g>
   )
   return (
-    <svg viewBox="0 0 640 270" className="w-full">
+    <svg viewBox="0 0 640 270" className="block w-full">
       <Beaker x={20} y={40} w={150} h={170} level={levelL} />
       <Beaker x={245} y={40} w={150} h={170} level={pumpFill} />
       <Beaker x={470} y={40} w={150} h={170} level={levelR} lid={false} />
       {/* émbolo */}
-      <rect x={250} y={40 + (1 - pumpFill) * 160} width={140} height={8} fill="#111827" />
-      <rect x={316} y={10} width={8} height={30 + (1 - pumpFill) * 160} fill="#6b7280" />
+      <rect className="il-metal" x={250} y={40 + (1 - pumpFill) * 160} width={140} height={8} rx={2} />
+      <rect className="il-metal" x={316} y={10} width={8} height={30 + (1 - pumpFill) * 160} />
       {tube(170, 75, radiusL, valveL)}
       {tube(395, 75, radiusR, valveR)}
     </svg>

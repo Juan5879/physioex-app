@@ -1,0 +1,86 @@
+/* PhysioEx — tokens de diseño (generado desde tokens.json). Tema por defecto: oscuro. */
+:root, [data-theme="dark"] {
+  --bg: #0d1218;
+  --surface: #131a22;
+  --surface-raised: #1a232e;
+  --surface-sunken: #0a0f14;
+  --border: #263241;
+  --border-strong: #3a4a5d;
+  --ink: #e6edf3;
+  --ink-muted: #a3b0bf;
+  --ink-subtle: #7f8d9e;
+  --accent: #4cc3b5;
+  --accent-hover: #6fd3c7;
+  --on-accent: #062320;
+  --accent-soft: #143430;
+  --accent-ink: #7fdcd0;
+  --signal: #f0b44c;
+  --danger: #ff8f7d;
+  --focus: var(--signal);
+  --readout-bg: #070b0f;
+  --readout-ink: #7ee8a6;
+  --readout-dim: #5aa77b;
+  --led-off: #24303c;
+  --chart-plot: #0a0f14;
+  --chart-grid: #1f2a36;
+  --chart-1: var(--accent);
+  --chart-2: var(--signal);
+  --chart-3: #93a7ff;
+  --chart-4: #ff9580;
+  --scale-1: #1f5f58;
+  --scale-2: #2f8a80;
+  --scale-3: #4cc3b5;
+  --scale-4: #9be6dc;
+  --shadow-panel: 0 1px 2px rgba(0,0,0,0.35);
+}
+[data-theme="light"] {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --surface-raised: #f8fafb;
+  --surface-sunken: #eef1f4;
+  --border: #d5dce3;
+  --border-strong: #a9b5c1;
+  --ink: #14202b;
+  --ink-muted: #475563;
+  --ink-subtle: #5d6b79;
+  --accent: #0d7d72;
+  --accent-hover: #0a655c;
+  --on-accent: #ffffff;
+  --accent-soft: #dff2ef;
+  --accent-ink: #0a655c;
+  --signal: #a35a00;
+  --danger: #b42318;
+  --focus: var(--signal);
+  --readout-bg: #0f1720;
+  --readout-ink: #7ee8a6;
+  --readout-dim: #5aa77b;
+  --led-off: #c9d2da;
+  --chart-plot: #ffffff;
+  --chart-grid: #e3e8ed;
+  --chart-1: var(--accent);
+  --chart-2: var(--signal);
+  --chart-3: #3d5bd9;
+  --chart-4: #c2412f;
+  --scale-1: #b9e3dd;
+  --scale-2: #6cc0b5;
+  --scale-3: #1f8c80;
+  --scale-4: #0a5a52;
+  --shadow-panel: 0 1px 2px rgba(20,32,43,0.06);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --appbar-height: 48px;
+  --control-height: 32px;
+  --content-max: 1320px;
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}

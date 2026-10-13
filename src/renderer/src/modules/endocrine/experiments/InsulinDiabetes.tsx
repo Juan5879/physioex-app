@@ -1,3 +1,4 @@
+import { ResultsTable } from '@/shared/components/DataTable'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
@@ -6,7 +7,7 @@ import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { PrintTable } from '@/shared/components/PrintReport'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Panel } from '@/shared/components/ui'
+import { Button, Hint, Light, Panel, SetList } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { DropperBottle, RatFigure, TestTube } from '../components/Figures'
 import { ProcessButtons, SpectroGraph, SpectroReadouts, useTubeProcess } from '../components/Lab'
@@ -114,7 +115,7 @@ export function InsulinDiabetes(): ReactNode {
     const p = rats[rat]
     const first = rat === 0 ? 'saline' : 'alloxan'
     return (
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-bench-500 bg-bench-900 p-2">
+      <div className="px-well flex flex-wrap items-center gap-2 p-2">
         <svg viewBox="0 0 100 60" className="h-9 w-14">
           <RatFigure />
         </svg>
@@ -133,7 +134,8 @@ export function InsulinDiabetes(): ReactNode {
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -157,7 +159,7 @@ export function InsulinDiabetes(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-3">
+      <Panel title={t(reagents ? 'panels.tubes' : 'panels.rats')}>
         {!reagents ? (
           <>
             {ratPanel(0)}
@@ -168,7 +170,7 @@ export function InsulinDiabetes(): ReactNode {
           </>
         ) : (
           <>
-            <p className="text-xs text-bench-300">{t('hints.dropper')}</p>
+            <Hint>{t('hints.dropper')}</Hint>
             <div className="grid grid-cols-4 gap-2">
               {(['water', 'barium', 'heparin', 'color'] as const).map((r) => (
                 <DropperBottle
@@ -183,7 +185,7 @@ export function InsulinDiabetes(): ReactNode {
             </div>
           </>
         )}
-        <div className="flex items-end justify-center gap-1 rounded-lg bg-bench-900 p-2">
+        <div className="px-well flex items-end justify-center gap-1 p-3">
           {Array.from({ length: N }, (_, i) => (
             <TestTube
               key={i}
@@ -203,12 +205,9 @@ export function InsulinDiabetes(): ReactNode {
         )}
       </Panel>
 
-      <Panel className="flex flex-col gap-3">
-        <div className="rounded-xl border-4 border-gray-400 bg-gray-300 p-2">
-          <SpectroGraph points={[]} showLine={ggs} readingX={ggs ? reading : null} />
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <Light on={setup} />
+      <Panel title={t('panels.spectro')} actions={<Light on={setup} label={setup ? tc('common.ready') : tc('common.stopped')} />}>
+        <SpectroGraph points={[]} showLine={ggs} readingX={ggs ? reading : null} />
+        <div className="flex flex-wrap items-center gap-2">
           <Button onClick={() => setSetup(true)} disabled={setup || !ps.incubated}>
             {t('actions.setUp')}
           </Button>
@@ -234,7 +233,7 @@ export function InsulinDiabetes(): ReactNode {
             {ggs ? tc('common.clearPlot') : t('actions.graphStandard')}
           </Button>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="grid gap-4">
           <SpectroReadouts od={current !== null ? DIABETES.opticalDensity[current] : null} glucose={ggs ? reading : null} />
           <div title={t('hints.reading')}>
             <Stepper
@@ -247,24 +246,15 @@ export function InsulinDiabetes(): ReactNode {
         </div>
       </Panel>
 
-      <Panel className="col-span-2 flex gap-3">
-        <div className="flex w-20 shrink-0 flex-col">
-          <span className="mb-1 text-center text-sm font-semibold text-bench-100">{t('fields.run')}</span>
-          <div className="h-32 overflow-y-auto rounded border border-black bg-black font-mono text-lcd">
-            {store.runs.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setViewRun(i)}
-                className={`block w-full px-2 py-0.5 text-center ${i === shownRun ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="flex w-36 shrink-0 flex-col justify-center">
+      </div>
+
+      <Panel
+        title={tc('common.results')}
+        actions={
+        <div className="px-panel__actions">
           <Button
+            size="sm"
+            icon="plus"
             onClick={() => {
               if (current === null) return
               store.setRow(run, {
@@ -283,31 +273,18 @@ export function InsulinDiabetes(): ReactNode {
             {t('actions.record')}
           </Button>
         </div>
-        <div className="h-40 flex-1 overflow-y-auto rounded border border-black bg-black">
-          <table className="w-full border-collapse text-sm">
-            <thead className="sticky top-0 bg-bench-600">
-              <tr>
-                {columns.map((c) => (
-                  <th key={c.key} className="px-2 py-1 text-center font-semibold">
-                    {c.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="font-mono text-lcd">
-              {rows.map((r) => (
-                <tr key={r.tube} className="border-t border-bench-700">
-                  {columns.map((c) => (
-                    <td key={c.key} className="px-2 py-1 text-center">
-                      {c.format(r)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        }
+      >
+        <div className="px-results">
+          <SetList
+            label={t('fields.run')}
+            items={store.runs.map((r, i) => ({ key: i, label: `${t('fields.run')} ${i + 1}`, count: r.length }))}
+            selected={shownRun}
+            onSelect={(k) => setViewRun(Number(k))}
+          />
+          <ResultsTable columns={columns} rows={rows} selected={null} onSelect={() => undefined} />
         </div>
       </Panel>
-    </div>
+    </>
   )
 }

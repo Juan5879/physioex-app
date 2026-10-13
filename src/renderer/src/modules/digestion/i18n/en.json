@@ -96,5 +96,9 @@
     "setup": "Setup",
     "incubating": "Incubating",
     "testing": "Testing"
+  },
+  "panels": {
+    "bench": "Bench",
+    "incubator": "Incubator"
   }
 }

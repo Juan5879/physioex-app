@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Panel, Readout } from '@/shared/components/ui'
+import { Button, Light, Panel, Readout } from '@/shared/components/ui'
 import { TIME_SCALES } from '../model/constants'
 
 interface ExperimentLayoutProps {
@@ -10,17 +10,21 @@ interface ExperimentLayoutProps {
   apparatusControls: ReactNode
   /** osciloscopio(s) */
   scope: ReactNode
-  /** acciones bajo la pantalla (limpiar trazos, escala de tiempo) */
+  /** barra bajo el gráfico (escala de tiempo, limpiar trazos) */
   scopeActions: ReactNode
   stimulator: ReactNode
   table: ReactNode
   /** menú de herramientas (graficar / imprimir) */
   tools: ReactNode
+  /** estimulando: enciende el LED del estimulador */
+  running: boolean
+  /** cantidad de trazos en el gráfico */
+  traceCount: number
 }
 
 /**
- * Distribución común de los cuatro experimentos, inspirada en la pantalla original:
- * aparato | osciloscopio | estimulador, con la tabla de datos debajo.
+ * Distribución común de los cuatro experimentos:
+ * Preparación | Registro | Estimulador, con Resultados a todo el ancho debajo.
  */
 export function ExperimentLayout({
   apparatus,
@@ -29,22 +33,36 @@ export function ExperimentLayout({
   scopeActions,
   stimulator,
   table,
-  tools
+  tools,
+  running,
+  traceCount
 }: ExperimentLayoutProps): ReactNode {
+  const { t } = useTranslation()
   return (
-    <div className="grid grid-cols-[210px_minmax(0,1fr)_240px] gap-3 p-3">
-      <div className="row-span-2 flex flex-col gap-3">
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">{apparatus}</div>
-        <Panel>{apparatusControls}</Panel>
+    <>
+      <ToolbarPortal>{tools}</ToolbarPortal>
+      <div className="grid grid-cols-[230px_minmax(0,1fr)_260px] items-stretch gap-4">
+        <Panel title={t('common.preparation')}>
+          <div className="px-well px-2 py-4">{apparatus}</div>
+          {apparatusControls}
+        </Panel>
+        <Panel
+          title={t('common.recording')}
+          actions={<span className="px-eyebrow">{t('common.traces', { count: traceCount })}</span>}
+          bodyClassName="!gap-0"
+        >
+          {scope}
+          <div className="px-chart__bar justify-end">{scopeActions}</div>
+        </Panel>
+        <Panel
+          title={t('common.stimulator')}
+          actions={<Light on={running} label={running ? t('common.inProgress') : t('common.ready')} />}
+        >
+          {stimulator}
+        </Panel>
       </div>
-      <div className="flex min-w-0 flex-col rounded-2xl border-4 border-gray-400 bg-gray-300 p-2 shadow-xl">
-        {scope}
-        <div className="mt-2 flex flex-wrap items-center justify-end gap-3">{scopeActions}</div>
-        <ToolbarPortal>{tools}</ToolbarPortal>
-      </div>
-      <Panel className="flex flex-col justify-center">{stimulator}</Panel>
-      <Panel className="col-span-2">{table}</Panel>
-    </div>
+      {table}
+    </>
   )
 }
 
@@ -60,15 +78,19 @@ export function ForceReadouts({
 }): ReactNode {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col items-center gap-1">
-      <span className="text-sm font-semibold text-bench-100">{t('muscle:fields.force')}</span>
-      <div className="grid grid-cols-[auto_auto] items-center gap-x-2 gap-y-1">
-        <Readout value={active} />
-        <span className="text-sm">{t('common.active')}</span>
-        <Readout value={passive} />
-        <span className="text-sm">{t('common.passive')}</span>
-        <Readout value={total} />
-        <span className="text-sm">{t('common.total')}</span>
+    <div className="px-section">
+      <span className="px-panel__title">{t('common.force')}</span>
+      <div className="px-row">
+        <span className="px-label">{t('common.active')}</span>
+        <Readout value={active} unit="g" />
+      </div>
+      <div className="px-row">
+        <span className="px-label">{t('common.passive')}</span>
+        <Readout value={passive} unit="g" />
+      </div>
+      <div className="px-row">
+        <span className="px-label">{t('common.total')}</span>
+        <Readout value={total} unit="g" />
       </div>
     </div>
   )
@@ -89,8 +111,8 @@ export function TimeScaleSelect({
   const scales = [...TIME_SCALES].reverse()
   const index = scales.indexOf(value as (typeof TIME_SCALES)[number])
   return (
-    <label className="flex items-center gap-2 text-sm text-bench-900">
-      <span className="font-semibold">{t('common.timeScale')}</span>
+    <label className="mr-auto flex items-center gap-3">
+      <span>{t('common.timeScale')}</span>
       <input
         type="range"
         min={0}
@@ -99,9 +121,9 @@ export function TimeScaleSelect({
         value={index}
         disabled={disabled}
         onChange={(e) => onChange(scales[Number(e.target.value)])}
-        className="w-40 accent-sky-600"
+        className="px-range"
       />
-      <span className="w-16 font-mono">{value} ms</span>
+      <span className="w-16 font-mono text-[color:var(--ink)]">{value} ms</span>
     </label>
   )
 }
@@ -116,7 +138,7 @@ export function ClearButton({
   children: ReactNode
 }): ReactNode {
   return (
-    <Button onClick={onClick} disabled={disabled} className="border border-gray-500 bg-gray-100">
+    <Button size="sm" icon="eraser" onClick={onClick} disabled={disabled}>
       {children}
     </Button>
   )

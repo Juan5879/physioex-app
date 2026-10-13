@@ -6,7 +6,7 @@ import { DataSetTable, PrintDataSets } from '@/shared/components/DataSetTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Panel, Readout } from '@/shared/components/ui'
+import { Button, Light, Panel, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { Beaker, Nephron } from '../components/Nephron'
@@ -38,6 +38,7 @@ export function filtrationColumns(t: TFunction): DataColumn<FiltrationRow>[] {
 /** Experimento 1: radios de las arteriolas, presión y filtración glomerular */
 export function GlomerularFiltration(): ReactNode {
   const { t } = useTranslation('renal')
+  const tc = useTranslation().t
   const sets = useFiltrationSets()
   const [afferent, setAfferent] = useState<number>(GF.afferent.initial)
   const [efferent, setEfferent] = useState<number>(GF.efferent.initial)
@@ -111,7 +112,8 @@ export function GlomerularFiltration(): ReactNode {
   const label = (n: string): string => t(`sets.${n}`, { defaultValue: n })
 
   return (
-    <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-3 p-3">
+    <>
+      <div className="grid grid-cols-[250px_minmax(0,1fr)_230px] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -122,58 +124,56 @@ export function GlomerularFiltration(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-3">
+      <Panel title={t('panels.parameters')}>
         <Stepper
+          block
           label={t('fields.afferent')}
           display={fixed(afferent)}
           disabled={running}
           edit={{ ...GF.afferent, value: afferent, onChange: changed(setAfferent) }}
         />
         <Stepper
+          block
           label={t('fields.efferent')}
           display={fixed(efferent)}
           disabled={running}
           edit={{ ...GF.efferent, value: efferent, onChange: changed(setEfferent) }}
         />
         <Stepper
+          block
           label={t('fields.pressure')}
           display={String(pressure)}
           disabled={running}
           edit={{ ...GF.pressure, value: pressure, onChange: changed(setPressure) }}
         />
-        <div className="flex justify-center gap-2">
-          <Beaker level={levels.left} color="#b91c1c" />
-          <Beaker level={levels.right} color="#fca5a5" />
+        <div className="px-well flex justify-center gap-3 p-3">
+          <Beaker level={levels.left} color="var(--chart-4)" />
+          <Beaker level={levels.right} color="var(--chart-4)" />
         </div>
-        <div className="flex justify-center gap-2">
-          <div className="flex items-center gap-2">
-            <Light on={running} />
-            <Button variant="primary" onClick={start} disabled={refilling}>
-              {running ? t('actions.stop') : t('actions.start')}
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Light on={refilling} />
-            <Button onClick={() => setRefilling(true)} disabled={running || refilling || levels.left >= 1}>
-              {t('actions.refill')}
-            </Button>
-          </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Button variant="primary" icon={running ? undefined : 'play'} onClick={start} disabled={refilling}>
+            {running ? t('actions.stop') : t('actions.start')}
+          </Button>
+          <Button onClick={() => setRefilling(true)} disabled={running || refilling || levels.left >= 1}>
+            {t('actions.refill')}
+          </Button>
         </div>
       </Panel>
 
-      <div className="flex flex-col gap-3">
-        <Panel className="flex flex-wrap items-center justify-center gap-6">
-          <div className="flex items-center gap-2">
-            <Readout value={showPressure ? fixed(result.glomerularPressure) : running ? '----' : ''} />
-            <span className="text-sm">{t('fields.glomPressure')}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Readout value={result ? fixed(result.gfr) : ''} />
-            <span className="text-sm">{t('fields.gfr')}</span>
-          </div>
-        </Panel>
-        <div className="flex items-end gap-3 rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
-          <div className="min-w-0 flex-1">
+      <Panel
+        title={t('panels.nephron')}
+        actions={<Light on={running || refilling} label={tc(running || refilling ? 'common.inProgress' : 'common.stopped')} />}
+      >
+        <div className="flex flex-wrap gap-x-6 gap-y-3">
+          <ReadoutField
+            inline
+            className="flex-1"
+            label={t('fields.glomPressure')}
+            value={showPressure ? fixed(result.glomerularPressure) : running ? '----' : ''}
+          />
+          <ReadoutField inline className="flex-1" label={t('fields.gfr')} value={result ? fixed(result.gfr) : ''} />
+        </div>
+        <div className="px-well p-3">
             <Nephron
               afferent={afferent}
               efferent={efferent}
@@ -182,20 +182,24 @@ export function GlomerularFiltration(): ReactNode {
               valveOpen={valveOpen}
               onToggleValve={running ? undefined : () => setValveOpen(!valveOpen)}
             />
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <Button onClick={() => setValveOpen(!valveOpen)} disabled={running}>
-              {valveOpen ? t('actions.valveOpen') : t('actions.valveClosed')}
-            </Button>
-            <Beaker level={Math.min(1, levels.urine)} color="#fde047" />
-            <span className="text-sm font-semibold text-bench-100">{t('fields.urineVolume')}</span>
-            <Readout value={done && result ? fixed(result.urineVolume) : urineSoFar !== null ? fixed(urineSoFar) : running ? '----' : ''} />
-          </div>
         </div>
+      </Panel>
+
+      <Panel title={t('panels.collector')}>
+        <Button block aria-pressed={valveOpen} onClick={() => setValveOpen(!valveOpen)} disabled={running}>
+          {valveOpen ? t('actions.valveOpen') : t('actions.valveClosed')}
+        </Button>
+        <div className="px-well flex justify-center p-3">
+          <Beaker level={Math.min(1, levels.urine)} color="var(--signal)" />
+        </div>
+        <ReadoutField
+          label={t('fields.urineVolume')}
+          value={done && result ? fixed(result.urineVolume) : urineSoFar !== null ? fixed(urineSoFar) : running ? '----' : ''}
+        />
+      </Panel>
       </div>
 
-      <Panel className="col-span-2">
-        <DataSetTable
+      <DataSetTable
           store={sets}
           columns={columns}
           editable
@@ -214,7 +218,6 @@ export function GlomerularFiltration(): ReactNode {
             setRecordable(false)
           }}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

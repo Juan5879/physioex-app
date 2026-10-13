@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal } from './ui'
+import { Button, Modal, Panel } from './ui'
 
 export interface DataColumn<Row> {
   key: string
@@ -20,77 +20,59 @@ interface DataTableProps<Row> {
   onDelete: (index: number) => void
   onClear: () => void
   canRecord: boolean
+  className?: string
 }
 
 /**
- * Tabla de resultados con los botones "Registrar datos", "Borrar línea" y "Limpiar tabla".
- * El original mostraba 4 filas con flechas de desplazamiento; aquí la tabla hace scroll.
+ * Panel «Resultados»: tabla con «Registrar datos», «Borrar línea» y «Limpiar tabla» en el
+ * encabezado. El original mostraba 4 filas con flechas de desplazamiento; aquí la tabla hace scroll.
  */
-export function DataTable<Row>({
-  columns,
+export function DataTable<Row>({ className = '', ...props }: DataTableProps<Row>): ReactNode {
+  const { t } = useTranslation()
+  return (
+    <Panel title={t('common.results')} actions={<TableActions {...props} />} className={className}>
+      <ResultsTable {...props} />
+    </Panel>
+  )
+}
+
+/** Botones del encabezado de Resultados (con confirmación para limpiar la tabla) */
+export function TableActions<Row>({
   rows,
   selected,
-  onSelect,
   onRecord,
   onDelete,
   onClear,
-  canRecord
-}: DataTableProps<Row>): ReactNode {
+  canRecord,
+  children
+}: Pick<DataTableProps<Row>, 'rows' | 'selected' | 'onRecord' | 'onDelete' | 'onClear' | 'canRecord'> & {
+  children?: ReactNode
+}): ReactNode {
   const { t } = useTranslation()
   const [confirmClear, setConfirmClear] = useState(false)
-
   return (
-    <div className="flex gap-3">
-      <div className="flex w-36 shrink-0 flex-col gap-1.5">
-        <Button onClick={onRecord} disabled={!canRecord}>
-          {t('common.recordData')}
-        </Button>
-        <Button onClick={() => selected !== null && onDelete(selected)} disabled={selected === null}>
-          {t('common.deleteLine')}
-        </Button>
-        <Button onClick={() => setConfirmClear(true)} disabled={rows.length === 0}>
-          {t('common.clearTable')}
-        </Button>
-      </div>
-
-      <div className="h-32 flex-1 overflow-y-auto rounded border border-black bg-black">
-        <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 bg-bench-600">
-            <tr>
-              {columns.map((c) => (
-                <th key={c.key} className="px-2 py-1 text-center font-semibold whitespace-nowrap">
-                  {c.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="font-mono text-lcd">
-            {rows.map((row, i) => (
-              <tr
-                key={i}
-                onClick={() => onSelect(selected === i ? null : i)}
-                className={`cursor-pointer border-t border-bench-700 ${selected === i ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
-              >
-                {columns.map((c) => (
-                  <td key={c.key} className="px-2 py-1 text-center tabular-nums">
-                    {c.format(row)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="px-panel__actions">
+      {children}
+      <Button size="sm" icon="plus" onClick={onRecord} disabled={!canRecord}>
+        {t('common.recordData')}
+      </Button>
+      <Button size="sm" onClick={() => selected !== null && onDelete(selected)} disabled={selected === null}>
+        {t('common.deleteLine')}
+      </Button>
+      <Button size="sm" variant="danger" icon="trash" onClick={() => setConfirmClear(true)} disabled={rows.length === 0}>
+        {t('common.clearTable')}
+      </Button>
 
       {confirmClear && (
         <Modal title={t('common.clearTable')} onClose={() => setConfirmClear(false)}>
-          <p className="mb-5 text-bench-100">{t('common.confirmClearTable')}</p>
-          <div className="flex justify-end gap-2">
+          <p className="px-modal__text">{t('common.confirmClearTable')}</p>
+          <div className="px-modal__actions">
             <Button variant="ghost" onClick={() => setConfirmClear(false)}>
               {t('common.cancel')}
             </Button>
             <Button
               variant="danger"
+              icon="trash"
               onClick={() => {
                 onClear()
                 setConfirmClear(false)
@@ -101,6 +83,69 @@ export function DataTable<Row>({
           </div>
         </Modal>
       )}
+    </div>
+  )
+}
+
+/** Tabla `.px-table` con selección de fila; las columnas numéricas se alinean a la derecha */
+export function ResultsTable<Row>({
+  columns,
+  rows,
+  selected,
+  onSelect
+}: Pick<DataTableProps<Row>, 'columns' | 'rows' | 'selected' | 'onSelect'>): ReactNode {
+  const numeric = columns.map((c) => rows.every((r) => Number.isFinite(c.value(r))))
+  return (
+    <div className="px-tablewrap px-tablewrap--scroll">
+      <table className="px-table">
+        <thead>
+          <tr>
+            {columns.map((c, j) => (
+              <th key={c.key} className={numeric[j] ? 'num' : undefined}>
+                <HeaderText>{c.header}</HeaderText>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr
+              key={i}
+              onClick={() => onSelect(selected === i ? null : i)}
+              className={`is-clickable ${selected === i ? 'is-selected' : ''}`}
+            >
+              {columns.map((c, j) => (
+                <td key={c.key} className={numeric[j] ? 'num' : undefined}>
+                  {c.format(row)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {rows.length === 0 && <EmptyTable />}
+    </div>
+  )
+}
+
+/** Separa la unidad final de un encabezado («Fuerza activa (g)») para mostrarla sin mayúsculas */
+export function HeaderText({ children }: { children: ReactNode }): ReactNode {
+  if (typeof children !== 'string') return children
+  const m = /^(.*\S)\s*(\([^()]+\))$/.exec(children)
+  if (!m) return children
+  return (
+    <>
+      {m[1]} <span className="u">{m[2]}</span>
+    </>
+  )
+}
+
+export function EmptyTable(): ReactNode {
+  const { t } = useTranslation()
+  return (
+    <div className="px-empty">
+      <b>{t('common.emptyTitle')}</b>
+      {t('common.emptyHint')}
     </div>
   )
 }

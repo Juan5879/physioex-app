@@ -20,6 +20,17 @@ const ghDefault = 'C:\\Program Files\\GitHub CLI\\gh.exe'
 const gh = existsSync(ghDefault) ? ghDefault : 'gh'
 const run = (args) => execFileSync(gh, args, { stdio: 'inherit' })
 
+// El instalador no está firmado: la primera vez Windows SmartScreen muestra «Windows protegió su PC».
+// Las actualizaciones automáticas no pasan por ese aviso.
+const installNotes = `## Instalación
+
+1. Descarga \`PhysioEx-Setup-${version}.exe\` y ábrelo.
+2. Si aparece **«Windows protegió su PC»**, haz clic en **Más información** y luego en **Ejecutar de todas formas**.
+
+El aviso aparece porque el instalador no tiene firma digital (un certificado cuesta dinero y este es un proyecto
+académico gratuito). Solo se ve en la primera instalación: las actualizaciones posteriores se descargan e
+instalan solas, sin ese aviso.`
+
 let exists = true
 try {
   execFileSync(gh, ['release', 'view', tag], { stdio: 'ignore' })
@@ -32,5 +43,5 @@ if (exists) {
   run(['release', 'upload', tag, ...files, '--clobber'])
 } else {
   console.log(`Creando release ${tag}`)
-  run(['release', 'create', tag, ...files, '--title', tag, '--generate-notes'])
+  run(['release', 'create', tag, ...files, '--title', tag, '--notes', installNotes, '--generate-notes'])
 }

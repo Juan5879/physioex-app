@@ -36,18 +36,18 @@ export function ExperimentTools<Row>({
   const close = (): void => setOpen(null)
 
   return (
-    <div className="flex items-center gap-2">
+    <div>
       {plotDefaults && (
-        <Button variant="ghost" onClick={() => setOpen('plot')}>
-          📈 {t('common.plotData')}
+        <Button variant="ghost" size="sm" icon="chart" onClick={() => setOpen('plot')}>
+          {t('common.plotData')}
         </Button>
       )}
-      <Button variant="ghost" onClick={() => setOpen('printData')} disabled={rows.length === 0}>
-        🖨️ {t('common.printData')}
+      <Button variant="ghost" size="sm" icon="print" onClick={() => setOpen('printData')} disabled={rows.length === 0}>
+        {t('common.printData')}
       </Button>
       {printableGraph && (
-        <Button variant="ghost" onClick={() => setOpen('printGraph')}>
-          🖨️ {t('common.printGraph')}
+        <Button variant="ghost" size="sm" icon="print" onClick={() => setOpen('printGraph')}>
+          {t('common.printGraph')}
         </Button>
       )}
 

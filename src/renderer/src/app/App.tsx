@@ -1,8 +1,9 @@
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useState, type ReactNode } from "react";
 import {
   HashRouter,
   Link,
   Navigate,
+  NavLink,
   Route,
   Routes,
   useParams,
@@ -10,15 +11,21 @@ import {
 import { useTranslation } from "react-i18next";
 import { labs } from "@/modules/registry";
 import { LANGUAGES } from "@/shared/i18n";
+import { Icon } from "@/shared/components/Icon";
+import { labNumber } from "@/shared/components/LabShell";
+import { LogoMark } from "@/shared/components/Logo";
+import { Button, Modal } from "@/shared/components/ui";
+import { THEMES, useTheme } from "@/shared/lib/theme";
 import { UpdateNotice } from "./UpdateNotice";
 import { ErrorBoundary } from "./ErrorBoundary";
 
 export function App(): ReactNode {
+  const [about, setAbout] = useState(false);
   return (
     <HashRouter>
-      <div className="no-print flex h-full flex-col">
+      <div className="px-shell no-print">
         <TopBar />
-        <main className="min-h-0 flex-1 overflow-auto">
+        <main className="px-shell__main">
           <ErrorBoundary>
             <Suspense fallback={null}>
               <Routes>
@@ -29,134 +36,165 @@ export function App(): ReactNode {
             </Suspense>
           </ErrorBoundary>
         </main>
+        <Footer onAbout={() => setAbout(true)} />
       </div>
+      {about && <AboutDialog onClose={() => setAbout(false)} />}
     </HashRouter>
   );
 }
 
 function TopBar(): ReactNode {
   const { t, i18n } = useTranslation();
+  const { theme, setTheme } = useTheme();
   return (
-    <header className="flex items-center gap-4 border-b border-black/40 bg-bench-800 px-4 py-1 shadow">
-      <Link
-        to="/"
-        className="text-lg font-bold tracking-wide text-white hover:text-sky-300"
-      >
-        {t("app.title")}
+    <header className="px-appbar">
+      <Link to="/" className="px-brand">
+        <LogoMark size={24} className="self-center" />
+        <b>{t("app.title")}</b>
+        <span>{t("app.brandTag")}</span>
       </Link>
-      <Link to="/" className="text-sm text-bench-100 hover:text-white">
-        {t("app.home")}
-      </Link>
-      <Link
-        to="/lab/histology"
-        className="text-sm text-bench-100 hover:text-white"
-      >
-        🔬 {t("labs.histology")}
-      </Link>
-      <div className="ml-auto flex items-center gap-2 text-sm">
+      <nav className="px-nav" aria-label={t("app.nav")}>
+        <NavLink to="/" end>
+          <Icon name="home" />
+          {t("app.home")}
+        </NavLink>
+        <NavLink to="/lab/histology">
+          <Icon name="microscope" />
+          {t("labs.histology")}
+        </NavLink>
+      </nav>
+      <div className="px-appbar__end">
         <UpdateNotice />
-        <span className="text-bench-300">{t("app.language")}</span>
-        {LANGUAGES.map((lng) => (
-          <button
-            key={lng}
-            type="button"
-            onClick={() => i18n.changeLanguage(lng)}
-            className={`rounded px-2 py-0.5 font-semibold uppercase ${i18n.language === lng ? "bg-sky-500 text-white" : "text-bench-100 hover:bg-bench-600"}`}
-          >
-            {lng}
-          </button>
-        ))}
+        <div className="px-seg" role="group" aria-label={t("app.theme")}>
+          {THEMES.map((th) => (
+            <button
+              key={th}
+              type="button"
+              aria-pressed={theme === th}
+              onClick={() => setTheme(th)}
+            >
+              {t(th === "dark" ? "app.themeDark" : "app.themeLight")}
+            </button>
+          ))}
+        </div>
+        <div className="px-seg" role="group" aria-label={t("app.language")}>
+          {LANGUAGES.map((lng) => (
+            <button
+              key={lng}
+              type="button"
+              aria-pressed={i18n.language === lng}
+              onClick={() => i18n.changeLanguage(lng)}
+            >
+              {lng.toUpperCase()}
+            </button>
+          ))}
+        </div>
       </div>
     </header>
   );
 }
 
+function Footer({ onAbout }: { onAbout: () => void }): ReactNode {
+  const { t } = useTranslation();
+  return (
+    <footer className="px-footer">
+      <span>
+        {t("app.footer")}{" "}
+        <button type="button" className="px-linkbtn" onClick={onAbout}>
+          {t("app.aboutTitle")}
+        </button>
+      </span>
+      <span className="px-poweredby">
+        Powered by <b>NovusElit</b>
+      </span>
+    </footer>
+  );
+}
+
+function AboutDialog({ onClose }: { onClose: () => void }): ReactNode {
+  const { t } = useTranslation();
+  return (
+    <Modal title={t("app.aboutTitle")} onClose={onClose}>
+      <p className="px-modal__text">{t("app.aboutBody")}</p>
+      <div className="px-modal__actions">
+        <Button variant="primary" autoFocus onClick={onClose}>
+          {t("common.close")}
+        </Button>
+      </div>
+    </Modal>
+  );
+}
+
 function Home(): ReactNode {
   const { t } = useTranslation();
+  const experiments = labs.filter((l) => !l.reference && l.component);
   const references = labs.filter((l) => l.reference);
   return (
-    <div className="mx-auto max-w-5xl p-8">
-      <h1 className="text-3xl font-bold">{t("app.title")}</h1>
-      <p className="mb-8 text-bench-300">{t("app.subtitle")}</p>
-      <h2 className="mb-3 font-semibold text-bench-100">
-        {t("app.selectLab")}
-      </h2>
-      <LabGrid />
+    <div className="px-container" style={{ maxWidth: 1100, paddingTop: "var(--space-6)" }}>
+      <div className="px-eyebrow">{t("app.eyebrow")}</div>
+      <h1 className="mt-2 mb-1.5 flex items-center gap-4 font-[family-name:var(--font-display)] text-[40px] leading-[44px] font-semibold tracking-[-0.01em]">
+        <LogoMark size={48} detailed />
+        {t("app.title")}
+      </h1>
+      <p className="m-0 max-w-[620px] text-[color:var(--ink-muted)]">
+        {t("app.intro")}
+      </p>
+
+      <div className="mt-9 mb-3 flex items-baseline justify-between">
+        <h2 className="px-panel__title m-0">{t("app.labsHeading")}</h2>
+        <span className="px-eyebrow">
+          {t("app.available", { count: experiments.length })}
+        </span>
+      </div>
+      <div className="px-labgrid">
+        {experiments.map((lab) => (
+          <Link key={lab.id} to={`/lab/${lab.id}`} className="px-labcard">
+            <span className="n">{labNumber(lab.number)}</span>
+            <span className="t">{t(lab.titleKey)}</span>
+            <span className="m">{t(`systems.${lab.id}`)}</span>
+            <span className="go">
+              <Icon name="arrowRight" />
+            </span>
+          </Link>
+        ))}
+      </div>
+
       {references.length > 0 && (
         <>
-          <h2 className="mt-10 mb-1 font-semibold text-bench-100">
-            {t("app.reference")}
-          </h2>
-          <p className="mb-3 text-sm text-bench-300">
-            {t("app.referenceHint")}
-          </p>
+          <h2 className="px-panel__title mt-9 mb-3">{t("app.reference")}</h2>
           {references.map((lab) => (
             <Link
               key={lab.id}
               to={`/lab/${lab.id}`}
-              className="flex items-center gap-4 overflow-hidden rounded-xl border border-emerald-400/60 bg-bench-700 transition-colors hover:bg-bench-600"
+              className="px-labcard"
+              style={{ gridTemplateColumns: "auto 1fr auto", padding: 12 }}
             >
               <img
                 src="histology/areol02.100.100.jpg"
                 alt=""
-                className="h-28 w-40 object-cover"
+                className="px-well h-24 w-37 object-cover"
               />
-              <span className="flex-1 py-3">
-                <span className="block text-xl font-semibold">
-                  {lab.icon} {t(lab.titleKey)}
-                </span>
-                <span className="block text-sm text-bench-300">
+              <span className="grid gap-1">
+                <span className="t">{t(lab.titleKey)}</span>
+                <span className="m" style={{ gridColumn: "auto" }}>
                   {t("app.histologyHint")}
                 </span>
+              </span>
+              <span className="go" style={{ gridRow: "auto" }}>
+                <Icon name="arrowRight" />
               </span>
             </Link>
           ))}
         </>
       )}
-    </div>
-  );
-}
 
-/** Tarjetas de los laboratorios con experimentos */
-function LabGrid(): ReactNode {
-  const { t } = useTranslation();
-  return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {labs
-        .filter((l) => !l.reference)
-        .map((lab) => {
-          const enabled = Boolean(lab.component);
-          const body = (
-            <>
-              <span className="text-3xl">{lab.icon}</span>
-              <span className="flex-1">
-                <span className="block text-xs text-bench-300">
-                  #{lab.number}
-                </span>
-                <span className="block font-semibold">{t(lab.titleKey)}</span>
-                {!enabled && (
-                  <span className="text-xs text-bench-300">
-                    {t("app.comingSoon")}
-                  </span>
-                )}
-              </span>
-            </>
-          );
-          const cls =
-            "flex items-center gap-3 rounded-xl border p-4 text-left transition-colors " +
-            (enabled
-              ? "border-sky-400/60 bg-bench-700 hover:bg-bench-600"
-              : "cursor-not-allowed border-bench-600 bg-bench-800 opacity-50");
-          return enabled ? (
-            <Link key={lab.id} to={`/lab/${lab.id}`} className={cls}>
-              {body}
-            </Link>
-          ) : (
-            <div key={lab.id} className={cls} aria-disabled>
-              {body}
-            </div>
-          );
-        })}
+      <aside className="px-notice mt-6">
+        <Icon name="info" />
+        <div>
+          <h3>{t("app.aboutTitle")}</h3>
+          <p>{t("app.aboutBody")}</p>
+        </div>
+      </aside>
     </div>
   );
 }

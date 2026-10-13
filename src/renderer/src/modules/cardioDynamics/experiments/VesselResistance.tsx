@@ -6,7 +6,7 @@ import { DataSetTable, PrintDataSets } from '@/shared/components/DataSetTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { Stepper } from '@/shared/components/Stepper'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Light, Notice, Panel, Readout } from '@/shared/components/ui'
+import { Button, Light, Notice, Panel, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 import { VesselApparatus } from '../components/Apparatus'
@@ -148,7 +148,7 @@ export function VesselResistance(): ReactNode {
   const current = store.sets[store.selected]
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_260px] gap-3 p-3">
+    <>
       <ToolbarPortal>
         <ExperimentTools
           lab={t('title')}
@@ -160,85 +160,82 @@ export function VesselResistance(): ReactNode {
         />
       </ToolbarPortal>
 
-      <Panel className="flex flex-col gap-2">
-        <div className="flex justify-start pl-4">
+      <div className="grid grid-cols-[240px_minmax(0,1fr)_240px] items-start gap-4">
+        <Panel title={t('panels.parameters')}>
           <Stepper
+            block
             label={t('fields.pressure')}
             display={String(pressure)}
             disabled={busy}
             edit={{ ...VR.pressure, value: pressure, onChange: param(setPressure) }}
           />
-        </div>
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
-          <VesselApparatus
-            radius={radius}
-            length={length}
-            leftLevel={view.left}
-            tubeFill={view.tube}
-            tubeFillFromRight={view.fromRight}
+          <Stepper
+            block
+            label={t('fields.radius')}
+            display={fixed(radius, 1)}
+            disabled={busy}
+            edit={{ ...VR.radius, value: radius, onChange: param(setRadius) }}
           />
-        </div>
-      </Panel>
+          <Stepper
+            block
+            label={t('fields.viscosity')}
+            display={fixed(viscosity, 1)}
+            disabled={busy}
+            edit={{ ...VR.viscosity, value: viscosity, onChange: param(setViscosity) }}
+          />
+          <Stepper
+            block
+            label={t('fields.length')}
+            display={String(length)}
+            disabled={busy}
+            edit={{ ...VR.length, value: length, onChange: param(setLength) }}
+          />
+        </Panel>
 
-      <Panel className="flex flex-col justify-center gap-3">
-        <div className="flex items-center gap-2">
-          <Light on={phase === 'running'} />
-          <Button variant="primary" onClick={start} disabled={phase !== 'ready'} className="flex-1">
+        <Panel title={t('panels.apparatus')} actions={<span className="px-eyebrow">{t('panels.sourceToDest')}</span>}>
+          <div className="px-well p-4">
+            <VesselApparatus
+              radius={radius}
+              length={length}
+              leftLevel={view.left}
+              tubeFill={view.tube}
+              tubeFillFromRight={view.fromRight}
+            />
+          </div>
+        </Panel>
+
+        <Panel
+          title={t('panels.pump')}
+          actions={<Light on={phase === 'running' || phase === 'refilling'} label={tc(phase === 'ready' ? 'common.ready' : phase === 'done' ? 'common.stopped' : 'common.inProgress')} />}
+        >
+          <Button variant="primary" block icon="play" onClick={start} disabled={phase !== 'ready'}>
             {t('actions.start')}
           </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Light on={phase === 'refilling'} />
-          <Button onClick={refill} disabled={phase !== 'done'} className="flex-1">
+          <Button block onClick={refill} disabled={phase !== 'done'}>
             {t('actions.refill')}
           </Button>
-        </div>
-        <div className="mt-2 flex flex-col items-center gap-1">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.flow')}</span>
-          <Readout
-            value={phase === 'running' ? tc('common.measuring') : flow !== null ? fixed(flow, 1) : ''}
-            className="w-32"
+          <ReadoutField
+            label={t('fields.flow')}
+            value={phase === 'running' ? '----' : flow !== null ? fixed(flow, 1) : ''}
+            className="px-section"
           />
-        </div>
-      </Panel>
+        </Panel>
+      </div>
 
-      <Panel className="col-span-2 flex flex-wrap items-end justify-around gap-4">
-        <Stepper
-          label={t('fields.radius')}
-          display={fixed(radius, 1)}
-          disabled={busy}
-          edit={{ ...VR.radius, value: radius, onChange: param(setRadius) }}
-        />
-        <Stepper
-          label={t('fields.viscosity')}
-          display={fixed(viscosity, 1)}
-          disabled={busy}
-          edit={{ ...VR.viscosity, value: viscosity, onChange: param(setViscosity) }}
-        />
-        <Stepper
-          label={t('fields.length')}
-          display={String(length)}
-          disabled={busy}
-          edit={{ ...VR.length, value: length, onChange: param(setLength) }}
-        />
-      </Panel>
-
-      <Panel className="col-span-2">
-        <DataSetTable
-          store={store}
-          columns={columns}
-          editable
-          label={label}
-          canRecord={recordable && flow !== null}
-          onRecord={() => {
-            if (flow === null) return
-            store.addRow({ flow, radius, viscosity, length, pressure })
-            setRecordable(false)
-          }}
-        />
-      </Panel>
+      <DataSetTable
+        store={store}
+        columns={columns}
+        editable
+        label={label}
+        canRecord={recordable && flow !== null}
+        onRecord={() => {
+          if (flow === null) return
+          store.addRow({ flow, radius, viscosity, length, pressure })
+          setRecordable(false)
+        }}
+      />
 
       {alert && <Notice title={t('alerts.title')} lines={[t(`alerts.${alert}`)]} onClose={() => setAlert(null)} />}
-    </div>
+    </>
   )
 }

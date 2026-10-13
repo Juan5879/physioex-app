@@ -5,7 +5,7 @@ import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
 import { Panel } from '@/shared/components/ui'
-import { ProcedureList, useProcedure, type ProcedureStep } from '../components/Procedure'
+import { ProcedurePanel, useProcedure, type ProcedureStep } from '../components/Procedure'
 import { WB_BANDS, WB_MINUTES, WESTERN_BLOT } from '../model/serology'
 import { useWbStore, type WbRow } from '../store'
 
@@ -41,16 +41,15 @@ export function WesternBlot(): ReactNode {
   const developed = proc.finished
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.wb')} columns={columns} rows={s.rows} />
       </ToolbarPortal>
-      <Panel>
-        <ProcedureList steps={STEPS} proc={proc} unit="min" />
-      </Panel>
-      <Panel className="flex flex-col items-center gap-3">
-        <div className="flex items-start gap-4 rounded-xl bg-bench-900 p-4">
-          <div className="flex flex-col pt-3 text-right font-mono text-xs text-bench-300" style={{ gap: 20 }}>
+      <ProcedurePanel steps={STEPS} proc={proc} unit="min" />
+      <Panel title={t('panels.membrane')} bodyClassName="justify-items-center">
+        <div className="px-well flex items-start gap-3 p-4">
+          <div className="flex flex-col pt-4 text-right font-mono text-[11px] text-[color:var(--ink-subtle)]" style={{ gap: 20 }}>
             {WB_BANDS.map((b) => (
               <span key={b}>{b}</span>
             ))}
@@ -61,21 +60,22 @@ export function WesternBlot(): ReactNode {
               type="button"
               disabled={!developed}
               onClick={() => setSelected(i)}
-              className={`flex flex-col items-center gap-1 rounded p-1 ${selected === i ? 'ring-2 ring-sky-400' : ''}`}
+              aria-pressed={selected === i}
+              className="px-option !gap-1.5 !px-1.5 disabled:cursor-not-allowed"
             >
               <svg viewBox="0 0 20 140" className="h-44 w-6">
-                <rect x={2} y={2} width={16} height={136} rx={2} fill="#f8fafc" />
+                <rect className="il-glass" x={2} y={2} width={16} height={136} rx={2} strokeWidth={1} />
                 {developed &&
-                  w.bands.map((on, k) => (on ? <rect key={k} x={3} y={14 + k * 25} width={14} height={4} fill="#6b21a8" /> : null))}
+                  w.bands.map((on, k) => (on ? <rect key={k} x={3} y={14 + k * 25} width={14} height={4} style={{ fill: 'var(--chart-3)' }} /> : null))}
               </svg>
-              <span className="max-w-16 text-center text-xs leading-tight">{t(`samples.${w.sample}`)}</span>
+              <span className="max-w-16 text-center leading-tight">{t(`samples.${w.sample}`)}</span>
             </button>
           ))}
         </div>
-        <p className="text-xs text-bench-300">{t('hints.wb')}</p>
+        <p className="px-hint m-0">{t('hints.wb')}</p>
       </Panel>
-      <Panel className="col-span-2">
-        <DataTable
+    </div>
+      <DataTable
           columns={columns}
           rows={s.rows}
           selected={s.selected}
@@ -85,7 +85,6 @@ export function WesternBlot(): ReactNode {
           onClear={s.clearRows}
           canRecord={developed && selected !== null && !recorded.includes(WESTERN_BLOT[selected].sample)}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

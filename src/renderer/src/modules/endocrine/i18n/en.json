@@ -38,7 +38,9 @@
     "opticalDensity": "Optical Density",
     "glucose": "Glucose (mg/deciliter)",
     "glucoseReading": "Glucose reading (mg/deciliter)",
-    "run": "Run"
+    "run": "Run",
+    "clamp": "Clamp",
+    "tConnector": "T-connector"
   },
   "actions": {
     "start": "Start",
@@ -110,7 +112,16 @@
     "spectro": "Spectrophotometer",
     "washer": "Test Tube Washer",
     "rack": "Rack",
-    "steps": "Steps"
+    "steps": "Steps",
+    "syringes": "Syringes",
+    "apparatus": "Apparatus",
+    "subjects": "Subjects",
+    "controls": "Controls",
+    "chamberEmpty": "Empty chamber",
+    "tubes": "Test tubes",
+    "rats": "Rats",
+    "manometerEqual": "Manometer levels equal",
+    "manometerOff": "Manometer levels unequal"
   },
   "yesNo": {
     "yes": "Yes",

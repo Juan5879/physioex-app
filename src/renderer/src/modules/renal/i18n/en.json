@@ -71,5 +71,11 @@
   "hints": {
     "probe": "Click on the tubule (at any depth) to measure the concentration with the probe.",
     "applyFirst": "Carrier and gradient changes are applied with their buttons."
+  },
+  "panels": {
+    "parameters": "Parameters",
+    "nephron": "Nephron",
+    "collector": "Collector",
+    "glomerulus": "Glomerulus"
   }
 }

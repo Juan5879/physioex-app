@@ -1,6 +1,6 @@
-import { useRef, useState, type ReactNode } from 'react'
+import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Light, Panel, Readout } from '@/shared/components/ui'
+import { Light, Panel, ReadoutField } from '@/shared/components/ui'
 import { useFrameLoop } from '@/shared/lib/useFrameLoop'
 
 /** Botones de las muestras numeradas; las usadas quedan deshabilitadas */
@@ -21,21 +21,22 @@ export function SampleBar({
 }): ReactNode {
   const { t } = useTranslation('blood')
   return (
-    <div className="flex flex-col items-center gap-2">
-      <span className="text-sm font-semibold text-bench-100">{label ?? t('fields.samples')}</span>
-      <div className="flex flex-wrap justify-center gap-2">
+    <div className="px-field">
+      <span className="px-label">{label ?? t('fields.samples')}</span>
+      <div className="flex flex-wrap gap-2">
         {Array.from({ length: count }, (_, i) => (
           <button
             key={i}
             type="button"
             disabled={disabled || used.includes(i)}
             onClick={() => onSelect(i)}
-            className={`flex flex-col items-center rounded-lg border px-2 py-1 text-xs font-semibold disabled:opacity-30 ${selected === i ? 'border-sky-400 bg-bench-800' : 'border-bench-500 bg-bench-900 hover:bg-bench-800'}`}
+            aria-pressed={selected === i}
+            className="px-reagent !min-h-0 !flex-col !gap-1 !px-2.5 !py-1.5 font-mono !text-xs disabled:cursor-not-allowed disabled:opacity-35"
+            style={{ '--c': 'var(--chart-4)' } as CSSProperties}
           >
-            <svg viewBox="0 0 24 40" className="h-9 w-5">
-              <rect x={4} y={2} width={16} height={6} rx={2} fill="#111827" />
-              <path d="M 3 10 H 21 V 34 Q 21 38 17 38 H 7 Q 3 38 3 34 Z" fill="#fee2e2" fillOpacity={0.3} stroke="#cbd5e1" />
-              <rect x={5} y={18} width={14} height={18} rx={2} fill="#b91c1c" />
+            <svg viewBox="0 0 14 24" aria-hidden="true">
+              <path className="vessel" d="M3 1h8v20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" />
+              <path className="fill" d="M4.5 10h5v10.5a1.5 1.5 0 0 1-1.5 1.5H6a1.5 1.5 0 0 1-1.5-1.5z" />
             </svg>
             {i + 1}
           </button>
@@ -93,24 +94,41 @@ export function useLabTimer(onDone: () => void): {
 }
 
 /** Panel del temporizador: tiempo transcurrido con luz */
-export function TimerReadout({ running, elapsed }: { running: boolean; elapsed: number }): ReactNode {
+export function TimerReadout({ elapsed }: { running?: boolean; elapsed: number }): ReactNode {
   const { t } = useTranslation('blood')
-  return (
-    <div className="flex items-center gap-2">
-      <Light on={running} />
-      <span className="text-sm font-semibold text-bench-100">{t('fields.elapsed')}</span>
-      <Readout value={`${elapsed}`} />
-    </div>
-  )
+  return <ReadoutField inline label={t('fields.elapsed')} unit="min" value={`${elapsed}`} />
 }
 
-/** Distribución común: aparato a la izquierda, controles a la derecha y tabla abajo */
-export function BloodLayout({ left, right, table }: { left: ReactNode; right: ReactNode; table: ReactNode }): ReactNode {
+/** Distribución común: Muestras | instrumento (con su estado), y Resultados debajo */
+export function BloodLayout({
+  left,
+  right,
+  table,
+  rightTitle,
+  running
+}: {
+  left: ReactNode
+  right: ReactNode
+  table: ReactNode
+  /** nombre del instrumento (centrífuga, hemoglobinómetro…) */
+  rightTitle: string
+  /** instrumento funcionando: enciende el LED del panel */
+  running?: boolean
+}): ReactNode {
+  const { t } = useTranslation('blood')
+  const tc = useTranslation().t
   return (
-    <div className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-3 p-3">
-      <Panel className="flex flex-col gap-3">{left}</Panel>
-      <Panel className="flex flex-col gap-3">{right}</Panel>
-      <Panel className="col-span-2">{table}</Panel>
-    </div>
+    <>
+      <div className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-4">
+        <Panel title={t('panels.samples')}>{left}</Panel>
+        <Panel
+          title={rightTitle}
+          actions={running !== undefined && <Light on={running} label={tc(running ? 'common.inProgress' : 'common.stopped')} />}
+        >
+          {right}
+        </Panel>
+      </div>
+      {table}
+    </>
   )
 }

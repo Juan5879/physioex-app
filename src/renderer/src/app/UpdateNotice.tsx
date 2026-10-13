@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '@/shared/components/Icon'
 import type { UpdateStatus } from '../../../main/updateStatus'
 
 /**
@@ -14,18 +15,17 @@ export function UpdateNotice(): ReactNode {
 
   if (status?.state === 'downloading') {
     return (
-      <span className="text-xs text-bench-300" title={t('updates.downloadingHint')}>
-        ⬇ {t('updates.downloading', { version: status.version, percent: status.percent ?? 0 })}
+      <span className="px-chip" title={t('updates.downloadingHint')}>
+        <Icon name="download" />
+        {t('updates.downloading', { version: status.version, percent: status.percent ?? 0 })}
       </span>
     )
   }
   if (status?.state === 'ready') {
     return (
-      <span
-        className="rounded bg-emerald-600/30 px-2 py-0.5 text-xs text-emerald-200"
-        title={t('updates.readyHint')}
-      >
-        ✓ {t('updates.ready', { version: status.version })}
+      <span className="px-chip px-chip--ok" title={t('updates.readyHint')}>
+        <Icon name="check" />
+        {t('updates.ready', { version: status.version })}
       </span>
     )
   }

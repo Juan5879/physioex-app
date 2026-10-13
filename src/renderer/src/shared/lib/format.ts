@@ -26,3 +26,9 @@ export const roundTo = (v: number, decimals: number): number => {
   const f = 10 ** decimals
   return Math.round(v * f) / f
 }
+
+/** Separa la unidad final entre paréntesis de un rótulo: «Voltaje (V)» → { text: 'Voltaje', unit: 'V' } */
+export function splitUnit(label: string): { text: string; unit: string } | null {
+  const m = /^(.*\S)\s*\(([^()]+)\)$/.exec(label)
+  return m ? { text: m[1], unit: m[2] } : null
+}

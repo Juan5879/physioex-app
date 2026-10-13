@@ -69,35 +69,20 @@ export function Apparatus({ length, shortening = 0, stimulusId, isotonic }: Appa
       onDragOver={(e) => isotonic && !isotonic.locked && e.preventDefault()}
       onDrop={onDrop}
     >
-      <svg viewBox="0 0 220 470" className="mx-auto h-full max-h-[440px] w-full">
-        <defs>
-          <linearGradient id="metal" x1="0" x2="1">
-            <stop offset="0" stopColor="#6b7280" />
-            <stop offset="0.45" stopColor="#f3f4f6" />
-            <stop offset="1" stopColor="#4b5563" />
-          </linearGradient>
-          <radialGradient id="muscle" cx="0.35" cy="0.4" r="0.8">
-            <stop offset="0" stopColor="#fecaca" />
-            <stop offset="0.35" stopColor="#ef4444" />
-            <stop offset="1" stopColor="#991b1b" />
-          </radialGradient>
-        </defs>
-
+      <svg viewBox="0 0 220 470" className="mx-auto block h-full max-h-[300px] w-full" role="img" aria-label={t('hints.apparatus')}>
         {/* soporte vertical */}
-        <rect x={22} y={14} width={14} height={450} rx={4} fill="url(#metal)" />
+        <rect className="il-metal" x={25} y={14} width={8} height={450} rx={4} />
         {/* brazo superior + transductor */}
-        <rect x={22} y={34} width={150} height={10} rx={3} fill="url(#metal)" />
-        <rect x={112} y={26} width={36} height={26} rx={4} fill="url(#metal)" stroke="#374151" />
-        <line x1={cx} y1={52} x2={cx} y2={TOP} stroke="#d1d5db" strokeWidth={2} />
+        <rect className="il-metal" x={22} y={35} width={150} height={8} rx={4} />
+        <rect className="il-glass" x={112} y={26} width={36} height={26} rx={4} />
+        <line className="il-thin" x1={cx} y1={52} x2={cx} y2={TOP} />
 
         {/* músculo */}
         <path
           d={`M ${cx} ${TOP}
               C ${cx + w * 0.9} ${TOP + h * 0.15}, ${cx + w * 0.75} ${TOP + h * 0.9}, ${cx} ${TOP + 10 + h}
               C ${cx - w * 0.75} ${TOP + h * 0.9}, ${cx - w * 0.9} ${TOP + h * 0.15}, ${cx} ${TOP} Z`}
-          fill="url(#muscle)"
-          stroke="#7f1d1d"
-          strokeWidth={1}
+          className="il-tissue"
           style={{ transition: 'all 40ms linear' }}
         />
         {Array.from({ length: 5 }, (_, i) => (
@@ -105,26 +90,24 @@ export function Apparatus({ length, shortening = 0, stimulusId, isotonic }: Appa
             key={i}
             d={`M ${cx} ${TOP + 6} Q ${cx + (i - 2) * w * 0.28} ${TOP + h / 2} ${cx} ${bottom - 4}`}
             fill="none"
-            stroke="#fee2e2"
-            strokeOpacity={0.35}
+            stroke="var(--surface)"
+            strokeOpacity={0.3}
           />
         ))}
 
         {/* electrodo */}
         <path
           d={`M 200 ${TOP + 60} V 300 H 214`}
-          fill="none"
-          stroke="url(#metal)"
-          strokeWidth={6}
+          className="il-electrode"
+          strokeWidth={3}
         />
-        <rect x={180} y={TOP + 50} width={22} height={20} rx={3} fill="url(#metal)" stroke="#374151" />
-        <line x1={cx + w * 0.45} y1={TOP + 56} x2={182} y2={TOP + 56} stroke="#111" strokeWidth={1.5} />
-        <line x1={cx + w * 0.45} y1={TOP + 64} x2={182} y2={TOP + 64} stroke="#111" strokeWidth={1.5} />
+        <rect className="il-glass" x={180} y={TOP + 50} width={22} height={20} rx={3} />
+        <line className="il-electrode" x1={cx + w * 0.45} y1={TOP + 56} x2={182} y2={TOP + 56} strokeWidth={1.5} />
+        <line className="il-electrode" x1={cx + w * 0.45} y1={TOP + 64} x2={182} y2={TOP + 64} strokeWidth={1.5} />
         {spark && (
           <path
             d={`M ${cx + 6} ${TOP + 52} l 8 6 l -6 2 l 10 8`}
-            fill="none"
-            stroke="#fde047"
+            className="il-electrode"
             strokeWidth={2.5}
           />
         )}
@@ -132,7 +115,7 @@ export function Apparatus({ length, shortening = 0, stimulusId, isotonic }: Appa
         {isotonic ? (
           <>
             {/* gancho inferior */}
-            <line x1={cx} y1={bottom} x2={cx} y2={bottom + 14} stroke="#d1d5db" strokeWidth={2} />
+            <line className="il-thin" x1={cx} y1={bottom} x2={cx} y2={bottom + 14} />
             {isotonic.weight > 0 ? (
               <g
                 onClick={() => !isotonic.locked && isotonic.onRemoveWeight()}
@@ -142,18 +125,18 @@ export function Apparatus({ length, shortening = 0, stimulusId, isotonic }: Appa
                 <Weight x={cx} y={bottom + 14} weight={isotonic.weight} />
               </g>
             ) : (
-              <circle cx={cx} cy={bottom + 18} r={5} fill="none" stroke="#d1d5db" strokeWidth={2} />
+              <circle className="il-thin" cx={cx} cy={bottom + 18} r={5} />
             )}
             {/* plataforma */}
-            <rect x={70} y={platformY} width={120} height={10} rx={2} fill="url(#metal)" stroke="#374151" />
-            <rect x={36} y={platformY + 3} width={40} height={5} fill="url(#metal)" />
+            <rect className="il-glass" x={70} y={platformY} width={120} height={10} rx={2} />
+            <rect className="il-metal" x={33} y={platformY + 3} width={40} height={5} />
           </>
         ) : (
           <>
             {/* pinza inferior fija (contracción isométrica) */}
-            <line x1={cx} y1={bottom} x2={cx} y2={bottom + 20} stroke="#d1d5db" strokeWidth={2} />
-            <rect x={110} y={bottom + 18} width={40} height={16} rx={4} fill="url(#metal)" stroke="#374151" />
-            <rect x={22} y={bottom + 22} width={90} height={8} rx={2} fill="url(#metal)" />
+            <line className="il-thin" x1={cx} y1={bottom} x2={cx} y2={bottom + 20} />
+            <rect className="il-glass" x={110} y={bottom + 18} width={40} height={16} rx={4} />
+            <rect className="il-metal" x={22} y={bottom + 22} width={90} height={8} rx={4} />
           </>
         )}
       </svg>
@@ -166,9 +149,9 @@ function Weight({ x, y, weight }: { x: number; y: number; weight: number }): Rea
   const r = 10 + weight * 5
   return (
     <g>
-      <line x1={x} y1={y} x2={x} y2={y + 8} stroke="#d1d5db" strokeWidth={2} />
-      <rect x={x - r} y={y + 8} width={r * 2} height={20 + weight * 6} rx={4} fill="#9ca3af" stroke="#374151" />
-      <text x={x} y={y + 24 + weight * 3} textAnchor="middle" fontSize={11} fontWeight={700} fill="#111827">
+      <line className="il-thin" x1={x} y1={y} x2={x} y2={y + 8} />
+      <rect className="il-glass" x={x - r} y={y + 8} width={r * 2} height={20 + weight * 6} rx={4} />
+      <text className="il-label" x={x} y={y + 24 + weight * 3} textAnchor="middle">
         {weight.toFixed(1)}g
       </text>
     </g>
@@ -204,7 +187,7 @@ export function WeightTray({
             disabled={locked || inUse}
             onDragStart={(e) => e.dataTransfer.setData('text/weight', String(w))}
             onClick={() => onPick(w)}
-            className="flex flex-col items-center rounded border border-bench-900 bg-gray-400 px-2 pt-1 pb-0.5 text-xs font-bold text-gray-900 shadow hover:bg-gray-300 disabled:opacity-25"
+            className="px-btn px-btn--sm flex-col !px-1 !pb-1 font-mono"
             style={{ height: 34 + w * 10, width: 36 + w * 6 }}
           >
             <span className="mt-auto">{w.toFixed(1)}g</span>

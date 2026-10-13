@@ -38,7 +38,9 @@
     "opticalDensity": "Densidad óptica",
     "glucose": "Glucosa (mg/dl)",
     "glucoseReading": "Lectura de glucosa (mg/dl)",
-    "run": "Corrida"
+    "run": "Corrida",
+    "clamp": "Pinza",
+    "tConnector": "Conector en T"
   },
   "actions": {
     "start": "Iniciar",
@@ -110,7 +112,16 @@
     "spectro": "Espectrofotómetro",
     "washer": "Lavador de tubos",
     "rack": "Gradilla",
-    "steps": "Pasos"
+    "steps": "Pasos",
+    "syringes": "Jeringas",
+    "apparatus": "Aparato",
+    "subjects": "Sujetos",
+    "controls": "Controles",
+    "chamberEmpty": "Cámara vacía",
+    "tubes": "Tubos de ensayo",
+    "rats": "Ratas",
+    "manometerEqual": "Manómetro igualado",
+    "manometerOff": "Manómetro desigual"
   },
   "yesNo": {
     "yes": "Sí",

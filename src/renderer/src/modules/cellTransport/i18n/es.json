@@ -28,7 +28,14 @@
     "left": "Vaso izquierdo",
     "right": "Vaso derecho",
     "top": "Vaso superior",
-    "bottom": "Filtrado"
+    "bottom": "Filtrado",
+    "leftShort": "IZQ.",
+    "rightShort": "DER.",
+    "topShort": "SUP.",
+    "bottomShort": "FILTR.",
+    "empty": "Vaso vacío",
+    "hasSolution": "Con solución",
+    "isEmpty": "Vacío"
   },
   "actions": {
     "dispense": "Dispensar",
@@ -66,7 +73,10 @@
     "dialysis": "Membranas de diálisis",
     "builder": "Constructor de membrana",
     "analysis": "Análisis de residuos de la membrana",
-    "holder": "Soporte de membrana"
+    "holder": "Soporte de membrana",
+    "apparatus": "Aparato",
+    "membraneHint": "Membrana de diálisis (arrastra al soporte)",
+    "filtrate": "Filtrado"
   },
   "columns": {
     "solute": "Soluto",
@@ -118,7 +128,10 @@
     "noRuns": "Aún no hay corridas registradas.",
     "builtMembrane": "Membrana con {{carriers}} transportadores",
     "builtMembranePumps": "Membrana con {{carriers}} transportadores y {{pumps}} bombas",
-    "pickMembrane": "Haz clic en una membrana (o arrástrala) para colocarla en el soporte; vuelve a hacer clic para quitarla."
+    "pickMembrane": "Haz clic en una membrana (o arrástrala) para colocarla en el soporte; vuelve a hacer clic para quitarla.",
+    "noRates": "Sin datos de difusión",
+    "noFiltrate": "Sin datos de filtrado",
+    "noResidue": "Sin análisis de residuos"
   },
   "run": "Corrida {{n}}"
 }

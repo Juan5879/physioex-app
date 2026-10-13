@@ -4,8 +4,8 @@ import type { TFunction } from 'i18next'
 import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Button, Panel } from '@/shared/components/ui'
-import { ProcedureList, useProcedure, type ProcedureStep } from '../components/Procedure'
+import { Hint, Panel } from '@/shared/components/ui'
+import { ProcedurePanel, useProcedure, type ProcedureStep } from '../components/Procedure'
 import { DFA, microscopeField } from '../model/serology'
 import { useDfaStore, type DfaRow } from '../store'
 
@@ -38,44 +38,49 @@ export function Fluorescent(): ReactNode {
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.dfa')} columns={columns} rows={s.rows} />
       </ToolbarPortal>
-      <Panel>
-        <ProcedureList steps={STEPS} proc={proc} unit="min" />
-      </Panel>
-      <Panel className="flex flex-col items-center gap-3">
-        <span className="text-sm font-semibold text-bench-100">{t('fields.microscope')}</span>
-        <div className="flex flex-wrap justify-center gap-2">
+      <ProcedurePanel steps={STEPS} proc={proc} unit="min" />
+      <Panel title={t('panels.microscope')} bodyClassName="justify-items-center">
+        <div className="px-seg flex-wrap" role="group" aria-label={t('fields.microscope')}>
           {DFA.map((d, i) => (
-            <Button key={d.label} onClick={() => setSlide(i)} disabled={!proc.finished || recorded.includes(d.label)} className={slide === i ? 'ring-2 ring-sky-400' : ''}>
+            <button
+              key={d.label}
+              type="button"
+              aria-pressed={slide === i}
+              onClick={() => setSlide(i)}
+              disabled={!proc.finished || recorded.includes(d.label)}
+            >
               {t(`samples.${d.label}`)}
-            </Button>
+            </button>
           ))}
         </div>
-        <svg viewBox="0 0 100 100" className="h-60 w-60 rounded-full bg-black">
+        <svg viewBox="0 0 100 100" className="px-scope" role="img" aria-label={t('fields.microscope')}>
           {field?.cells.map((c, i) => (
-            <ellipse key={i} cx={c.x} cy={c.y} rx={4.5} ry={3.5} fill="#7f1d1d" fillOpacity={0.9} stroke="#b91c1c" strokeWidth={0.4} />
+            <ellipse key={i} cx={c.x} cy={c.y} rx={4.5} ry={3.5} style={{ fill: 'var(--chart-4)' }} fillOpacity={0.35} />
           ))}
           {field?.elementary.map((c, i) => (
-            <circle key={i} cx={c.x} cy={c.y} r={1.3} fill="#4ade80" style={{ filter: 'drop-shadow(0 0 1.5px #22c55e)' }} />
+            <circle key={i} cx={c.x} cy={c.y} r={1.3} />
           ))}
         </svg>
-        <p className="text-center text-xs text-bench-300">{t('hints.dfa')}</p>
-        <div className="flex gap-2">
-          <span className="self-center text-sm">{t('fields.chlamydia')}:</span>
-          <Button onClick={() => record(true)} disabled={!field}>
-            {t('values.present')}
-          </Button>
-          <Button onClick={() => record(false)} disabled={!field}>
-            {t('values.absent')}
-          </Button>
+        <Hint>{t('hints.dfa')}</Hint>
+        <div className="flex items-center gap-3">
+          <span className="px-label">{t('fields.chlamydia')}</span>
+          <div className="px-seg" role="group" aria-label={t('fields.chlamydia')}>
+            <button type="button" onClick={() => record(true)} disabled={!field}>
+              {t('values.present')}
+            </button>
+            <button type="button" onClick={() => record(false)} disabled={!field}>
+              {t('values.absent')}
+            </button>
+          </div>
         </div>
       </Panel>
-      <Panel className="col-span-2">
-        <DataTable columns={columns} rows={s.rows} selected={s.selected} onSelect={s.select} onRecord={() => undefined} onDelete={s.deleteRow} onClear={s.clearRows} canRecord={false} />
-      </Panel>
     </div>
+      <DataTable columns={columns} rows={s.rows} selected={s.selected} onSelect={s.select} onRecord={() => undefined} onDelete={s.deleteRow} onClear={s.clearRows} canRecord={false} />
+    </>
   )
 }

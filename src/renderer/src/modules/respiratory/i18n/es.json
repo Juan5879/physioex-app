@@ -76,5 +76,9 @@
   "hints": {
     "valve": "Abrir la válvula deja entrar aire en la cavidad pleural y el pulmón colapsa (neumotórax).",
     "forced": "VRE y CVF empiezan al comienzo de la siguiente respiración."
+  },
+  "panels": {
+    "apparatus": "Aparato",
+    "spirometer": "Espirómetro"
   }
 }

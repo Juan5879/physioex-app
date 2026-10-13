@@ -4,9 +4,9 @@ import type { TFunction } from 'i18next'
 import { DataTable, type DataColumn } from '@/shared/components/DataTable'
 import { ExperimentTools } from '@/shared/components/ExperimentTools'
 import { ToolbarPortal } from '@/shared/components/ToolbarSlot'
-import { Panel, Readout } from '@/shared/components/ui'
+import { Panel, ReadoutField } from '@/shared/components/ui'
 import { fixed } from '@/shared/lib/format'
-import { ProcedureList, useProcedure, type ProcedureStep } from '../components/Procedure'
+import { ProcedurePanel, useProcedure, type ProcedureStep } from '../components/Procedure'
 import { ELISA, ELISA_HOURS } from '../model/serology'
 import { useElisaStore, type ElisaRow } from '../store'
 
@@ -40,39 +40,36 @@ export function Elisa(): ReactNode {
   const developed = proc.finished
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.elisa')} columns={columns} rows={s.rows} />
       </ToolbarPortal>
-      <Panel>
-        <ProcedureList steps={STEPS} proc={proc} unit="h" />
-      </Panel>
-      <Panel className="flex flex-col items-center gap-3">
-        <div className="flex gap-3 rounded-xl bg-bench-900 p-4">
+      <ProcedurePanel steps={STEPS} proc={proc} unit="h" />
+      <Panel title={t('panels.plate')} bodyClassName="justify-items-center">
+        <div className="px-well flex flex-wrap justify-center gap-3 p-4">
           {ELISA.map((w, i) => (
             <button
               key={w.sample}
               type="button"
               disabled={!developed}
               onClick={() => setMeasured(i)}
-              className={`flex flex-col items-center gap-1 rounded p-1 ${measured === i ? 'ring-2 ring-sky-400' : ''}`}
+              aria-pressed={measured === i}
+              className="px-option !gap-1.5 disabled:cursor-not-allowed"
             >
               <span
-                className="block size-12 rounded-full border-2 border-slate-400"
-                style={{ background: developed ? `rgb(${w.color.join(',')})` : proc.done >= 2 ? 'rgb(200,200,255)' : '#e2e8f0' }}
+                className="block size-12 rounded-full border-2 border-[color:var(--border-strong)]"
+                style={{ background: developed ? `rgb(${w.color.join(',')})` : proc.done >= 2 ? 'var(--chart-3)' : 'var(--surface-sunken)' }}
               />
-              <span className="max-w-20 text-center text-xs leading-tight">{t(`samples.${w.sample}`)}</span>
+              <span className="max-w-20 text-center leading-tight">{t(`samples.${w.sample}`)}</span>
             </button>
           ))}
         </div>
-        <p className="text-xs text-bench-300">{t('hints.elisa')}</p>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-bench-100">{t('fields.od')}</span>
-          <Readout value={measured !== null ? fixed(ELISA[measured].od) : '--'} />
-        </div>
+        <p className="px-hint m-0">{t('hints.elisa')}</p>
+        <ReadoutField inline label={t('fields.od')} value={measured !== null ? fixed(ELISA[measured].od) : '--'} />
       </Panel>
-      <Panel className="col-span-2">
-        <DataTable
+    </div>
+      <DataTable
           columns={columns}
           rows={s.rows}
           selected={s.selected}
@@ -82,7 +79,6 @@ export function Elisa(): ReactNode {
           onClear={s.clearRows}
           canRecord={developed && measured !== null && !recorded.includes(ELISA[measured].sample)}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

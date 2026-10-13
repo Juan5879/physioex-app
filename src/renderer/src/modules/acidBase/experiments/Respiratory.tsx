@@ -65,55 +65,71 @@ export function RespiratoryAB(): ReactNode {
   const scope = (light = false): ReactNode => <AbScope series={s.traces} light={light} />
 
   return (
-    <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 p-3">
+    <>
+    <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-start gap-4">
       <ToolbarPortal>
         <ExperimentTools lab={t('title')} experiment={t('experiments.raa')} columns={columns} rows={s.rows} printableGraph={scope(true)} />
       </ToolbarPortal>
-      <div className="flex flex-col gap-3">
-        <div className="rounded-xl bg-gradient-to-b from-bench-50/15 to-bench-50/5 p-2">
+      <Panel title={t('panels.apparatus')}>
+        <div className="px-well p-4">
           <BellJar scale={running && r ? 200 - r.lungSize : 100} radius={5} bag={running && r?.bagInflated} />
         </div>
-        <Panel className="flex flex-wrap items-center justify-around gap-3">
-          <div className="flex items-center gap-2">
-            <Light on={running} />
-            <Button variant="primary" onClick={start}>
-              {running ? t('actions.stop') : t('actions.start')}
-            </Button>
-          </div>
-          <Readout value={r ? t(`conditions.${r.display}`) : t('conditions.normal')} className="min-w-52 text-center" />
-        </Panel>
-      </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col rounded-2xl border-4 border-gray-400 bg-gray-300 p-2 shadow-xl">
+        <div className="flex flex-wrap items-center gap-3">
+          <Light on={running} label={running ? tc('common.inProgress') : tc('common.stopped')} />
+          <Button variant="primary" icon={running ? undefined : 'play'} onClick={start}>
+            {running ? t('actions.stop') : t('actions.start')}
+          </Button>
+          <Readout text value={r ? t(`conditions.${r.display}`) : t('conditions.normal')} className="ml-auto min-w-40" />
+        </div>
+      </Panel>
+      <Panel title={tc('common.recording')}>
+        <div>
           {scope()}
-          <div className="mt-2 flex justify-end">
-            <Button className="border border-gray-500 bg-gray-100" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
+          <div className="px-chart__bar">
+            <span>{t('fields.condition')}</span>
+            <div className="px-seg" role="group" aria-label={t('fields.condition')}>
+              <button
+                type="button"
+                aria-pressed={running && r?.display === 'hyperventilation'}
+                onClick={() => r?.hyperventilate()}
+                disabled={!running || r?.abnormal}
+              >
+                {t('actions.hyperventilation')}
+              </button>
+              <button
+                type="button"
+                aria-pressed={running && r?.display === 'rebreathing'}
+                onClick={() => r?.rebreathe()}
+                disabled={!running || r?.abnormal}
+              >
+                {t('actions.rebreathing')}
+              </button>
+              <button
+                type="button"
+                aria-pressed={running && (r?.display === 'normal' || r?.display === 'returning')}
+                onClick={() => r?.normalBreathing()}
+                disabled={!running || !r?.abnormal}
+              >
+                {t('actions.normal')}
+              </button>
+            </div>
+            <span className="flex-1" />
+            <Button size="sm" icon="eraser" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
               {tc('common.clearTracings')}
             </Button>
           </div>
         </div>
-        <Panel className="grid grid-cols-[auto_minmax(0,1fr)] gap-3">
-          <div className="flex flex-col gap-2">
-            <Button onClick={() => r?.hyperventilate()} disabled={!running || r?.abnormal}>
-              {t('actions.hyperventilation')}
-            </Button>
-            <Button onClick={() => r?.rebreathe()} disabled={!running || r?.abnormal}>
-              {t('actions.rebreathing')}
-            </Button>
-            <Button onClick={() => r?.normalBreathing()} disabled={!running || !r?.abnormal}>
-              {t('actions.normal')}
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
+        <div className="px-section">
+          <div className="px-metrics">
             <ResultCell label={t('fields.ph')} value={r ? fixed(r.ph) : '---'} />
             <ResultCell label={t('fields.pco2')} value={r ? fixed(r.pco2) : '----'} />
             <ResultCell label={t('fields.maxPco2')} value={r ? fixed(r.maxPco2) : '----'} />
             <ResultCell label={t('fields.minPco2')} value={r ? fixed(r.minPco2) : '----'} />
           </div>
-        </Panel>
-      </div>
-      <Panel className="col-span-2">
-        <DataTable
+        </div>
+      </Panel>
+    </div>
+      <DataTable
           columns={columns}
           rows={s.rows}
           selected={s.selected}
@@ -126,7 +142,6 @@ export function RespiratoryAB(): ReactNode {
           onClear={s.clearRows}
           canRecord={!running && last !== null && last !== recorded}
         />
-      </Panel>
-    </div>
+    </>
   )
 }

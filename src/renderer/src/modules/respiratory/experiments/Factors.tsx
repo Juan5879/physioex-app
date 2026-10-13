@@ -104,10 +104,10 @@ export function Factors(): ReactNode {
       </ToolbarPortal>
       <RespLayout
         apparatus={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-3">
             <div className="flex flex-col gap-2" title={t('hints.valve')}>
               {(['L', 'R'] as const).map((side) => (
-                <Button key={side} onClick={() => toggleValve(side)} className={valves[side] ? 'ring-2 ring-rose-400' : ''}>
+                <Button key={side} size="sm" onClick={() => toggleValve(side)} aria-pressed={valves[side]}>
                   {side === 'L' ? '◀ ' : '▶ '}
                   {valves[side] ? t('actions.valveOpen') : t('actions.valveClosed')}
                 </Button>
@@ -123,15 +123,15 @@ export function Factors(): ReactNode {
           </div>
         }
         controls={
-          <div className="flex flex-wrap items-end justify-around gap-3">
-            <div className="flex flex-col gap-2">
-              <Button onClick={() => setSurfactant((v) => Math.min(10, v + 1))} disabled={running || surfactant >= 10}>
+          <div className="flex flex-wrap items-end gap-4">
+            <div className="flex w-full flex-wrap gap-2">
+              <Button size="sm" onClick={() => setSurfactant((v) => Math.min(10, v + 1))} disabled={running || surfactant >= 10}>
                 {t('actions.surfactant')}
               </Button>
-              <Button onClick={() => setSurfactant(5)} disabled={running || surfactant === 5}>
+              <Button size="sm" onClick={() => setSurfactant(5)} disabled={running || surfactant === 5}>
                 {t('actions.flush')}
               </Button>
-              <Button onClick={() => setLungs((l) => reinflate(l, valves.L, valves.R))} disabled={running || !canReset}>
+              <Button size="sm" onClick={() => setLungs((l) => reinflate(l, valves.L, valves.R))} disabled={running || !canReset}>
                 {t('actions.reset')}
               </Button>
             </div>
@@ -147,9 +147,9 @@ export function Factors(): ReactNode {
               disabled={running}
               edit={{ ...PUMP_RATE, value: pumpRate, onChange: (v) => s.setParams({ pumpRate: v }) }}
             />
-            <div className="flex items-center gap-2">
-              <Light on={running} />
-              <Button variant="primary" onClick={start}>
+            <div className="flex h-[34px] items-center gap-3">
+              <Light on={running} label="" />
+              <Button variant="primary" icon={running ? undefined : 'play'} onClick={start}>
                 {running ? t('actions.stop') : t('actions.start')}
               </Button>
             </div>
@@ -157,12 +157,12 @@ export function Factors(): ReactNode {
         }
         scope={scope()}
         scopeActions={
-          <Button className="border border-gray-500 bg-gray-100" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
+          <Button size="sm" icon="eraser" onClick={s.clearTraces} disabled={running || s.traces.length === 0}>
             {tc('common.clearTracings')}
           </Button>
         }
         results={
-          <div className="grid grid-cols-2 gap-2">
+          <div className="px-metrics">
             <ResultCell label={t('fields.flowLeft')} value={running ? show(r?.cycleFlowL) : show(res?.flowL)} />
             <ResultCell label={t('fields.pressureLeft')} value={running ? show(r?.pressL) : show(res?.pressureL)} />
             <ResultCell label={t('fields.flowRight')} value={running ? show(r?.cycleFlowR) : show(res?.flowR)} />

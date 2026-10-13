@@ -69,5 +69,13 @@
     "hb": "Mueve el deslizador hasta que el color del patrón coincida con el de la muestra.",
     "chol": "Elige en la escala el color que coincide con la tira.",
     "recorded": "Esa muestra ya está registrada."
+  },
+  "panels": {
+    "samples": "Muestras de sangre",
+    "centrifuge": "Centrífuga",
+    "sedimentation": "Sedimentación",
+    "colorimeter": "Colorímetro",
+    "hemoglobinometer": "Hemoglobinómetro",
+    "typing": "Tipificación"
   }
 }

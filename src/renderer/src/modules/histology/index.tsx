@@ -1,6 +1,7 @@
+import { Icon } from '@/shared/components/Icon'
 import { useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Panel } from '@/shared/components/ui'
+import { Button } from '@/shared/components/ui'
 import data from './data/histology.json'
 
 /** Datos generados por scripts/build-histology.mjs a partir de 12_HistologyT/xml */
@@ -55,7 +56,8 @@ export default function HistologyLab(): ReactNode {
             key={key}
             type="button"
             onClick={() => setCurrent(n.item ?? null)}
-            className={`block w-full truncate rounded px-2 py-0.5 text-left text-sm ${n.item === current ? 'bg-sky-700 text-white' : 'hover:bg-bench-800'}`}
+            aria-current={n.item === current ? 'true' : undefined}
+            className={`block w-full truncate rounded-[var(--radius-sm)] py-1.5 pr-2 text-left text-[13px] ${n.item === current ? 'bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]' : 'text-[color:var(--ink)] hover:bg-[color:var(--surface-raised)]'}`}
             style={{ paddingLeft: 8 + depth * 12 }}
             title={n.label}
           >
@@ -69,7 +71,7 @@ export default function HistologyLab(): ReactNode {
           <button
             type="button"
             onClick={() => setOpen((o) => ({ ...o, [key]: !isOpen }))}
-            className="block w-full rounded px-2 py-0.5 text-left text-sm font-semibold text-bench-100 hover:bg-bench-800"
+            className="block w-full rounded-[var(--radius-sm)] py-1 pr-2 text-left font-mono text-[11px] tracking-[0.06em] text-[color:var(--ink-subtle)] uppercase hover:bg-[color:var(--surface-raised)]"
             style={{ paddingLeft: 8 + depth * 12 }}
           >
             {isOpen ? '▾' : '▸'} {groupLabel(n.label)}
@@ -80,59 +82,80 @@ export default function HistologyLab(): ReactNode {
     })
 
   return (
-    <div className="mx-auto max-w-[1500px]">
-      <div className="flex flex-wrap items-end gap-x-4 border-b border-bench-600 px-3 pt-1.5">
-        <h1 className="pb-1.5 text-lg font-bold">{t('title')}</h1>
-        <nav className="flex flex-wrap gap-1">
-          {INDEX.map((g, i) => (
-            <button
-              key={g.label}
-              type="button"
-              onClick={() => {
-                setGroup(i)
-                setQuery('')
-              }}
-              className={`rounded-t-lg px-3 py-1.5 text-sm font-semibold ${i === group ? 'bg-bench-700 text-white' : 'text-bench-300 hover:bg-bench-800 hover:text-white'}`}
-            >
-              {groupLabel(g.label)}
-            </button>
-          ))}
-        </nav>
+    <div className="px-container">
+      <div className="px-labhead">
+        <div>
+          <div className="px-eyebrow">{t('eyebrow')}</div>
+          <h1>{t('title')}</h1>
+        </div>
       </div>
-      <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-3 p-3">
-        <Panel className="flex h-[calc(100vh-130px)] flex-col gap-2">
+      <div className="px-tabs" role="tablist">
+        {INDEX.map((g, i) => (
+          <button
+            key={g.label}
+            type="button"
+            role="tab"
+            aria-selected={i === group}
+            className="px-tab"
+            onClick={() => {
+              setGroup(i)
+              setQuery('')
+            }}
+          >
+            <span className="n">{String(i + 1).padStart(2, '0')}</span>
+            {groupLabel(g.label)}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 grid grid-cols-[280px_minmax(0,1fr)] items-start gap-4">
+        <section className="px-panel flex h-[calc(100vh-260px)] min-h-[420px] flex-col gap-3 p-4">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('search')}
-            className="rounded border border-bench-500 bg-bench-900 px-2 py-1 text-sm select-text"
+            className="px-input"
           />
           <div className="min-h-0 flex-1 overflow-y-auto">
-            {found
-              ? found.length
-                ? renderNodes(found, 'q', 0)
-                : <p className="p-2 text-sm text-bench-300">{t('noResults')}</p>
-              : renderNodes(branch, String(group), 0)}
+            {found ? (
+              found.length ? (
+                renderNodes(found, 'q', 0)
+              ) : (
+                <p className="px-empty">{t('noResults')}</p>
+              )
+            ) : (
+              renderNodes(branch, String(group), 0)
+            )}
           </div>
-        </Panel>
-        <div className="flex min-w-0 flex-col gap-3">
-          {item ? (
-            <>
-              <Panel className="flex flex-wrap items-center gap-3">
-                <h2 className="flex-1 text-lg font-semibold">{item.title}</h2>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={showLabels} onChange={(e) => setShowLabels(e.target.checked)} disabled={!item.overlay} />
-                  {t('labels')}
-                </label>
-                <Button onClick={() => pos > 0 && setCurrent(list[pos - 1].item ?? null)} disabled={pos <= 0}>
-                  ◀ {t('previous')}
-                </Button>
-                <Button onClick={() => pos >= 0 && pos < list.length - 1 && setCurrent(list[pos + 1].item ?? null)} disabled={pos < 0 || pos >= list.length - 1}>
-                  {t('next')} ▶
-                </Button>
-              </Panel>
-              <div className="relative overflow-hidden rounded-xl border-4 border-gray-500 bg-black">
-                <svg viewBox="0 0 640 480" className="mx-auto block max-h-[58vh] w-full">
+        </section>
+        {item ? (
+          <section className="px-panel">
+            <div className="px-panel__head !min-h-12">
+              <h2 className="m-0 flex-1 text-[15px] font-semibold">{item.title}</h2>
+              <label className="flex items-center gap-2 text-[13px] text-[color:var(--ink-muted)]">
+                <input
+                  type="checkbox"
+                  className="accent-[color:var(--accent)]"
+                  checked={showLabels}
+                  onChange={(e) => setShowLabels(e.target.checked)}
+                  disabled={!item.overlay}
+                />
+                {t('labels')}
+              </label>
+              <Button size="sm" icon="chevronLeft" onClick={() => pos > 0 && setCurrent(list[pos - 1].item ?? null)} disabled={pos <= 0}>
+                {t('previous')}
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => pos >= 0 && pos < list.length - 1 && setCurrent(list[pos + 1].item ?? null)}
+                disabled={pos < 0 || pos >= list.length - 1}
+              >
+                {t('next')}
+                <Icon name="chevronRight" />
+              </Button>
+            </div>
+            <div className="px-panel__body">
+              <div className="px-well flex justify-center overflow-hidden">
+                <svg viewBox="0 0 640 480" className="block aspect-[4/3] w-full max-w-[calc(56vh*4/3)]">
                   <image href={`histology/${encodeURIComponent(item.image)}`} width={640} height={480} />
                   {showLabels && item.overlay && (
                     <g>
@@ -154,15 +177,17 @@ export default function HistologyLab(): ReactNode {
                   )}
                 </svg>
               </div>
-              <Panel>
-                <p className="leading-relaxed whitespace-pre-line text-bench-50 select-text">{item.description}</p>
-                <p className="mt-2 text-xs text-bench-300">{t('originalNote')}</p>
-              </Panel>
-            </>
-          ) : (
-            <Panel>{t('pick')}</Panel>
-          )}
-        </div>
+              <div>
+                <p className="m-0 leading-relaxed whitespace-pre-line select-text">{item.description}</p>
+                <p className="mt-2 mb-0 text-xs text-[color:var(--ink-subtle)]">{t('originalNote')}</p>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="px-panel">
+            <div className="px-empty">{t('pick')}</div>
+          </section>
+        )}
       </div>
     </div>
   )

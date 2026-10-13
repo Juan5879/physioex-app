@@ -1,0 +1,76 @@
+/*
+ * PhysioEx — piezas de la app que el paquete de rediseño no trae como clase (estructura de la
+ * ventana, diálogos, campos de texto). Mismas reglas: sólo valores de tokens.css, prefijo px-.
+ */
+
+/* ---------- Ventana: barra superior fija, contenido con scroll, pie fijo ---------- */
+.px-shell { height: 100%; display: flex; flex-direction: column; background: var(--bg); color: var(--ink); }
+.px-shell__main { flex: 1; min-height: 0; overflow: auto; }
+.px-shell__main > .px-container { padding-bottom: var(--space-5); }
+.px-brand:focus-visible, .px-nav a:focus-visible, .px-footer a:focus-visible, .px-footer button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Enlaces usados como pestaña */
+.px-tab { text-decoration: none; }
+.px-tab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+.px-tab[aria-current="page"] .n { color: var(--accent-ink); }
+.px-tabs { overflow-x: auto; scrollbar-width: none; }
+
+/* Enlace del pie con aspecto de link (abre un diálogo) */
+.px-linkbtn { padding: 0; border: 0; background: none; font: inherit; color: var(--ink-subtle); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--border-strong); cursor: pointer; }
+.px-linkbtn:hover { color: var(--ink); }
+.px-footer > span { min-width: 0; }
+
+/* Aviso de actualización en la barra superior */
+.px-chip--ok { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+
+/* ---------- Página de laboratorio ---------- */
+.px-labhead__actions:empty { display: none; }
+.px-labhead__actions > * { display: flex; gap: var(--space-1); }
+.px-labbody { margin-top: var(--space-4); display: grid; gap: var(--space-4); }
+.px-panel__head .px-eyebrow { white-space: nowrap; }
+.px-panel__actions { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; padding: 6px 0; }
+
+/* Subsección dentro de un panel (Fuerza, Cursor de tiempo…) */
+.px-section { display: grid; gap: var(--space-2); padding-top: 14px; border-top: 1px solid var(--border); }
+.px-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.px-row .px-readout { min-width: 96px; }
+
+/* Visor editable: el <input> toma el aspecto de .px-readout */
+input.px-readout { width: 100%; min-width: 0; border: 0; outline: none; text-align: right; user-select: text; field-sizing: content; }
+.px-readout__wrap input.px-readout { min-width: 5ch; }
+.px-readout__wrap { flex: 1; display: flex; align-items: center; background: var(--readout-bg); min-width: 76px; }
+.px-readout__wrap .px-readout { flex: 1; padding-right: 4px; }
+.px-readout__wrap .u { padding-right: 10px; font: 500 11px/1 var(--font-mono); color: var(--readout-dim); letter-spacing: 0.04em; }
+.px-stepper:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.px-stepper.is-disabled .px-readout { color: var(--readout-dim); }
+.px-stepper--block { display: flex; }
+.px-cursor { display: flex; gap: var(--space-2); align-items: center; }
+.px-cursor .px-readout__wrap { border: 1px solid var(--border-strong); border-radius: var(--radius-sm); height: 32px; }
+.px-cursor .px-readout { height: 30px; }
+
+/* Visor de solo lectura con unidad */
+.px-readout .u:empty { display: none; }
+
+/* ---------- Tabla con scroll y encabezado fijo ---------- */
+.px-tablewrap--scroll { max-height: 220px; overflow: auto; }
+.px-tablewrap--scroll thead th { position: sticky; top: 0; z-index: 1; }
+.px-table tbody tr.is-clickable { cursor: pointer; }
+.px-table th.c, .px-table td.c { text-align: center; }
+
+/* ---------- Diálogos ---------- */
+.px-modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: var(--space-4); background: color-mix(in srgb, var(--surface-sunken) 72%, transparent); }
+.px-modal__box { width: 100%; max-width: 440px; max-height: calc(100% - 2 * var(--space-4)); overflow: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow-panel); padding: var(--space-5); box-sizing: border-box; }
+.px-modal__box--wide { max-width: 960px; }
+.px-modal__title { margin: 0 0 var(--space-4); font-family: var(--font-display); font-size: 19px; line-height: 24px; font-weight: 600; color: var(--ink); }
+.px-modal__text { margin: 0 0 var(--space-5); color: var(--ink-muted); }
+.px-modal__text p { margin: 0 0 var(--space-1); }
+.px-modal__actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-5); }
+
+/* ---------- Campos de texto y selects ---------- */
+.px-input { width: 100%; height: var(--control-height); padding: 0 10px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface-sunken); color: var(--ink); font: 400 14px/1 var(--font-sans); box-sizing: border-box; user-select: text; }
+.px-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+select.px-input { padding-right: 6px; cursor: pointer; }
+
+/* En un campo, los controles conservan su ancho natural salvo que se pidan a todo el ancho */
+.px-field > .px-stepper:not(.px-stepper--block), .px-field > .px-readout { justify-self: start; }
+.px-field > .px-cursor { justify-self: stretch; }
